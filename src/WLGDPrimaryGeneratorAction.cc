@@ -204,6 +204,6 @@ void WLGDPrimaryGeneratorAction::DefineCommands()
     .SetGuidance("MeiAndHume = WW standard case")
     .SetGuidance("Musun = Used in previous MaGe simulation")
     .SetCandidates("MeiAndHume Musun")
-    .SetStates(G4State_GeomClosed)
+//    .SetStates(G4State_GeomClosed)
     .SetToBeBroadcasted(false);
 }

@@ -4,16 +4,17 @@
 // std c++ includes
 #include <cmath>
 #include <random>
+#include <ifstream>
 
 #include "G4GenericMessenger.hh"
 #include "G4VUserPrimaryGeneratorAction.hh"
 #include "globals.hh"
 
+using namespace std;
 class G4ParticleGun;
 class G4Event;
 class G4ParticleDefinition;
 class WLGDDetectorConstruction;
-using namespace std;
 /// Primary generator
 ///
 /// A single particle is generated.

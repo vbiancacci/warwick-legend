@@ -13,7 +13,7 @@ class G4ParticleGun;
 class G4Event;
 class G4ParticleDefinition;
 class WLGDDetectorConstruction;
-
+using namespace std;
 /// Primary generator
 ///
 /// A single particle is generated.

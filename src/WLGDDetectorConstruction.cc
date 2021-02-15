@@ -234,7 +234,7 @@ auto WLGDDetectorConstruction::SetupAlternative() -> G4VPhysicalVolume*
   // size parameter, unit [cm]
   // cavern
   G4double stone     = 100.0;  // Hall wall thickness 1 m
-  G4double hallhside = 850.0;  // Hall cube side 17 m
+  G4double hallhside = 1000.0;//850.0;  // Hall cube side 17 m
   // cryostat
   G4double tankhside  = 650;   // cryostat cube side 13 m
   G4double outerwall  = 1.2;   // outer SS wall thickness

@@ -156,9 +156,9 @@ void WLGDPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
 
     G4double theMass = theParticleTable->FindParticle(particleName)->GetPDGMass();
     G4double totMomentum = std::sqrt(energy*energy+2*theMass*energy);
-    pz = -1*totMomentum*std::cos(theta);
-    px = totMomentum*std::sin(theta)*cos(phi);
-    py = totMomentum*std::sin(theta)*sin(phi);
+    pz = -1*std::cos(theta);
+    px = std::sin(theta)*cos(phi);
+    py = std::sin(theta)*sin(phi);
     G4ThreeVector momentumDir(px, py, pz);
 
     fParticleGun->SetParticleMomentumDirection(momentumDir);

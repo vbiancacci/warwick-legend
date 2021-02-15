@@ -32,7 +32,6 @@
 
 int main(int argc, char** argv)
 {
-  WLGDPrimaryGeneratorAction::ChangeFileName("./data/musun_gs_1M_0.dat");
 
   // command line interface
   CLI::App    app{ "Muon Simulation for Legend" };
@@ -109,6 +108,7 @@ int main(int argc, char** argv)
   auto* actions = new WLGDActionInitialization(detector, outputFileName);
   runManager->SetUserInitialization(actions);
 
+  WLGDPrimaryGeneratorAction::ChangeFileName("./data/musun_gs_1M_0.dat");
   // Initialize G4 kernel
   //
   // runManager->Initialize();

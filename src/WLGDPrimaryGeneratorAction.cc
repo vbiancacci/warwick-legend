@@ -116,8 +116,6 @@ void WLGDPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
   }
   if(fGenerator == "Musun")
   {
-    G4cout << "_________________________________________________" << endl << "Musun" << endl << "_________________________________________________" << endl;
-
 
     G4int nEvent=0;
     G4double time=0.0;
@@ -176,6 +174,9 @@ void WLGDPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
 
 void WLGDPrimaryGeneratorAction::SetGenerator(const G4String& name)
 {
+  G4cout << "_________________________________________________" << endl << name << endl << "_________________________________________________" << endl;
+
+
   std::set<G4String> knownGenerators = { "MeiAndHume", "Musun" };
   if(knownGenerators.count(name) == 0)
   {

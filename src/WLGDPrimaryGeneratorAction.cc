@@ -132,12 +132,12 @@ void WLGDPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
     }
 
     G4double particle_time = time*s;
-    G4double  = energy*GeV;
-    G4double theta = theta*rad;
-    G4double phi = phi*rad;
-    G4double x = x * cm;
-    G4double y = y * cm;
-    G4double z = fZShift + (z * cm);
+    energy = energy*GeV;
+    theta = theta*rad;
+    phi = phi*rad;
+    x = x * cm;
+    y = y * cm;
+    z = fZShift + (z * cm);
 
     /*G4cout << "Primary coordinates: " << position/m << " m" << G4endl;
     G4cout << "Primary energy: " << energy/GeV << " GeV" << G4endl;

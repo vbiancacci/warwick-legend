@@ -16,6 +16,8 @@ WLGDPrimaryGeneratorAction::WLGDPrimaryGeneratorAction(WLGDDetectorConstruction*
 , fParticleGun(nullptr)
 , fMessenger(nullptr)
 , fDepth(0.0)
+, fGenerator("MeiAndHume")
+, fZShift(0.0)
 {
   generator.seed(rd());  // set a random seed
 
@@ -37,50 +39,143 @@ WLGDPrimaryGeneratorAction::~WLGDPrimaryGeneratorAction()
   delete fMessenger;
 }
 
+void WLGDPrimaryGeneratorAction::OpenFile()
+{
+
+  fInputFile.open(fFileName);
+
+  if (!(fInputFile.is_open())) {//not open correctly
+
+    G4cerr << "File not valid!" << G4endl;
+  }
+}
+
+void WLGDPrimaryGeneratorAction::ChangeFileName(G4String newFile)
+{
+  if (fFileName != newFile) //check if the new file is equal to the other
+  {
+    if (fInputFile.is_open()) fInputFile.close(); //close the old file
+    fFileName = newFile;
+    OpenFile(); //open the new one
+  }
+}
+
+
 void WLGDPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
 {
-  using pld_type = std::piecewise_linear_distribution<double>;
+  if(fGenerator == "MeiAndHume")
+  {
+    using pld_type = std::piecewise_linear_distribution<double>;
 
-  int    nw             = 100;     // number of bins
-  double lower_bound    = 1.0;     // energy interval lower bound [GeV]
-  double upper_bound    = 3000.0;  // upper bound [GeV]
-  double nearhorizontal = 1.0e-5;
-  double fullcosangle   = 1.0;
+    int    nw             = 100;     // number of bins
+    double lower_bound    = 1.0;     // energy interval lower bound [GeV]
+    double upper_bound    = 3000.0;  // upper bound [GeV]
+    double nearhorizontal = 1.0e-5;
+    double fullcosangle   = 1.0;
 
-  // custom probability distributions
-  pld_type ed(nw, lower_bound, upper_bound, MuEnergy(fDepth));
-  pld_type cosd(nw, nearhorizontal, fullcosangle, MuAngle(fDepth));
+    // custom probability distributions
+    pld_type ed(nw, lower_bound, upper_bound, MuEnergy(fDepth));
+    pld_type cosd(nw, nearhorizontal, fullcosangle, MuAngle(fDepth));
 
-  // momentum vector
-  G4double costheta = cosd(generator);  // get a random number
-  G4double sintheta = std::sqrt(1. - costheta * costheta);
+    // momentum vector
+    G4double costheta = cosd(generator);  // get a random number
+    G4double sintheta = std::sqrt(1. - costheta * costheta);
 
-  std::uniform_real_distribution<> rndm(0.0, 1.0);   // azimuth angle
-  G4double phi    = CLHEP::twopi * rndm(generator);  // random uniform number
-  G4double sinphi = std::sin(phi);
-  G4double cosphi = std::cos(phi);
+    std::uniform_real_distribution<> rndm(0.0, 1.0);   // azimuth angle
+    G4double phi    = CLHEP::twopi * rndm(generator);  // random uniform number
+    G4double sinphi = std::sin(phi);
+    G4double cosphi = std::cos(phi);
 
-  G4double      px = -sintheta * cosphi;
-  G4double      py = -sintheta * sinphi;
-  G4double      pz = -costheta;  // default downwards: pz = -1.0
-  G4ThreeVector momentumDir(px, py, pz);
-  fParticleGun->SetParticleMomentumDirection(momentumDir);
-  // G4cout << "Momentum direction Primary: " << momentumDir << G4endl;
+    G4double      px = -sintheta * cosphi;
+    G4double      py = -sintheta * sinphi;
+    G4double      pz = -costheta;  // default downwards: pz = -1.0
+    G4ThreeVector momentumDir(px, py, pz);
+    fParticleGun->SetParticleMomentumDirection(momentumDir);
+    // G4cout << "Momentum direction Primary: " << momentumDir << G4endl;
 
-  G4double ekin = ed(generator);  // get random number
-  ekin *= GeV;
-  fParticleGun->SetParticleEnergy(ekin);
+    G4double ekin = ed(generator);  // get random number
+    ekin *= GeV;
+    fParticleGun->SetParticleEnergy(ekin);
 
-  // position, top of world, sample circle uniformly
-  G4double zvertex = fDetector->GetWorldSizeZ();  // inline on WLGDDetectorConstruction
-  G4double radius  = fDetector->GetWorldExtent() * rndm(generator);  // fraction of max
-  phi              = CLHEP::twopi * rndm(generator);  // another random angle
-  G4double vx      = radius * std::cos(phi);
-  G4double vy      = radius * std::sin(phi);
+    // position, top of world, sample circle uniformly
+    G4double zvertex = fDetector->GetWorldSizeZ();  // inline on WLGDDetectorConstruction
+    G4double radius  = fDetector->GetWorldExtent() * rndm(generator);  // fraction of max
+    phi              = CLHEP::twopi * rndm(generator);  // another random angle
+    G4double vx      = radius * std::cos(phi);
+    G4double vy      = radius * std::sin(phi);
 
-  fParticleGun->SetParticlePosition(G4ThreeVector(vx, vy, zvertex - 1.0 * cm));
+    fParticleGun->SetParticlePosition(G4ThreeVector(vx, vy, zvertex - 1.0 * cm));
 
-  fParticleGun->GeneratePrimaryVertex(event);
+    fParticleGun->GeneratePrimaryVertex(event);
+  }
+  if(fGenerator == "Musun")
+  {
+
+    G4int nEvent=0;
+    G4double time=0.0;
+    G4double energy = 0.0*MeV;
+    G4double px,py,pz;
+    G4double theta,phi;
+    G4double x, y, z;
+    G4int particleID = 0;
+
+    fInputFile >> nEvent >> particleID >> energy >> x >> y >> z >> theta >> phi;
+
+    if (fInputFile.eof())
+    {
+      fInputFile.close();
+      G4cerr << "File over: not enough events!" << G4endl;
+      G4Exception("WLGDPrimaryGeneratorAction::GeneratePrimaryVertex()", "err001", FatalException, "Exit Warwick");
+      return;
+    }
+
+    G4double particle_time = time*s;
+    G4double  = energy*GeV;
+    G4double theta = theta*rad;
+    G4double phi = phi*rad;
+    G4double x = x * cm;
+    G4double y = y * cm;
+    G4double z = fZShift + (z * cm);
+
+    /*G4cout << "Primary coordinates: " << position/m << " m" << G4endl;
+    G4cout << "Primary energy: " << energy/GeV << " GeV" << G4endl;
+    G4cout << "Theta: " << theta/deg << " deg; Phi: " << phi/deg << " deg" << G4endl;*/
+
+    G4ParticleTable* theParticleTable = G4ParticleTable::GetParticleTable();
+
+    G4String particleName = " ";
+
+    if (particleID == 10) particleName = "mu+";
+    else particleName = "mu-";
+
+    G4double theMass = theParticleTable->FindParticle(particleName)->GetPDGMass();
+    G4double totMomentum = std::sqrt(energy*energy+2*theMass*energy);
+    pz = -1*totMomentum*std::cos(theta);
+    px = totMomentum*std::sin(theta)*cos(phi);
+    py = totMomentum*std::sin(theta)*sin(phi);
+    G4ThreeVector momentumDir(px, py, pz);
+
+    fParticleGun->SetParticleMomentumDirection(momentumDir);
+
+    fParticleGun->SetParticleEnergy(energy);
+
+    fParticleGun->SetParticlePosition(G4ThreeVector(x, y, z));
+
+    fParticleGun->GeneratePrimaryVertex(event);
+
+  }
+}
+
+void WLGDPrimaryGeneratorAction::SetGenerator(const G4String& name)
+{
+  std::set<G4String> knownGenerators = { "MeiAndHume", "Musun" };
+  if(knownGenerators.count(name) == 0)
+  {
+    G4Exception("WLGDPrimaryGeneratorAction::SetGenerator", "WLGD0101", JustWarning,
+                ("Invalid generator name '" + name + "'").c_str());
+    return;
+  }
+  fGenerator = name;
 }
 
 void WLGDPrimaryGeneratorAction::DefineCommands()
@@ -95,4 +190,14 @@ void WLGDPrimaryGeneratorAction::DefineCommands()
   depthCmd.SetParameterName("d", true);
   depthCmd.SetRange("d>=0.");
   depthCmd.SetDefaultValue("0.");
+
+  // generator command
+  // switch command
+  fMessenger->DeclareMethod("setGenerator", &WLGDPrimaryGeneratorAction::SetGenerator)
+    .SetGuidance("Set geometry model of cavern and detector")
+    .SetGuidance("MeiAndHume = WW standard case")
+    .SetGuidance("Musun = Used in previous MaGe simulation")
+    .SetCandidates("MeiAndHume Musun")
+    .SetStates(G4State_PreInit)
+    .SetToBeBroadcasted(false);
 }

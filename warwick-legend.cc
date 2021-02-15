@@ -28,9 +28,12 @@
 #include "CLI11.hpp"  // c++17 safe; https://github.com/CLIUtils/CLI11
 #include "WLGDActionInitialization.hh"
 #include "WLGDDetectorConstruction.hh"
+#include "WLGDPrimaryGeneratorAction.hh"
 
 int main(int argc, char** argv)
 {
+  WLGDPrimaryGeneratorAction::ChangeFileName("./data/musun_gs_1M_0.dat");
+
   // command line interface
   CLI::App    app{ "Muon Simulation for Legend" };
   int         nthreads = 4;

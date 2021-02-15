@@ -91,6 +91,11 @@ public:
   void     SetDepth(G4double val) { fDepth = val; }
   G4double GetDepth() const { return fDepth; }
 
+  void     SetGenerator(const G4String& name);
+  void     SetZShift(G4double fZShift);
+
+  void     ChangeFileName(G4String newFile);
+  void     OpenFile();
 private:
   void DefineCommands();
 
@@ -102,6 +107,10 @@ private:
   std::random_device rd;
   std::ranlux24      generator;
   G4double           fDepth;
+  G4String           fGenerator;
+  std::ifstream      fInputFile;
+  G4String           fFileName;
+  G4double           fZShift;
 };
 
 #endif

@@ -10,9 +10,11 @@
 #include "G4PhysicalConstants.hh"
 #include "G4SystemOfUnits.hh"
 
-
+// std
 #include <set>
-using namespace std;
+
+G4String WLGDPrimaryGeneratorAction::fFileName;
+std::ifstream WLGDPrimaryGeneratorAction::fInputFile;
 
 WLGDPrimaryGeneratorAction::WLGDPrimaryGeneratorAction(WLGDDetectorConstruction* det)
 : G4VUserPrimaryGeneratorAction()

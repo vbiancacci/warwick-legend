@@ -199,11 +199,11 @@ void WLGDPrimaryGeneratorAction::DefineCommands()
 
   // generator command
   // switch command
-  fMessenger->DeclareMethod("setGenerator", &WLGDPrimaryGeneratorAction::SetGenerator)
-    .SetGuidance("Set geometry model of cavern and detector")
+  auto& GeneratorCmd = fMessenger->DeclareMethod("setGenerator", &WLGDPrimaryGeneratorAction::SetGenerator)
+    .SetGuidance("Set generator model of primary muons")
     .SetGuidance("MeiAndHume = WW standard case")
     .SetGuidance("Musun = Used in previous MaGe simulation")
     .SetCandidates("MeiAndHume Musun")
-    .SetStates(G4State_PreInit)
+    .SetStates(G4State_EventProc)
     .SetToBeBroadcasted(false);
 }

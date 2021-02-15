@@ -116,7 +116,7 @@ void WLGDPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
   }
   if(fGenerator == "Musun")
   {
-    G4cout << "_________________________________________________" << endl << "Musun" << endl << << "_________________________________________________" << endl;
+    G4cout << "_________________________________________________" << endl << "Musun" << endl << "_________________________________________________" << endl;
 
 
     G4int nEvent=0;

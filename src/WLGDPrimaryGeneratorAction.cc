@@ -202,7 +202,7 @@ void WLGDPrimaryGeneratorAction::DefineCommands()
 
   // generator command
   // switch command
-  auto& GeneratorCmd = fMessenger->DeclareMethod("setGenerator", &WLGDPrimaryGeneratorAction::SetGenerator)
+  fMessenger->DeclareMethod("setGenerator", &WLGDPrimaryGeneratorAction::SetGenerator)
     .SetGuidance("Set generator model of primary muons")
     .SetGuidance("MeiAndHume = WW standard case")
     .SetGuidance("Musun = Used in previous MaGe simulation")

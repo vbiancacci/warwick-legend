@@ -42,6 +42,8 @@ private:
   G4double                            fNeutronBias       = 1.0;
   G4double                            fMuonBias          = 1.0;
   G4Cache<G4MultiFunctionalDetector*> fSD                = nullptr;
+  G4double                            fXeConc            = 0.0;
+  G4double                            fHe3Conc            = 0.0;
 };
 
 #endif

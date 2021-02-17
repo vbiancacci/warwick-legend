@@ -111,6 +111,30 @@ void WLGDDetectorConstruction::DefineMaterials()
   G4double density = 5.323 * g / cm3;
   auto*    roiMat  = new G4Material("enrGe", density, 1);
   roiMat->AddElement(eGe, 1);
+
+  // Edit: 2020/02/17 by Moritz Neuberger
+  // Added new def. of LAr in order to add doping with Xe and He-3
+
+
+  G4double dLAr = 1.393 * g / cm3;
+  G4double dLXe = 3.02 * g / cm3;
+  G4double dLHe3 = 0.059 * g / cm3;
+
+  G4double fArConc = 1 - fXeConc - fHe3Conc;
+
+  G4double dComb = 1 / ((fArConc / dLAr ) + (fXeConc / dLXe) + (fHe3Conc / dLHe3));
+
+  auto* eLAr = new G4Element("LAr", "Ar", 18., 39.95 * g / mole);
+  auto* eLXe = new G4Element("LXe", "Xe", 54., 131.29 * g / mole);
+  auto* eHe3 = new G4Element("He3", "He3", 1);
+  G4Isotope *iHe3 = new G4Isotope("He3", 2, 3);
+  eHe3->AddIsotope(iHe3, 1);
+
+  auto* CombinedArXeHe3 = new G4Material("CombinedArXeHe3", dComb, 3);
+  CombinedArXeHe3->AddElement(eLAr, fArConc);
+  CombinedArXeHe3->AddElement(eHe3, fHe3Conc);
+  CombinedArXeHe3->AddElement(eLXe, fXeConc);
+
 }
 
 void WLGDDetectorConstruction::ConstructSDandField()
@@ -230,7 +254,10 @@ auto WLGDDetectorConstruction::SetupAlternative() -> G4VPhysicalVolume*
   auto* stdRock       = G4Material::GetMaterial("StdRock");
   auto* puMat         = G4Material::GetMaterial("polyurethane");
   auto* roiMat        = G4Material::GetMaterial("enrGe");
+  auto* larMat_alt        = G4Material::GetMaterial("CombinedArXeHe3");
 
+  if(fXeConc != 0 || fHe3Conc != 0)
+    larMat        = larMat_alt;
   // size parameter, unit [cm]
   // cavern
   G4double stone     = 100.0;  // Hall wall thickness 1 m
@@ -418,7 +445,10 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
   auto* copperMat     = G4Material::GetMaterial("G4_Cu");
   auto* stdRock       = G4Material::GetMaterial("StdRock");
   auto* roiMat        = G4Material::GetMaterial("enrGe");
+  auto* larMat_alt        = G4Material::GetMaterial("CombinedArXeHe3");
 
+  if(fXeConc != 0 || fHe3Conc != 0)
+    larMat        = larMat_alt;
   // constants
   // size parameter, unit [cm]
   G4double offset = 200.0;  // shift cavern floor to keep detector centre at origin
@@ -648,7 +678,10 @@ auto WLGDDetectorConstruction::SetupHallA() -> G4VPhysicalVolume*
   auto* copperMat     = G4Material::GetMaterial("G4_Cu");
   auto* stdRock       = G4Material::GetMaterial("StdRock");
   auto* roiMat        = G4Material::GetMaterial("enrGe");
+  auto* larMat_alt        = G4Material::GetMaterial("CombinedArXeHe3");
 
+  if(fXeConc != 0 || fHe3Conc != 0)
+    larMat        = larMat_alt;
   // constants
   // size parameter, unit [cm]
   G4double offset = 250.0;  // shift cavern floor to keep detector centre at origin
@@ -908,6 +941,22 @@ void WLGDDetectorConstruction::DefineCommands()
     .SetStates(G4State_Idle)
     .SetToBeBroadcasted(false);
 
+
+  // Edit: 2021/02/17 by Moritz Neuberger
+  // Adding options to adjust the concentration of Xe and He-3 in the LAr to test change in Ge-77 production
+
+  auto& XeConcCmd = fDetectorMessenger->DeclareProperty("XeConc", fXeConc,
+                                               "Concentration of Xe in the LAr [mg/g]");
+  XeConcCmd.SetParameterName("cXe", true);
+  XeConcCmd.SetRange("cXe>=0.");
+  XeConcCmd.SetDefaultValue("0.");
+
+  auto& He3ConcCmd = fDetectorMessenger->DeclareProperty("He3Conc", fHe3Conc,
+                                                        "Concentration of He3 in the LAr [mg/g]");
+  XeConcCmd.SetParameterName("cHe3", true);
+  XeConcCmd.SetRange("cHe3>=0.");
+  XeConcCmd.SetDefaultValue("0.");
+fXeConc
   // Define bias operator command directory using generic messenger class
   fBiasMessenger =
     new G4GenericMessenger(this, "/WLGD/bias/", "Commands for controlling bias factors");

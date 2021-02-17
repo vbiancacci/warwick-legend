@@ -120,9 +120,9 @@ void WLGDDetectorConstruction::DefineMaterials()
   G4double dLXe = 3.02 * g / cm3;
   G4double dLHe3 = 0.059 * g / cm3;
 
-  G4double fArConc = 1 - (fXeConc + fHe3Conc)*1e-3;
+  G4double fArConc = 1 - (fXeConc + fHe3Conc);
 
-  G4double dComb = 1 / ((fArConc / dLAr ) + (fXeConc*1e-3 / dLXe) + (fHe3Conc*1e-3 / dLHe3));
+  G4double dComb = 1 / ((fArConc / dLAr ) + (fXeConc / dLXe) + (fHe3Conc / dLHe3));
 
   G4cout << "___________________________________________" << G4endl;
   G4cout << "Mass ratios of coolant:" << G4endl;
@@ -139,8 +139,8 @@ void WLGDDetectorConstruction::DefineMaterials()
 
   auto* CombinedArXeHe3 = new G4Material("CombinedArXeHe3", dComb, 3);
   CombinedArXeHe3->AddElement(eLAr, fArConc);
-  CombinedArXeHe3->AddElement(eHe3, fHe3Conc*1e-3);
-  CombinedArXeHe3->AddElement(eLXe, fXeConc*1e-3);
+  CombinedArXeHe3->AddElement(eHe3, fHe3Conc);
+  CombinedArXeHe3->AddElement(eLXe, fXeConc);
 
 }
 
@@ -887,7 +887,7 @@ auto WLGDDetectorConstruction::SetupHallA() -> G4VPhysicalVolume*
   fWaterLogical->SetVisAttributes(greyVisAtt);
   fLarLogical->SetVisAttributes(greyVisAtt);
   fCoutLogical->SetVisAttributes(blueVisAtt);
-  fCvacLogical->SetVisAttributes(greyVisAtt);
+  fCvacLogical->SetVisAttributes(greyVisAtt);setHe3Conc
   fCinnLogical->SetVisAttributes(blueVisAtt);
   fLidLogical->SetVisAttributes(blueVisAtt);
   fBotLogical->SetVisAttributes(blueVisAtt);
@@ -924,9 +924,9 @@ void WLGDDetectorConstruction::SetNeutronBiasFactor(G4double nf) { fNeutronBias 
 void WLGDDetectorConstruction::SetMuonBiasFactor(G4double mf) { fMuonBias = mf; }
 
 
-void WLGDDetectorConstruction::SetXeConc(G4double nf) { fXeConc = nf; WLGDDetectorConstruction::DefineMaterials(); G4RunManager::GetRunManager()->ReinitializeGeometry();}
+void WLGDDetectorConstruction::SetXeConc(G4double nf) { fXeConc = nf*1e-3; WLGDDetectorConstruction::DefineMaterials(); G4RunManager::GetRunManager()->ReinitializeGeometry();}
 
-void WLGDDetectorConstruction::SetHe3Conc(G4double nf) { fHe3Conc = nf; WLGDDetectorConstruction::DefineMaterials(); G4RunManager::GetRunManager()->ReinitializeGeometry();}
+void WLGDDetectorConstruction::SetHe3Conc(G4double nf) { fHe3Conc = nf*1e-3; WLGDDetectorConstruction::DefineMaterials(); G4RunManager::GetRunManager()->ReinitializeGeometry();}
 
 void WLGDDetectorConstruction::DefineCommands()
 {

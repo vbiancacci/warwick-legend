@@ -120,9 +120,9 @@ void WLGDDetectorConstruction::DefineMaterials()
   G4double dLXe = 3.02 * g / cm3;
   G4double dLHe3 = 0.059 * g / cm3;
 
-  G4double fArConc = 1 - fXeConc - fHe3Conc;
+  G4double fArConc = 1 - (fXeConc + fHe3Conc)*1e-3;
 
-  G4double dComb = 1 / ((fArConc / dLAr ) + (fXeConc / dLXe) + (fHe3Conc / dLHe3));
+  G4double dComb = 1 / ((fArConc / dLAr ) + (fXeConc*1e-3 / dLXe) + (fHe3Conc*1e-3 / dLHe3));
 
   G4cout << "___________________________________________" << G4endl;
   G4cout << "Mass ratios of coolant:" << G4endl;
@@ -139,8 +139,8 @@ void WLGDDetectorConstruction::DefineMaterials()
 
   auto* CombinedArXeHe3 = new G4Material("CombinedArXeHe3", dComb, 3);
   CombinedArXeHe3->AddElement(eLAr, fArConc);
-  CombinedArXeHe3->AddElement(eHe3, fHe3Conc);
-  CombinedArXeHe3->AddElement(eLXe, fXeConc);
+  CombinedArXeHe3->AddElement(eHe3, fHe3Conc*1e-3);
+  CombinedArXeHe3->AddElement(eLXe, fXeConc*1e-3);
 
 }
 
@@ -960,10 +960,10 @@ void WLGDDetectorConstruction::DefineCommands()
 
   auto& He3ConcCmd = fDetectorMessenger->DeclareProperty("He3Conc", fHe3Conc,
                                                         "Concentration of He3 in the LAr [mg/g]");
-  XeConcCmd.SetParameterName("cHe3", true);
-  XeConcCmd.SetRange("cHe3>=0.");
-  XeConcCmd.SetDefaultValue("0.");
-fXeConc
+  He3ConcCmd.SetParameterName("cHe3", true);
+  He3ConcCmd.SetRange("cHe3>=0.");
+  He3ConcCmd.SetDefaultValue("0.");
+
   // Define bias operator command directory using generic messenger class
   fBiasMessenger =
     new G4GenericMessenger(this, "/WLGD/bias/", "Commands for controlling bias factors");

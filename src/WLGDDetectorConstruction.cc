@@ -923,6 +923,10 @@ void WLGDDetectorConstruction::SetNeutronBiasFactor(G4double nf) { fNeutronBias 
 
 void WLGDDetectorConstruction::SetMuonBiasFactor(G4double mf) { fMuonBias = mf; }
 
+
+void WLGDDetectorConstruction::SetXeConc(G4double nf) { fXeConc = nf; DefineMaterials(); G4RunManager::GetRunManager()->ReinitializeGeometry();}
+void WLGDDetectorConstruction::SetHe3Conc(G4double nf) { fHe3Conc = nf; DefineMaterials(); G4RunManager::GetRunManager()->ReinitializeGeometry();}
+
 void WLGDDetectorConstruction::DefineCommands()
 {
   // Define geometry command directory using generic messenger class
@@ -963,6 +967,20 @@ void WLGDDetectorConstruction::DefineCommands()
   He3ConcCmd.SetParameterName("cHe3", true);
   He3ConcCmd.SetRange("cHe3>=0.");
   He3ConcCmd.SetDefaultValue("0.");
+
+  fDetectorMessenger
+    ->DeclareMethod("setXeConc", &WLGDDetectorConstruction::SetXeConc)
+    .SetGuidance("Set concentration of Xe in the LAr [mg/g]")
+    .SetDefaultValue("0.0")
+    .SetStates(G4State_PreInit)
+    .SetToBeBroadcasted(false);
+
+  fDetectorMessenger
+    ->DeclareMethod("setHe3Conc", &WLGDDetectorConstruction::SetHe3Conc)
+    .SetGuidance("Set concentration of He3 in the LAr [mg/g]")
+    .SetDefaultValue("0.0")
+    .SetStates(G4State_PreInit)
+    .SetToBeBroadcasted(false);
 
   // Define bias operator command directory using generic messenger class
   fBiasMessenger =

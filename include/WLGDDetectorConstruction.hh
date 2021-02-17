@@ -44,6 +44,8 @@ private:
   G4Cache<G4MultiFunctionalDetector*> fSD                = nullptr;
   G4double                            fXeConc            = 0.0;
   G4double                            fHe3Conc            = 0.0;
+  void                                SetXeConc(G4double nf);
+  void                                SetHe3Conc(G4double nf);
 };
 
 #endif

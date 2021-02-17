@@ -924,8 +924,9 @@ void WLGDDetectorConstruction::SetNeutronBiasFactor(G4double nf) { fNeutronBias 
 void WLGDDetectorConstruction::SetMuonBiasFactor(G4double mf) { fMuonBias = mf; }
 
 
-void WLGDDetectorConstruction::SetXeConc(G4double nf) { fXeConc = nf; DefineMaterials(); G4RunManager::GetRunManager()->ReinitializeGeometry();}
-void WLGDDetectorConstruction::SetHe3Conc(G4double nf) { fHe3Conc = nf; DefineMaterials(); G4RunManager::GetRunManager()->ReinitializeGeometry();}
+void WLGDDetectorConstruction::SetXeConc(G4double nf) { fXeConc = nf; WLGDDetectorConstruction::DefineMaterials(); G4RunManager::GetRunManager()->ReinitializeGeometry();}
+
+void WLGDDetectorConstruction::SetHe3Conc(G4double nf) { fHe3Conc = nf; WLGDDetectorConstruction::DefineMaterials(); G4RunManager::GetRunManager()->ReinitializeGeometry();}
 
 void WLGDDetectorConstruction::DefineCommands()
 {
@@ -955,7 +956,7 @@ void WLGDDetectorConstruction::DefineCommands()
 
   // Edit: 2021/02/17 by Moritz Neuberger
   // Adding options to adjust the concentration of Xe and He-3 in the LAr to test change in Ge-77 production
-
+/*
   auto& XeConcCmd = fDetectorMessenger->DeclareProperty("XeConc", fXeConc,
                                                "Concentration of Xe in the LAr [mg/g]");
   XeConcCmd.SetParameterName("cXe", true);
@@ -967,7 +968,7 @@ void WLGDDetectorConstruction::DefineCommands()
   He3ConcCmd.SetParameterName("cHe3", true);
   He3ConcCmd.SetRange("cHe3>=0.");
   He3ConcCmd.SetDefaultValue("0.");
-
+*/
   fDetectorMessenger
     ->DeclareMethod("setXeConc", &WLGDDetectorConstruction::SetXeConc)
     .SetGuidance("Set concentration of Xe in the LAr [mg/g]")

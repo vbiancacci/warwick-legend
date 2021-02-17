@@ -970,14 +970,14 @@ void WLGDDetectorConstruction::DefineCommands()
   He3ConcCmd.SetDefaultValue("0.");
 */
   fDetectorMessenger
-    ->DeclareMethod("setXeConc", &WLGDDetectorConstruction::SetXeConc)
+    ->DeclareMethod("XeConc", &WLGDDetectorConstruction::SetXeConc)
     .SetGuidance("Set concentration of Xe in the LAr [mg/g]")
     .SetDefaultValue("0.0")
     .SetStates(G4State_PreInit)
     .SetToBeBroadcasted(false);
 
   fDetectorMessenger
-    ->DeclareMethod("setHe3Conc", &WLGDDetectorConstruction::SetHe3Conc)
+    ->DeclareMethod("He3Conc", &WLGDDetectorConstruction::SetHe3Conc)
     .SetGuidance("Set concentration of He3 in the LAr [mg/g]")
     .SetDefaultValue("0.0")
     .SetStates(G4State_PreInit)

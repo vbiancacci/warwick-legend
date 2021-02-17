@@ -887,7 +887,7 @@ auto WLGDDetectorConstruction::SetupHallA() -> G4VPhysicalVolume*
   fWaterLogical->SetVisAttributes(greyVisAtt);
   fLarLogical->SetVisAttributes(greyVisAtt);
   fCoutLogical->SetVisAttributes(blueVisAtt);
-  fCvacLogical->SetVisAttributes(greyVisAtt);setHe3Conc
+  fCvacLogical->SetVisAttributes(greyVisAtt);
   fCinnLogical->SetVisAttributes(blueVisAtt);
   fLidLogical->SetVisAttributes(blueVisAtt);
   fBotLogical->SetVisAttributes(blueVisAtt);

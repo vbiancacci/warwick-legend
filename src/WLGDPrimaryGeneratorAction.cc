@@ -174,7 +174,7 @@ void WLGDPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
 
 void WLGDPrimaryGeneratorAction::SetGenerator(const G4String& name)
 {
-  G4cout << "__________________________________________xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx__________________________________________" << endl << name << endl << "__________________________________________xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx__________________________________________" << endl;
+  G4cout << "__________________________________________xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx__________________________________________" << G4endl << name << G4endl << "__________________________________________xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx__________________________________________" << G4endl;
 
 
   std::set<G4String> knownGenerators = { "MeiAndHume", "Musun" };

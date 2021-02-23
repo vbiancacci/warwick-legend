@@ -138,7 +138,7 @@ void WLGDDetectorConstruction::DefineMaterials()
   G4Isotope *iHe3 = new G4Isotope("He3", 2, 3);
   eHe3->AddIsotope(iHe3, 1);
 
-  auto* CombinedArXeHe3 = new G4Material("CombinedArXeHe3", dComb, 3);
+  auto* CombinedArXeHe3 = new G4Material("CombinedArXeHe3", dComb, 3, kStateLiquid, 87.*kelvin);
   CombinedArXeHe3->AddMaterial(larMat, fArConc);
   CombinedArXeHe3->AddElement(eHe3, fHe3Conc);
   CombinedArXeHe3->AddElement(eLXe, fXeConc);

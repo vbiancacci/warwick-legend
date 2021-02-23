@@ -143,6 +143,8 @@ void WLGDDetectorConstruction::DefineMaterials()
   CombinedArXeHe3->AddElement(eHe3, fHe3Conc);
   CombinedArXeHe3->AddElement(eLXe, fXeConc);
 
+  G4cout << CombinedArXeHe3 << G4endl;
+
 }
 
 void WLGDDetectorConstruction::ConstructSDandField()

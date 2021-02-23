@@ -131,14 +131,15 @@ void WLGDDetectorConstruction::DefineMaterials()
   G4cout << "LHe3:   " << fHe3Conc << G4endl;
   G4cout << "___________________________________________" << G4endl;
 
-  auto* eLAr = new G4Element("LAr", "Ar", 18., 39.95 * g / mole);
+  //auto* eLAr = new G4Element("LAr", "Ar", 18., 39.95 * g / mole);
+  auto* larMat        = G4Material::GetMaterial("G4_lAr");
   auto* eLXe = new G4Element("LXe", "Xe", 54., 131.29 * g / mole);
   auto* eHe3 = new G4Element("He3", "He3", 1);
   G4Isotope *iHe3 = new G4Isotope("He3", 2, 3);
   eHe3->AddIsotope(iHe3, 1);
 
   auto* CombinedArXeHe3 = new G4Material("CombinedArXeHe3", dComb, 3);
-  CombinedArXeHe3->AddElement(eLAr, fArConc);
+  CombinedArXeHe3->AddMaterial(larMat, fArConc);
   CombinedArXeHe3->AddElement(eHe3, fHe3Conc);
   CombinedArXeHe3->AddElement(eLXe, fXeConc);
 
@@ -263,7 +264,7 @@ auto WLGDDetectorConstruction::SetupAlternative() -> G4VPhysicalVolume*
   auto* roiMat        = G4Material::GetMaterial("enrGe");
   auto* larMat_alt        = G4Material::GetMaterial("CombinedArXeHe3");
 
-  if(fXeConc != 0 || fHe3Conc != 0)
+  //if(fXeConc != 0 || fHe3Conc != 0)
     larMat        = larMat_alt;
   // size parameter, unit [cm]
   // cavern
@@ -454,7 +455,7 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
   auto* roiMat        = G4Material::GetMaterial("enrGe");
   auto* larMat_alt        = G4Material::GetMaterial("CombinedArXeHe3");
 
-  if(fXeConc != 0 || fHe3Conc != 0)
+  //if(fXeConc != 0 || fHe3Conc != 0)
     larMat        = larMat_alt;
   // constants
   // size parameter, unit [cm]
@@ -687,7 +688,7 @@ auto WLGDDetectorConstruction::SetupHallA() -> G4VPhysicalVolume*
   auto* roiMat        = G4Material::GetMaterial("enrGe");
   auto* larMat_alt        = G4Material::GetMaterial("CombinedArXeHe3");
 
-  if(fXeConc != 0 || fHe3Conc != 0)
+  //if(fXeConc != 0 || fHe3Conc != 0)
     larMat        = larMat_alt;
   // constants
   // size parameter, unit [cm]

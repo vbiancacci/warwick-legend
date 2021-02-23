@@ -263,7 +263,7 @@ auto WLGDDetectorConstruction::SetupAlternative() -> G4VPhysicalVolume*
   auto* roiMat        = G4Material::GetMaterial("enrGe");
   auto* larMat_alt        = G4Material::GetMaterial("CombinedArXeHe3");
 
-  if(fXeConc != 0 || fHe3Conc != 0)
+//  if(fXeConc != 0 || fHe3Conc != 0)
     larMat        = larMat_alt;
   // size parameter, unit [cm]
   // cavern
@@ -454,7 +454,7 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
   auto* roiMat        = G4Material::GetMaterial("enrGe");
   auto* larMat_alt        = G4Material::GetMaterial("CombinedArXeHe3");
 
-  if(fXeConc != 0 || fHe3Conc != 0)
+ // if(fXeConc != 0 || fHe3Conc != 0)
     larMat        = larMat_alt;
   // constants
   // size parameter, unit [cm]
@@ -687,7 +687,7 @@ auto WLGDDetectorConstruction::SetupHallA() -> G4VPhysicalVolume*
   auto* roiMat        = G4Material::GetMaterial("enrGe");
   auto* larMat_alt        = G4Material::GetMaterial("CombinedArXeHe3");
 
-  if(fXeConc != 0 || fHe3Conc != 0)
+  //if(fXeConc != 0 || fHe3Conc != 0)
     larMat        = larMat_alt;
   // constants
   // size parameter, unit [cm]

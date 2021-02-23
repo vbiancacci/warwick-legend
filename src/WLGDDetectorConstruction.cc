@@ -1004,3 +1004,4 @@ void WLGDDetectorConstruction::DefineCommands()
     .SetStates(G4State_PreInit)
     .SetToBeBroadcasted(false);
 }
+

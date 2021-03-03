@@ -49,10 +49,9 @@ void WLGDTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
     {
       if(aTrack->GetStep()->GetSecondaryInCurrentStep()->at(i)->GetParticleDefinition()->GetAtomicMass() == 77
          && aTrack->GetStep()->GetSecondaryInCurrentStep()->at(i)->GetParticleDefinition()->GetPDGCharge() == 32){
-        auto eventAction = G4RunManager::GetRunManager()->GetUserEventAction();
-        eventAction->AddNeutronxLoc(tmp_neutronXpos);
-        eventAction->AddNeutronyLoc(tmp_neutronYpos);
-        eventAction->AddNeutronzLoc(tmp_neutronZpos);
+        fEventAction->AddNeutronxLoc(tmp_neutronXpos);
+        fEventAction->AddNeutronyLoc(tmp_neutronYpos);
+        fEventAction->AddNeutronzLoc(tmp_neutronZpos);
       }
     }
   }

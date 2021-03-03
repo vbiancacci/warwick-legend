@@ -24,9 +24,9 @@ void WLGDActionInitialization::Build() const
 {
   // forward detector
   SetUserAction(new WLGDPrimaryGeneratorAction(fDet));
-  auto event = new WLGDEventAction;
+  auto event = new WLGDEventAction();
   SetUserAction(event);
+  SetUserAction(new WLGDTrackingAction(event));
   SetUserAction(new WLGDRunAction(event, foutname));
   SetUserAction(new WLGDStackingAction);
-  SetUserAction(new WLGDTrackingAction);
 }

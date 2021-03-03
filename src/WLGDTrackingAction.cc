@@ -44,11 +44,14 @@ void WLGDTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
 
   if(aTrack->GetStep()->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName() == "nCapture")
   {
+    G4cout << "Got through nCapture" << G4endl;
     int NumberOfSecundaries = aTrack->GetStep()->GetSecondaryInCurrentStep()->size();
     for(int i = 0; i < NumberOfSecundaries; i++)
     {
+      G4cout << "Looking for Ge77" << G4endl;
       if(aTrack->GetStep()->GetSecondaryInCurrentStep()->at(i)->GetParticleDefinition()->GetAtomicMass() == 77
          && aTrack->GetStep()->GetSecondaryInCurrentStep()->at(i)->GetParticleDefinition()->GetPDGCharge() == 32){
+        G4cout << "Got it!" << G4endl;
         fEventAction->AddNeutronxLoc(tmp_neutronXpos);
         fEventAction->AddNeutronyLoc(tmp_neutronYpos);
         fEventAction->AddNeutronzLoc(tmp_neutronZpos);

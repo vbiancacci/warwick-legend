@@ -48,10 +48,12 @@ void WLGDTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
     for(int i = 0; i < NumberOfSecundaries; i++)
     {
       if(aTrack->GetStep()->GetSecondaryInCurrentStep()->at(i)->GetParticleDefinition()->GetAtomicMass() == 77
-         && aTrack->GetStep()->GetSecondaryInCurrentStep()->at(i)->GetParticleDefinition()->GetPDGCharge() == 32)
-      G4RunManager::GetUserEventAction()->AddNeutronxLoc(tmp_neutronXpos);
-      G4RunManager::GetUserEventAction()->AddNeutronyLoc(tmp_neutronYpos);
-      G4RunManager::GetUserEventAction()->AddNeutronzLoc(tmp_neutronZpos);
+         && aTrack->GetStep()->GetSecondaryInCurrentStep()->at(i)->GetParticleDefinition()->GetPDGCharge() == 32){
+        auto eventAction = G4RunManager::GetRunManager()->GetUserEventAction();
+        eventAction->AddNeutronxLoc(tmp_neutronXpos);
+        eventAction->AddNeutronyLoc(tmp_neutronYpos);
+        eventAction->AddNeutronzLoc(tmp_neutronZpos);
+      }
     }
   }
 }

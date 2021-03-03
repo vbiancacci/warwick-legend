@@ -3,6 +3,7 @@
 #include "WLGDTrajectory.hh"
 
 #include "G4RunManager.hh"
+#include "G4UnitsTable.hh"
 #include "G4Track.hh"
 #include "G4TrackingManager.hh"
 
@@ -52,6 +53,7 @@ void WLGDTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
       if(aTrack->GetStep()->GetSecondaryInCurrentStep()->at(i)->GetParticleDefinition()->GetAtomicMass() == 77
          && aTrack->GetStep()->GetSecondaryInCurrentStep()->at(i)->GetParticleDefinition()->GetPDGCharge() == 32){
         G4cout << "Got it!" << G4endl;
+        G4cout << tmp_neutronXpos << " " << tmp_neutronYpos << " " << tmp_neutronZpos << G4endl;
         fEventAction->AddNeutronxLoc(tmp_neutronXpos);
         fEventAction->AddNeutronyLoc(tmp_neutronYpos);
         fEventAction->AddNeutronzLoc(tmp_neutronZpos);

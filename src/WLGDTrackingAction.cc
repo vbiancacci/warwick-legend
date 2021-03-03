@@ -2,6 +2,7 @@
 #include "WLGDTrackInformation.hh"
 #include "WLGDTrajectory.hh"
 
+#include "G4RunManager.hh"
 #include "G4Track.hh"
 #include "G4TrackingManager.hh"
 
@@ -14,6 +15,14 @@ void WLGDTrackingAction::PreUserTrackingAction(const G4Track* aTrack)
   {
     fpTrackingManager->SetTrajectory(new WLGDTrajectory(aTrack));
   }
+
+  if(aTrack->GetParticleDefinition()->GetParticleName() == "neutron"){
+    auto tmp_vector = aTrack->GetVertexPosition();
+    tmp_neutronXpos = tmp_vector.getX();
+    tmp_neutronYpos = tmp_vector.getY();
+    tmp_neutronZpos = tmp_vector.getZ();
+  }
+
 }
 
 void WLGDTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
@@ -30,6 +39,19 @@ void WLGDTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
         WLGDTrackInformation* infoNew = new WLGDTrackInformation(info);
         (*secondaries)[i]->SetUserInformation(infoNew);
       }
+    }
+  }
+
+  if(aTrack->GetStep()->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName() == "nCapture")
+  {
+    int NumberOfSecundaries = aTrack->GetStep()->GetSecondaryInCurrentStep()->size();
+    for(int i = 0; i < NumberOfSecundaries; i++)
+    {
+      if(aTrack->GetStep()->GetSecondaryInCurrentStep()->at(i)->GetParticleDefinition()->GetAtomicMass() == 77
+         && aTrack->GetStep()->GetSecondaryInCurrentStep()->at(i)->GetParticleDefinition()->GetPDGCharge() == 32)
+      G4RunManager::GetUserEventAction()->AddNeutronxLoc(tmp_neutronXpos);
+      G4RunManager::GetUserEventAction()->AddNeutronyLoc(tmp_neutronYpos);
+      G4RunManager::GetUserEventAction()->AddNeutronzLoc(tmp_neutronZpos);
     }
   }
 }

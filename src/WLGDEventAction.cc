@@ -110,6 +110,9 @@ void WLGDEventAction::BeginOfEventAction(const G4Event*
   xloc.clear();
   yloc.clear();
   zloc.clear();
+  neutronxloc.clear();
+  neutronyloc.clear();
+  neutronzloc.clear();
   // clear trajectory data
   trjpdg.clear();
   trjnpts.clear();

@@ -29,6 +29,9 @@ public:
   std::vector<G4double>& GetHitxLoc() { return xloc; }
   std::vector<G4double>& GetHityLoc() { return yloc; }
   std::vector<G4double>& GetHitzLoc() { return zloc; }
+  std::vector<G4double>& GetNeutronxLoc() { return neutronxloc; }
+  std::vector<G4double>& GetNeutronyLoc() { return neutronyloc; }
+  std::vector<G4double>& GetNeutronzLoc() { return neutronzloc; }
 
   // tajectory methods
   std::vector<G4int>&    GetTrjPDG() { return trjpdg; }
@@ -40,6 +43,10 @@ public:
   std::vector<G4double>& GetTrjXPos() { return trjxpos; }
   std::vector<G4double>& GetTrjYPos() { return trjypos; }
   std::vector<G4double>& GetTrjZPos() { return trjzpos; }
+
+  void AddNeutronxLoc(double posx){neutronxloc.push_back(posx);}
+  void AddNeutronyLoc(double posy){neutronyloc.push_back(posy);}
+  void AddNeutronzLoc(double posz){neutronzloc.push_back(posz);}
 
 private:
   // methods
@@ -97,6 +104,9 @@ private:
   std::vector<G4double> xloc;
   std::vector<G4double> yloc;
   std::vector<G4double> zloc;
+  std::vector<G4double> neutronxloc;
+  std::vector<G4double> neutronyloc;
+  std::vector<G4double> neutronzloc;
 
   // trajectory data
   std::vector<G4int>        trjpdg;

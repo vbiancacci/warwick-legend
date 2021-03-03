@@ -11,6 +11,9 @@ public:
 
   virtual void PreUserTrackingAction(const G4Track*);
   virtual void PostUserTrackingAction(const G4Track*);
+private:
+  double tmp_neutronXpos, tmp_neutronYpos, tmp_neutronZpos;
+
 };
 
 #endif

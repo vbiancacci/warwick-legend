@@ -35,6 +35,7 @@ G4bool WLGDPSLocation::ProcessHits(G4Step* aStep, G4TouchableHistory* /*unused*/
   G4TrackLogger& tlog  = fCellTrackLogger[index];
   if(tlog.FirstEnterance(aStep->GetTrack()->GetTrackID()))
   {
+    G4cout << aStep->GetTrack()->GetParticleDefinition()->GetParticleName() << G4endl;
     G4StepPoint*  stepPoint = aStep->GetPreStepPoint();
     G4ThreeVector loc       = stepPoint->GetPosition();  // location at track creation
 

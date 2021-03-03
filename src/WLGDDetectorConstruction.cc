@@ -125,7 +125,7 @@ void WLGDDetectorConstruction::DefineMaterials()
   G4double dComb = 1 / ((fArConc / dLAr ) + (fXeConc / dLXe) + (fHe3Conc / dLHe3));
 
   G4cout << "___________________________________________" << G4endl;
-  G4cout << "Mass ratios of coolant:" << G4endl;
+  G4cout << "Mass ratios of cryostat:" << G4endl;
   G4cout << "LAr:   " << fArConc << G4endl;
   G4cout << "LXe:   " << fXeConc << G4endl;
   G4cout << "LHe3:   " << fHe3Conc << G4endl;

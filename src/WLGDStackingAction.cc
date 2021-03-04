@@ -7,12 +7,9 @@ G4ClassificationOfNewTrack WLGDStackingAction ::ClassifyNewTrack(const G4Track* 
   if(aTrack->GetParticleDefinition()->GetParticleName() == "neutron")
   {
     G4cout << "Before accessing the physVolume" << G4endl;
-    auto physVol = aTrack->GetStep()->GetPreStepPoint()->GetPhysicalVolume();
+    auto physVol = aTrack->GetVolume();
     G4cout << physVol << G4endl;
     G4cout << "Pre: " << physVol->GetName() << G4endl;
-    physVol = aTrack->GetStep()->GetPostStepPoint()->GetPhysicalVolume();
-    G4cout << physVol << G4endl;
-    G4cout << "Post: " << physVol->GetName() << G4endl;
     //if(aTrack->GetStep()->GetPreStepPoint()->GetPhysicalVolume()->GetName() == "Ge_phys")
   }
 

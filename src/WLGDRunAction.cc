@@ -2,16 +2,24 @@
 #include "WLGDEventAction.hh"
 #include "g4root.hh"
 
+#include <iostream>
+#include <fstream>
 #include "G4Run.hh"
 #include "G4RunManager.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4UnitsTable.hh"
+using namespace std;
 
 WLGDRunAction::WLGDRunAction(WLGDEventAction* eventAction, G4String name)
 : G4UserRunAction()
 , fEventAction(eventAction)
 , fout(std::move(name))
 {
+
+  ofstream outputStream;
+  outputStream.open("CrossingNeutrons_File.txt",ios::trunc);
+  outputStream.close();
+
   // Create analysis manager
   auto analysisManager = G4AnalysisManager::Instance();
 
@@ -51,10 +59,11 @@ void WLGDRunAction::BeginOfRunAction(const G4Run* /*run*/)
 {
   // Get analysis manager
   auto analysisManager = G4AnalysisManager::Instance();
-  fNumberOfCrossingNeutrons = 0;
   // Open an output file
   //
   analysisManager->OpenFile(fout);
+
+  fNumberOfCrossingNeutrons = 0;
 }
 
 void WLGDRunAction::EndOfRunAction(const G4Run* /*run*/)
@@ -68,4 +77,9 @@ void WLGDRunAction::EndOfRunAction(const G4Run* /*run*/)
   //
   analysisManager->Write();
   analysisManager->CloseFile();
+
+  ofstream outputStream;
+  outputStream.open("CrossingNeutrons_File.txt",ios::app);
+  outputStream << fNumberOfCrossingNeutrons << endl;
+  outputStream.close();
 }

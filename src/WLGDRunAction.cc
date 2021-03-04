@@ -51,7 +51,7 @@ void WLGDRunAction::BeginOfRunAction(const G4Run* /*run*/)
 {
   // Get analysis manager
   auto analysisManager = G4AnalysisManager::Instance();
-
+  fNumberOfCrossingNeutrons = 0;
   // Open an output file
   //
   analysisManager->OpenFile(fout);
@@ -61,6 +61,8 @@ void WLGDRunAction::EndOfRunAction(const G4Run* /*run*/)
 {
   // Get analysis manager
   auto analysisManager = G4AnalysisManager::Instance();
+
+  G4cout << "NumberOfNeutronCrossings: " << fNumberOfCrossingNeutrons << G4endl;
 
   // save ntuple
   //

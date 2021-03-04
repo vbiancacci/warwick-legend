@@ -16,13 +16,13 @@ class WLGDSteppingAction : public G4UserSteppingAction
 {
 public:
   WLGDSteppingAction() = default;
-  WLGDSteppingAction(WLGDTrackingAction* track){fTrackingAction = track; WLGDSteppingAction();}
+  WLGDSteppingAction(WLGDRunAction* run){fRunAction = run; WLGDSteppingAction();}
   virtual ~WLGDSteppingAction() = default;
 
   virtual void UserSteppingAction(const G4Step*);
 
 private:
-  WLGDTrackingAction* fTrackingAction;
+  WLGDRunAction* fRunAction;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

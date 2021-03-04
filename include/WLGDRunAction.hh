@@ -18,10 +18,12 @@ public:
 
   virtual void BeginOfRunAction(const G4Run*);
   virtual void EndOfRunAction(const G4Run*);
+  void increaseNumberOfCrossingNeutrons(){fNumberOfCrossingNeutrons++;}
 
 private:
   WLGDEventAction* fEventAction;  // have event information for run
   G4String         fout;          // output file name
+  G4int            fNumberOfCrossingNeutrons;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

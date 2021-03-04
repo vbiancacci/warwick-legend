@@ -16,6 +16,7 @@ public:
   virtual void PostUserTrackingAction(const G4Track*);
 private:
   double tmp_neutronXpos, tmp_neutronYpos, tmp_neutronZpos;
+  double tmp_neutronXmom, tmp_neutronYmom, tmp_neutronZmom;
   WLGDEventAction* fEventAction;
   WLGDRunAction* fRunAction;
 };

@@ -40,6 +40,9 @@ WLGDRunAction::WLGDRunAction(WLGDEventAction* eventAction, G4String name)
   analysisManager->CreateNtupleDColumn("Neutronxloc", fEventAction->GetNeutronxLoc());
   analysisManager->CreateNtupleDColumn("Neutronyloc", fEventAction->GetNeutronyLoc());
   analysisManager->CreateNtupleDColumn("Neutronzloc", fEventAction->GetNeutronzLoc());
+  analysisManager->CreateNtupleDColumn("Neutronxmom", fEventAction->GetNeutronxMom());
+  analysisManager->CreateNtupleDColumn("Neutronymom", fEventAction->GetNeutronyMom());
+  analysisManager->CreateNtupleDColumn("Neutronzmom", fEventAction->GetNeutronzMom());
 
   analysisManager->CreateNtupleIColumn("Trjpdg", fEventAction->GetTrjPDG());
   analysisManager->CreateNtupleIColumn("Trjentries", fEventAction->GetTrjEntries());

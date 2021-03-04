@@ -32,6 +32,9 @@ public:
   std::vector<G4double>& GetNeutronxLoc() { return neutronxloc; }
   std::vector<G4double>& GetNeutronyLoc() { return neutronyloc; }
   std::vector<G4double>& GetNeutronzLoc() { return neutronzloc; }
+  std::vector<G4double>& GetNeutronxMom() { return neutronxmom; }
+  std::vector<G4double>& GetNeutronyMom() { return neutronymom; }
+  std::vector<G4double>& GetNeutronzMom() { return neutronzmom; }
 
   // tajectory methods
   std::vector<G4int>&    GetTrjPDG() { return trjpdg; }
@@ -47,6 +50,9 @@ public:
   void AddNeutronxLoc(double posx){neutronxloc.push_back(posx);}
   void AddNeutronyLoc(double posy){neutronyloc.push_back(posy);}
   void AddNeutronzLoc(double posz){neutronzloc.push_back(posz);}
+  void AddNeutronxMom(double posx){neutronxmom.push_back(posx);}
+  void AddNeutronyMom(double posy){neutronymom.push_back(posy);}
+  void AddNeutronzMom(double posz){neutronzmom.push_back(posz);}
 
 private:
   // methods
@@ -107,6 +113,9 @@ private:
   std::vector<G4double> neutronxloc;
   std::vector<G4double> neutronyloc;
   std::vector<G4double> neutronzloc;
+  std::vector<G4double> neutronxmom;
+  std::vector<G4double> neutronymom;
+  std::vector<G4double> neutronzmom;
 
   // trajectory data
   std::vector<G4int>        trjpdg;

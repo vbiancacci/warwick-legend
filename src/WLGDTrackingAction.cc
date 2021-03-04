@@ -23,6 +23,10 @@ void WLGDTrackingAction::PreUserTrackingAction(const G4Track* aTrack)
     tmp_neutronXpos = tmp_vector.getX()/m;
     tmp_neutronYpos = tmp_vector.getY()/m;
     tmp_neutronZpos = tmp_vector.getZ()/m;
+    tmp_vector = aTrack->GetMomentum();
+    tmp_neutronXmom = tmp_vector.getX();
+    tmp_neutronYmom = tmp_vector.getY();
+    tmp_neutronZmom = tmp_vector.getZ();
     //G4cout << "Position of Neutron: " << tmp_neutronXpos << " " << tmp_neutronYpos << " " << tmp_neutronZpos << G4endl;
     if(aTrack->GetVolume()->GetName() == "Lar_phys") fRunAction->increaseTotalNumberOfNeutronsInLAr();
   }
@@ -74,11 +78,16 @@ void WLGDTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
                ->GetPDGCharge() == 32)
         {
           G4cout << "Got it!" << G4endl;
-          G4cout << tmp_neutronXpos << " " << tmp_neutronYpos << " " << tmp_neutronZpos
+          G4cout << "Position: " << tmp_neutronXpos << " " << tmp_neutronYpos << " " << tmp_neutronZpos
+                 << G4endl;
+          G4cout << "Direction: " << tmp_neutronXmom << " " << tmp_neutronYmom << " " << tmp_neutronZmom
                  << G4endl;
           fEventAction->AddNeutronxLoc(tmp_neutronXpos);
           fEventAction->AddNeutronyLoc(tmp_neutronYpos);
           fEventAction->AddNeutronzLoc(tmp_neutronZpos);
+          fEventAction->AddNeutronxMom(tmp_neutronXmom);
+          fEventAction->AddNeutronyMom(tmp_neutronYmom);
+          fEventAction->AddNeutronzMom(tmp_neutronZmom);
         }
       }
     }

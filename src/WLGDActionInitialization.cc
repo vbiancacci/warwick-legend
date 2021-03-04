@@ -3,6 +3,7 @@
 #include "WLGDPrimaryGeneratorAction.hh"
 #include "WLGDRunAction.hh"
 #include "WLGDStackingAction.hh"
+#include "WLGDSteppingAction.hh"
 #include "WLGDTrackingAction.hh"
 
 WLGDActionInitialization::WLGDActionInitialization(WLGDDetectorConstruction* det,
@@ -26,7 +27,9 @@ void WLGDActionInitialization::Build() const
   SetUserAction(new WLGDPrimaryGeneratorAction(fDet));
   auto event = new WLGDEventAction();
   SetUserAction(event);
-  SetUserAction(new WLGDTrackingAction(event));
+  auto track = new WLGDTrackingAction(event);
+  SetUserAction(track);
   SetUserAction(new WLGDRunAction(event, foutname));
+  SetUserAction(new WLGDSteppingAction(track));
   SetUserAction(new WLGDStackingAction);
 }

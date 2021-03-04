@@ -47,24 +47,6 @@ void WLGDTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
   if(aTrack->GetParticleDefinition()->GetParticleName() == "neutron")
   {
 
-      G4cout << "___________________________________________________________________________________________________________________" << G4endl;
-      G4cout << "___________________________________________________________________________________________________________________" << G4endl;
-      G4cout << "___________________________________________________________________________________________________________________" << G4endl;
-      G4cout << "___________________________________________________________________________________________________________________" << G4endl;
-      G4cout << "___________________________________________________________________________________________________________________" << G4endl;
-      G4cout << "___________________________________________________________________________________________________________________" << G4endl;
-      G4cout << "___________________________________________________________________________________________________________________" << G4endl;
-      G4cout << "Before accessing the physVolume" << G4endl;
-      auto physVol = aTrack->GetVolume();
-      G4cout << "Pre: " << physVol->GetName() << " - " << aTrack->GetTrackID() << G4endl;
-      if(aTrack->GetNextVolume())
-      {
-        auto physVol2 = aTrack->GetNextVolume();
-        G4cout << "Post: " << physVol2->GetName() << " - " << aTrack->GetTrackID() << G4endl;
-      }
-      // if(aTrack->GetStep()->GetPreStepPoint()->GetPhysicalVolume()->GetName() ==
-      // "Ge_phys")
-
 
 
     //G4cout

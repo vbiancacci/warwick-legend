@@ -17,15 +17,6 @@ using namespace std;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-WLGDSteppingAction::WLGDSteppingAction(WLGDTrackingAction *TrAct)
-  : G4UserSteppingAction(), fTrackingAction(TrAct) {}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-WLGDSteppingAction::~WLGDSteppingAction() {}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
 void WLGDSteppingAction::UserSteppingAction(const G4Step *aStep) {
 
 

@@ -15,8 +15,9 @@ class WLGDTrackingAction;
 class WLGDSteppingAction : public G4UserSteppingAction
 {
 public:
-  WLGDSteppingAction(WLGDTrackingAction*);
-  ~WLGDSteppingAction();
+  WLGDSteppingAction() = default;
+  WLGDSteppingAction(WLGDTrackingAction* track){fTrackingAction = track; WLGDSteppingAction();}
+  ~WLGDSteppingAction() = default;
 
   virtual void UserSteppingAction(const G4Step*);
 

@@ -9,8 +9,8 @@ G4ClassificationOfNewTrack WLGDStackingAction ::ClassifyNewTrack(const G4Track* 
     G4cout << "Before accessing the physVolume" << G4endl;
     auto physVol = aTrack->GetVolume();
     G4cout << "Pre: " << physVol->GetName() << G4endl;
-    physVol = aTrack->GetNextVolume();
-    G4cout << "Post: " << physVol->GetName() << G4endl;
+    auto physVol2 = aTrack->GetNextVolume();
+    G4cout << "Post: " << physVol2->GetName() << G4endl;
     //if(aTrack->GetStep()->GetPreStepPoint()->GetPhysicalVolume()->GetName() == "Ge_phys")
   }
 

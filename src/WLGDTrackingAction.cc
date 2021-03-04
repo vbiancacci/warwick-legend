@@ -23,7 +23,7 @@ void WLGDTrackingAction::PreUserTrackingAction(const G4Track* aTrack)
     tmp_neutronXpos = tmp_vector.getX()/m;
     tmp_neutronYpos = tmp_vector.getY()/m;
     tmp_neutronZpos = tmp_vector.getZ()/m;
-    G4cout << "Position of Neutron: " << tmp_neutronXpos << " " << tmp_neutronYpos << " " << tmp_neutronZpos << G4endl;
+    //G4cout << "Position of Neutron: " << tmp_neutronXpos << " " << tmp_neutronYpos << " " << tmp_neutronZpos << G4endl;
   }
 
 }
@@ -51,7 +51,7 @@ void WLGDTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
       << aTrack->GetStep()->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName()
       << G4endl;
     if(aTrack->GetStep()->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName() ==
-       "nCapture")
+       "biasWrapper(nCapture)")
     {
       G4cout << "Got through nCapture" << G4endl;
       int NumberOfSecundaries = aTrack->GetStep()->GetSecondaryInCurrentStep()->size();

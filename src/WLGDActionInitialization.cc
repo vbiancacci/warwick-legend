@@ -27,9 +27,9 @@ void WLGDActionInitialization::Build() const
   SetUserAction(new WLGDPrimaryGeneratorAction(fDet));
   auto event = new WLGDEventAction();
   SetUserAction(event);
+  SetUserAction(new WLGDRunAction(event, foutname));
   auto track = new WLGDTrackingAction(event);
   SetUserAction(track);
-  SetUserAction(new WLGDRunAction(event, foutname));
   SetUserAction(new WLGDSteppingAction(track));
   SetUserAction(new WLGDStackingAction);
 }

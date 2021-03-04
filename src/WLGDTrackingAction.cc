@@ -46,18 +46,18 @@ void WLGDTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
   }
   if(aTrack->GetParticleDefinition()->GetParticleName() == "neutron")
   {
-    G4cout
-      << "Step Process: "
-      << aTrack->GetStep()->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName()
-      << G4endl;
+    //G4cout
+     // << "Step Process: "
+     // << aTrack->GetStep()->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName()
+     // << G4endl;
     if(aTrack->GetStep()->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName() ==
        "biasWrapper(nCapture)")
     {
-      G4cout << "Got through nCapture" << G4endl;
+      //G4cout << "Got through nCapture" << G4endl;
       int NumberOfSecundaries = aTrack->GetStep()->GetSecondaryInCurrentStep()->size();
       for(int i = 0; i < NumberOfSecundaries; i++)
       {
-        G4cout << "Looking for Ge77" << G4endl;
+        //G4cout << "Looking for Ge77" << G4endl;
         if(aTrack->GetStep()
                ->GetSecondaryInCurrentStep()
                ->at(i)

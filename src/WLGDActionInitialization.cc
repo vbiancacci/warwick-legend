@@ -29,7 +29,7 @@ void WLGDActionInitialization::Build() const
   SetUserAction(event);
   auto run = new WLGDRunAction(event, foutname);
   SetUserAction(run);
-  SetUserAction(new WLGDTrackingAction(event));
+  SetUserAction(new WLGDTrackingAction(event,run));
   SetUserAction(new WLGDSteppingAction(run));
   SetUserAction(new WLGDStackingAction);
 }

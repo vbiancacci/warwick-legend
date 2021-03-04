@@ -24,6 +24,7 @@ void WLGDTrackingAction::PreUserTrackingAction(const G4Track* aTrack)
     tmp_neutronYpos = tmp_vector.getY()/m;
     tmp_neutronZpos = tmp_vector.getZ()/m;
     //G4cout << "Position of Neutron: " << tmp_neutronXpos << " " << tmp_neutronYpos << " " << tmp_neutronZpos << G4endl;
+    if(aTrack->GetVolume()->GetName() == "Lar_phys") fRunAction->increaseTotalNumberOfNeutronsInLAr();
   }
 
 }

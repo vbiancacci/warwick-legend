@@ -65,6 +65,7 @@ void WLGDRunAction::BeginOfRunAction(const G4Run* /*run*/)
   analysisManager->OpenFile(fout);
 
   fNumberOfCrossingNeutrons = 0;
+  fTotalNumberOfNeutronsInLAr = 0;
 }
 
 void WLGDRunAction::EndOfRunAction(const G4Run* /*run*/)
@@ -73,6 +74,7 @@ void WLGDRunAction::EndOfRunAction(const G4Run* /*run*/)
   auto analysisManager = G4AnalysisManager::Instance();
 
   G4cout << "NumberOfNeutronCrossings: " << fNumberOfCrossingNeutrons << G4endl;
+  G4cout << "TotalNumberOfNeutronInLAr: " << fTotalNumberOfNeutronsInLAr << G4endl;
 
   // save ntuple
   //
@@ -81,6 +83,6 @@ void WLGDRunAction::EndOfRunAction(const G4Run* /*run*/)
 
   ofstream outputStream;
   outputStream.open(fout2.c_str(),ios::app);
-  outputStream << fNumberOfCrossingNeutrons << endl;
+  outputStream << fNumberOfCrossingNeutrons << "   " << fTotalNumberOfNeutronsInLAr << endl;
   outputStream.close();
 }

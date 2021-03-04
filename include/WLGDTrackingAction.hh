@@ -3,12 +3,13 @@
 
 #include "G4UserTrackingAction.hh"
 #include "WLGDEventAction.hh"
+#include "WLGDRunAction.hh"
 
 class WLGDTrackingAction : public G4UserTrackingAction
 {
 public:
   WLGDTrackingAction();
-  WLGDTrackingAction(WLGDEventAction* event){fEventAction = event; WLGDTrackingAction();}
+  WLGDTrackingAction(WLGDEventAction* event,WLGDRunAction* run){fEventAction = event; fRunAction=run; WLGDTrackingAction();}
   virtual ~WLGDTrackingAction(){};
 
   virtual void PreUserTrackingAction(const G4Track*);
@@ -16,6 +17,7 @@ public:
 private:
   double tmp_neutronXpos, tmp_neutronYpos, tmp_neutronZpos;
   WLGDEventAction* fEventAction;
+  WLGDRunAction* fRunAction;
 };
 
 #endif

@@ -6,6 +6,7 @@
 #define WARWICK_LEGEND_WLGDSTEPPINGACTION_HH
 
 #include "G4UserSteppingAction.hh"
+#include "WLGDRunAction.hh"
 #include "globals.hh"
 
 class WLGDTrackingAction;

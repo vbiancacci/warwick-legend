@@ -7,9 +7,9 @@ G4ClassificationOfNewTrack WLGDStackingAction ::ClassifyNewTrack(const G4Track* 
   {
     G4cout << aTrack->GetParticleDefinition()->GetParticleName() << G4endl;
     G4cout << "Before accessing the physVolume" << G4endl;
-    auto physVol = aTrack->GetStep()->GetPreStepPoint()->GetPhysicalVolume();
+    auto physVol = aTrack->GetVolume();
     G4cout << "Pre: " << physVol->GetName() << " - " << aTrack->GetTrackID() << G4endl;
-    if(aTrack->GetStep()->GetPostStepPoint()->GetPhysicalVolume())
+    if(aTrack->GetNextVolume())
     {
       auto physVol2 = aTrack->GetNextVolume();
       G4cout << "Post: " << physVol2->GetName() << " - " << aTrack->GetTrackID() << G4endl;

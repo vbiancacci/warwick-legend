@@ -24,6 +24,7 @@ private:
   WLGDEventAction* fEventAction;  // have event information for run
   G4String         fout;          // output file name
   G4int            fNumberOfCrossingNeutrons;
+  G4String         fout2;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

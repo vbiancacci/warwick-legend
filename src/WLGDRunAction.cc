@@ -17,7 +17,8 @@ WLGDRunAction::WLGDRunAction(WLGDEventAction* eventAction, G4String name)
 {
 
   ofstream outputStream;
-  outputStream.open("CrossingNeutrons_File.txt",ios::trunc);
+  fout2 = fout + "_NCrossing.txt";
+  outputStream.open(fout2.c_str(),ios::trunc);
   outputStream.close();
 
   // Create analysis manager
@@ -79,7 +80,7 @@ void WLGDRunAction::EndOfRunAction(const G4Run* /*run*/)
   analysisManager->CloseFile();
 
   ofstream outputStream;
-  outputStream.open("CrossingNeutrons_File.txt",ios::app);
+  outputStream.open(fout2.c_str(),ios::app);
   outputStream << fNumberOfCrossingNeutrons << endl;
   outputStream.close();
 }

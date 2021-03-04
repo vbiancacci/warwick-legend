@@ -3,9 +3,9 @@
 
 G4ClassificationOfNewTrack WLGDStackingAction ::ClassifyNewTrack(const G4Track* aTrack)
 {
-  G4cout << aTrack->GetParticleDefinition()->GetParticleName() << G4endl;
   if(aTrack->GetParticleDefinition()->GetParticleName() == "neutron")
   {
+    G4cout << aTrack->GetParticleDefinition()->GetParticleName() << G4endl;
     G4cout << "Before accessing the physVolume" << G4endl;
     auto physVol = aTrack->GetVolume();
     G4cout << "Pre: " << physVol->GetName() << " - " << aTrack->GetTrackID() << G4endl;

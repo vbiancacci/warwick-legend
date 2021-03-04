@@ -22,6 +22,7 @@ void WLGDTrackingAction::PreUserTrackingAction(const G4Track* aTrack)
     tmp_neutronXpos = tmp_vector.getX();
     tmp_neutronYpos = tmp_vector.getY();
     tmp_neutronZpos = tmp_vector.getZ();
+    G4cout << "Position of Neutron: " << tmp_neutronXpos << " " << tmp_neutronYpos << " " << tmp_neutronZpos << G4endl;
   }
 
 }

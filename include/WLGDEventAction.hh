@@ -24,6 +24,7 @@ public:
 
   // to create columns for Ntuple
   std::vector<G4double>& GetHitEdep() { return edep; }
+  std::vector<G4double>& GetHitEkin() { return ekin; }
   std::vector<G4double>& GetHitTime() { return thit; }
   std::vector<G4double>& GetHitWeight() { return whit; }
   std::vector<G4double>& GetHitxLoc() { return xloc; }
@@ -47,6 +48,7 @@ public:
   std::vector<G4double>& GetTrjYPos() { return trjypos; }
   std::vector<G4double>& GetTrjZPos() { return trjzpos; }
 
+  void AddEkin(double kin){ekin.push_back(kin);}
   void AddNeutronxLoc(double posx){neutronxloc.push_back(posx);}
   void AddNeutronyLoc(double posy){neutronyloc.push_back(posy);}
   void AddNeutronzLoc(double posz){neutronzloc.push_back(posz);}
@@ -105,6 +107,7 @@ private:
   G4int                 fEdepID   = -1;
   std::vector<G4int>    htrid;
   std::vector<G4double> edep;
+  std::vector<G4double> ekin;
   std::vector<G4double> thit;
   std::vector<G4double> whit;
   std::vector<G4double> xloc;

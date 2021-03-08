@@ -28,7 +28,6 @@ WLGDPSEnergyDeposit::~WLGDPSEnergyDeposit() = default;
 
 G4bool WLGDPSEnergyDeposit::ProcessHits(G4Step* aStep, G4TouchableHistory* /*unused*/)
 {
-  G4cout << aStep->GetTrack()->GetParticleDefinition()->GetParticleName() << G4endl;
   G4double edep = aStep->GetTotalEnergyDeposit();
 
   if(edep > 0)

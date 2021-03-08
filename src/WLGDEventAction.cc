@@ -104,6 +104,7 @@ void WLGDEventAction::BeginOfEventAction(const G4Event*
                                          /*event*/)
 {
   edep.clear();
+  ekin.clear();
   htrid.clear();
   thit.clear();
   whit.clear();
@@ -113,6 +114,9 @@ void WLGDEventAction::BeginOfEventAction(const G4Event*
   neutronxloc.clear();
   neutronyloc.clear();
   neutronzloc.clear();
+  neutronxmom.clear();
+  neutronymom.clear();
+  neutronzmom.clear();
   // clear trajectory data
   trjpdg.clear();
   trjnpts.clear();

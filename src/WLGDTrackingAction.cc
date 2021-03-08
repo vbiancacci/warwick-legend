@@ -82,9 +82,9 @@ void WLGDTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
                  << G4endl;
           G4cout << "Direction: " << tmp_neutronXmom << " " << tmp_neutronYmom << " " << tmp_neutronZmom
                  << G4endl;
-          G4cout << "Energy: " << aTrack->GetStep()->GetPreStepPoint()->GetKineticEnergy() << G4endl;
+          G4cout << "Energy: " << aTrack->GetStep()->GetPreStepPoint()->GetKineticEnergy()/eV << G4endl;
 
-          fEventAction->AddEkin(aTrack->GetStep()->GetPreStepPoint()->GetKineticEnergy());
+          fEventAction->AddEkin(aTrack->GetStep()->GetPreStepPoint()->GetKineticEnergy()/eV);
           fEventAction->AddNeutronxLoc(tmp_neutronXpos);
           fEventAction->AddNeutronyLoc(tmp_neutronYpos);
           fEventAction->AddNeutronzLoc(tmp_neutronZpos);

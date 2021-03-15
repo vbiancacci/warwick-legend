@@ -1,6 +1,8 @@
 // WLGDPSLocation
 #include "WLGDPSLocation.hh"
 #include "G4UnitsTable.hh"
+#include "G4PhysicalConstants.hh"
+#include "G4SystemOfUnits.hh"
 
 ////////////////////////////////////////////////////////////////////////////////
 // Description:
@@ -38,6 +40,8 @@ G4bool WLGDPSLocation::ProcessHits(G4Step* aStep, G4TouchableHistory* /*unused*/
     G4cout << aStep->GetTrack()->GetParticleDefinition()->GetParticleName() << G4endl;
     G4StepPoint*  stepPoint = aStep->GetPreStepPoint();
     G4ThreeVector loc       = stepPoint->GetPosition();  // location at track creation
+
+    G4cout << "Position of Ge-77: " << loc.getX()/m << " " << loc.getY()/m << " " << loc.getZ()/m << G4endl;
 
     EvtMap->add(index, loc);
   }

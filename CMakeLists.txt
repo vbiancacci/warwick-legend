@@ -28,6 +28,7 @@ add_executable(warwick-legend
   src/WLGDPrimaryGeneratorAction.cc
   src/WLGDRunAction.cc
   src/WLGDStackingAction.cc
+  src/WLGDSteppingAction.cc
   src/WLGDTrackInformation.cc
   src/WLGDTrackingAction.cc
   src/WLGDTrajectory.cc)

@@ -77,12 +77,18 @@ void WLGDTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
                ->GetParticleDefinition()
                ->GetPDGCharge() == 32)
         {
+ 	  double tmp_x, tmp_y, tmp_z;
+	  tmp_x = aTrack->GetStep()->GetPostStepPoint()->GetPosition().getX()/m;
+          tmp_y = aTrack->GetStep()->GetPostStepPoint()->GetPosition().getY()/m;
+          tmp_z = aTrack->GetStep()->GetPostStepPoint()->GetPosition().getZ()/m;
+
           G4cout << "Got it!" << G4endl;
           G4cout << "Position: " << tmp_neutronXpos << " " << tmp_neutronYpos << " " << tmp_neutronZpos
                  << G4endl;
           G4cout << "Direction: " << tmp_neutronXmom << " " << tmp_neutronYmom << " " << tmp_neutronZmom
                  << G4endl;
           G4cout << "Energy: " << aTrack->GetStep()->GetPreStepPoint()->GetKineticEnergy()/eV << G4endl;
+	  G4cout << "Position of generated Ge-77: " << tmp_x << " " << tmp_y << " " << tmp_z << G4endl;
 
           fEventAction->AddEkin(aTrack->GetStep()->GetPreStepPoint()->GetKineticEnergy()/eV);
           fEventAction->AddNeutronxLoc(tmp_neutronXpos);

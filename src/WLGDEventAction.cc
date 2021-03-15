@@ -183,6 +183,10 @@ void WLGDEventAction::EndOfEventAction(const G4Event* event)
     htrid.push_back((*it.second));
   }
 
+  G4cout << "Edep size: " <<  edep.size() << G4endl;
+  G4cout << "Ekin size: " <<  ekin.size() << G4endl;
+
+
   // fill trajectory data
   // temporary full storage
   std::vector<G4int>    temptid, temppid, temppdg, tempnpts;

@@ -482,7 +482,7 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
   G4double cuhheight = 200.0;  // copper tube height 4 m inside cryostat
   G4double cushift   = 150.0;  // shift cu tube inside cryostat to top
   G4double ringrad   = 100.0;  // cu tube placement ring radius
-  // Ge cylinder for 250 kg at 5.32 g/cm3
+  // Ge cylinder for 250 kg at 5.32 g/cm3^
   G4double roiradius     = 25.0;   // detector region diam 50 cm
   G4double roihalfheight = 11.97;  // detector region height 24 cm
 

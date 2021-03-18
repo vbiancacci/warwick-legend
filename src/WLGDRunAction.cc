@@ -21,6 +21,11 @@ WLGDRunAction::WLGDRunAction(WLGDEventAction* eventAction, G4String name)
   outputStream.open(fout2.c_str(),ios::trunc);
   outputStream.close();
 
+
+  fout3 = fout + "_NCreationPosition.txt";
+  outputStream_2.open(fout3.c_str(),ios::trunc);
+  outputStream_2.close();
+  outputStream_2.open(fout3.c_str(),ios::trunc);
   // Create analysis manager
   auto analysisManager = G4AnalysisManager::Instance();
 
@@ -89,4 +94,5 @@ void WLGDRunAction::EndOfRunAction(const G4Run* /*run*/)
   outputStream.open(fout2.c_str(),ios::app);
   outputStream << fNumberOfCrossingNeutrons << "   " << fTotalNumberOfNeutronsInLAr << endl;
   outputStream.close();
+  outputStream_2.close();
 }

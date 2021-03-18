@@ -28,7 +28,11 @@ void WLGDTrackingAction::PreUserTrackingAction(const G4Track* aTrack)
     tmp_neutronYmom = tmp_vector.getY();
     tmp_neutronZmom = tmp_vector.getZ();
     //G4cout << "Position of Neutron: " << tmp_neutronXpos << " " << tmp_neutronYpos << " " << tmp_neutronZpos << G4endl;
-    if(aTrack->GetVolume()->GetName() == "Lar_phys") fRunAction->increaseTotalNumberOfNeutronsInLAr();
+    if(aTrack->GetVolume()->GetName() == "Lar_phys")
+    {
+      fRunAction->increaseTotalNumberOfNeutronsInLAr();
+      fRunAction->addCoordinatsToFile(tmp_neutronXpos,tmp_neutronYpos,tmp_neutronZpos);
+    }
   }
 
 }

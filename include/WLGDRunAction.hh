@@ -25,6 +25,7 @@ public:
   void increaseNumberOfCrossingNeutrons(){fNumberOfCrossingNeutrons++;}
   void increaseTotalNumberOfNeutronsInLAr(){fTotalNumberOfNeutronsInLAr++;}
   void addCoordinatsToFile(G4double x, G4double y, G4double z){vector_x_dir.push_back(x);vector_y_dir.push_back(y);vector_z_dir.push_back(z);}//{outputStream_2 << x << " " << y << " " << z << endl;}
+  void addMomentumToFile(G4double x, G4double y, G4double z){vector_x_mom.push_back(x);vector_y_mom.push_back(y);vector_z_mom.push_back(z);}//{outputStream_2 << x << " " << y << " " << z << endl;}
 
 private:
   WLGDEventAction* fEventAction;  // have event information for run
@@ -36,6 +37,9 @@ private:
   std::vector<G4double> vector_x_dir;
   std::vector<G4double> vector_y_dir;
   std::vector<G4double> vector_z_dir;
+  std::vector<G4double> vector_x_mom;
+  std::vector<G4double> vector_y_mom;
+  std::vector<G4double> vector_z_mom;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

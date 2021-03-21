@@ -96,7 +96,7 @@ void WLGDRunAction::EndOfRunAction(const G4Run* /*run*/)
 
   for(int i = 0; i < vector_x_dir.size(); i++)
   {
-    outputStream_2 << vector_x_dir[i] << " " << vector_y_dir[i] << " " << vector_z_dir[i] << endl;
+    outputStream_2 << vector_x_dir[i] << " " << vector_y_dir[i] << " " << vector_z_dir[i] << " " << vector_x_mom[i] << " " << vector_y_mom[i] << " " << vector_z_mom[i] << endl;
   }
   outputStream_2.close();
 }

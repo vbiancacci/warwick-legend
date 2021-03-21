@@ -145,7 +145,7 @@ void WLGDPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
     z = fZShift + (z * cm);
 
     //G4cout << "Primary coordinates: " << position/m << " m" << G4endl;
-    G4cout << "Primary coordinates: " << x/cm << " " <<  y/cm << " " << z/cm << " " << G4endl;
+//    G4cout << "Primary coordinates: " << x/cm << " " <<  y/cm << " " << z/cm << " " << G4endl;
     G4cout << "Primary energy: " << energy/GeV << " GeV" << G4endl;
     G4cout << "Theta: " << theta/deg << " deg; Phi: " << phi/deg << " deg" << G4endl;
 

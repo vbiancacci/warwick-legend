@@ -48,7 +48,7 @@ WLGDPrimaryGeneratorAction::~WLGDPrimaryGeneratorAction()
 void WLGDPrimaryGeneratorAction::OpenFile()
 {
 
-  fInputFile.open(fFileName);
+  fInputFile.open(fFileName.c_str());
   G4cout << "Was opened!" << G4endl;
   if (!(fInputFile.is_open())) {//not open correctly
 

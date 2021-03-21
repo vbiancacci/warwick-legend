@@ -33,7 +33,7 @@
 int main(int argc, char** argv)
 {
 
-  WLGDPrimaryGeneratorAction::ChangeFileName("../data/musun_gs_1M_0.dat");
+  WLGDPrimaryGeneratorAction::ChangeFileName("../data/musun_gs_100M.dat");
   // command line interface
   CLI::App    app{ "Muon Simulation for Legend" };
   int         nthreads = 4;

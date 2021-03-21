@@ -463,7 +463,7 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
   // size parameter, unit [cm]
   G4double offset = 200.0;  // shift cavern floor to keep detector centre at origin
   // cavern
-  G4double stone       = 100.0;  // Hall wall thickness 1 m
+  G4double stone       = 500.0;  // Hall wall thickness 5 m
   G4double hallrad     = 600.0;  // Hall cylinder diam 12 m
   G4double hallhheight = 850.0;  // Hall cylinder height 17 m
   // water tank

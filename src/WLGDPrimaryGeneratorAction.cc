@@ -23,7 +23,7 @@ WLGDPrimaryGeneratorAction::WLGDPrimaryGeneratorAction(WLGDDetectorConstruction*
 , fMessenger(nullptr)
 , fDepth(0.0)
 , fGenerator("Musun")
-, fZShift(0.0)
+, fZShift(200.0*cm)
 {
   generator.seed(rd());  // set a random seed
 

@@ -46,6 +46,7 @@ WLGDPrimaryGeneratorAction::~WLGDPrimaryGeneratorAction()
 {
   delete fParticleGun;
   delete fMessenger;
+  if (fInputFile.is_open()) fInputFile.close();
 }
 
 void WLGDPrimaryGeneratorAction::OpenFile()

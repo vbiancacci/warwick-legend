@@ -18,7 +18,8 @@ WLGDActionInitialization::~WLGDActionInitialization() = default;
 void WLGDActionInitialization::BuildForMaster() const
 {
   auto event = new WLGDEventAction;
-  SetUserAction(new WLGDRunAction(event, foutname));
+  auto prim = new WLGDPrimaryGeneratorAction(fDet);
+  SetUserAction(new WLGDRunAction(event, foutname, prim));
 }
 
 void WLGDActionInitialization::Build() const

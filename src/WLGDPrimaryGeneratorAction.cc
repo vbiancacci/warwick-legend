@@ -12,7 +12,7 @@
 
 // std
 #include <set>
-#include <fstream>
+#include <ifstream>
 
 
 G4String WLGDPrimaryGeneratorAction::fFileName;

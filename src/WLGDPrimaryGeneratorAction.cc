@@ -183,7 +183,7 @@ void WLGDPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
 
 void WLGDPrimaryGeneratorAction::SetGenerator(const G4String& name)
 {
-  G4cout << "__________________________________________xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx__________________________________________" << G4endl << name << G4endl << "__________________________________________xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx__________________________________________" << G4endl;
+//  G4cout << "__________________________________________xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx__________________________________________" << G4endl << name << G4endl << "__________________________________________xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx__________________________________________" << G4endl;
 
 
   std::set<G4String> knownGenerators = { "MeiAndHume", "Musun" };
@@ -197,8 +197,8 @@ void WLGDPrimaryGeneratorAction::SetGenerator(const G4String& name)
 }
 
 void WLGDPrimaryGeneratorAction::shortcutToChangeFileName(const G4String& newFile){
-  G4cout << "___________________________________________________________________________________-" << G4endl;
-  G4cout << "MUSUN FileName:    " << newFile << G4endl;
+ // G4cout << "___________________________________________________________________________________-" << G4endl;
+ // G4cout << "MUSUN FileName:    " << newFile << G4endl;
   ChangeFileName(newFile);
 }
 

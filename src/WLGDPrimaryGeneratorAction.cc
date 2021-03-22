@@ -61,7 +61,7 @@ void WLGDPrimaryGeneratorAction::OpenFile()
     G4cout << "Was opened!" << G4endl;
 }
 
-void WLGDPrimaryGeneratorAction::ChangeFileName(const G4String& newFile)
+void WLGDPrimaryGeneratorAction::ChangeFileName(G4String newFile)
 {
   if (fFileName != newFile) //check if the new file is equal to the other
   {
@@ -195,6 +195,12 @@ void WLGDPrimaryGeneratorAction::SetGenerator(const G4String& name)
   fGenerator = name;
 }
 
+void WLGDPrimaryGeneratorAction::shortcutToChangeFileName(const G4String& newFile){
+  G4cout << "___________________________________________________________________________________-" << G4endl;
+  G4cout << "MUSUN FileName:    " << newFile << G4endl;
+  ChangeFileName(newFile);
+}
+
 void WLGDPrimaryGeneratorAction::DefineCommands()
 {
   // Define /WLGD/generator command directory using generic messenger class
@@ -209,7 +215,7 @@ void WLGDPrimaryGeneratorAction::DefineCommands()
   depthCmd.SetDefaultValue("0.");
 
   // musun file command
-  fMessenger->DeclareMethod("setMUSUNFile",&WLGDPrimaryGeneratorAction::ChangeFileName)
+  fMessenger->DeclareMethod("setMUSUNFile",&WLGDPrimaryGeneratorAction::shortcutToChangeFileName)
     .SetGuidance("Set MUSUN file name")
     .SetParameterName("filename", false)
     .SetDefaultValue("./musun_gs_100M.dat")

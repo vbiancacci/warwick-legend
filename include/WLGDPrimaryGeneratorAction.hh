@@ -109,7 +109,7 @@ private:
   std::ranlux24      generator;
   G4double           fDepth;
   G4String           fGenerator;
-  static std::fstream      fInputFile;
+  static std::ifstream      fInputFile;
   static G4String           fFileName;
   G4double           fZShift;
 };

@@ -97,7 +97,7 @@ public:
 
   static void     ChangeFileName(G4String newFile);
   static void     OpenFile();
-  static std::ifstream      fInputFile;
+
 private:
   void DefineCommands();
 
@@ -111,6 +111,7 @@ private:
   G4double           fDepth;
   G4String           fGenerator;
   static G4String           fFileName;
+  std::ifstream      fInputFile;
   G4double           fZShift;
 };
 

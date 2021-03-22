@@ -1,5 +1,6 @@
 #include "WLGDRunAction.hh"
 #include "WLGDEventAction.hh"
+#include "WLGDPrimaryGeneratorAction.hh"
 #include "g4root.hh"
 
 #include <iostream>
@@ -10,7 +11,7 @@
 #include "G4UnitsTable.hh"
 using namespace std;
 
-WLGDRunAction::WLGDRunAction(WLGDEventAction* eventAction, G4String name)
+WLGDRunAction::WLGDRunAction(WLGDEventAction* eventAction, G4String name, WLGDPrimaryGeneratorAction* primAction)
 : G4UserRunAction()
 , fEventAction(eventAction)
 , fout(std::move(name))
@@ -27,6 +28,10 @@ WLGDRunAction::WLGDRunAction(WLGDEventAction* eventAction, G4String name)
 
   // Create analysis manager
   auto analysisManager = G4AnalysisManager::Instance();
+
+
+
+  primAction->ChangeFileName("./musun_gs_100M.dat");
 
   // Create directories
   analysisManager->SetVerboseLevel(1);

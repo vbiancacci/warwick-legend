@@ -24,10 +24,11 @@ void WLGDActionInitialization::BuildForMaster() const
 void WLGDActionInitialization::Build() const
 {
   // forward detector
-  SetUserAction(new WLGDPrimaryGeneratorAction(fDet));
+  auto prim = new WLGDPrimaryGeneratorAction(fDet);
+  SetUserAction(prim);
   auto event = new WLGDEventAction();
   SetUserAction(event);
-  auto run = new WLGDRunAction(event, foutname);
+  auto run = new WLGDRunAction(event, foutname, prim);
   SetUserAction(run);
   SetUserAction(new WLGDTrackingAction(event,run));
   SetUserAction(new WLGDSteppingAction(run));

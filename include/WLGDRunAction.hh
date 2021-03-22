@@ -5,6 +5,7 @@
 #include "globals.hh"
 
 class WLGDEventAction;
+class WLGDPrimaryGeneratorAction;
 class G4Run;
 
 #include <fstream>
@@ -17,7 +18,7 @@ using namespace std;
 class WLGDRunAction : public G4UserRunAction
 {
 public:
-  WLGDRunAction(WLGDEventAction* eventAction, G4String name);
+  WLGDRunAction(WLGDEventAction* eventAction, G4String name, WLGDPrimaryGeneratorAction* primAction);
   virtual ~WLGDRunAction();
 
   virtual void BeginOfRunAction(const G4Run*);

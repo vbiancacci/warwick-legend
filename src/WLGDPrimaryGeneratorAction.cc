@@ -50,7 +50,7 @@ WLGDPrimaryGeneratorAction::~WLGDPrimaryGeneratorAction()
 void WLGDPrimaryGeneratorAction::OpenFile()
 {
 
-  fInputFile.open(fFileName.c_str());
+  fInputFile.open(fFileName);
   G4cout << "Was opened!" << G4endl;
   if (!(fInputFile.is_open())) {//not open correctly
 
@@ -130,7 +130,7 @@ void WLGDPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
 
     fInputFile >> nEvent >> particleID >> energy >> x >> y >> z >> theta >> phi;
 
-    G4cout << x << " " << y << " " << z << G4endl;
+    G4cout << fInputFile.is_open() << " " << x << " " << y << " " << z << G4endl;
     if (fInputFile.eof())
     {
       fInputFile.close();

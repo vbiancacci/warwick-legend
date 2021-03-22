@@ -12,6 +12,8 @@
 
 // std
 #include <set>
+#include <fstream>
+
 
 G4String WLGDPrimaryGeneratorAction::fFileName;
 std::ifstream WLGDPrimaryGeneratorAction::fInputFile;

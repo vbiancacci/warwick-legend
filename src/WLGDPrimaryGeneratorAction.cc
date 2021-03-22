@@ -213,7 +213,7 @@ void WLGDPrimaryGeneratorAction::DefineCommands()
     .SetGuidance("Set MUSUN file name")
     .SetParameterName("filename", false)
     .SetDefaultValue("./musun_gs_100M.dat")
-    .SetStates(G4State_Idle)
+    //.SetStates(G4State_Idle)
     .SetToBeBroadcasted(false);
 
   // generator command

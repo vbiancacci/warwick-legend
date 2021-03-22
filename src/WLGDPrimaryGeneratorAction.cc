@@ -16,7 +16,7 @@
 
 
 G4String WLGDPrimaryGeneratorAction::fFileName;
-std::ifstream WLGDPrimaryGeneratorAction::fInputFile;
+std::fstream WLGDPrimaryGeneratorAction::fInputFile;
 
 WLGDPrimaryGeneratorAction::WLGDPrimaryGeneratorAction(WLGDDetectorConstruction* det)
 : G4VUserPrimaryGeneratorAction()

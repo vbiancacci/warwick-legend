@@ -219,9 +219,6 @@ void WLGDPrimaryGeneratorAction::DefineCommands()
     .SetGuidance("Set MUSUN file name")
     .SetParameterName("filename", false)
     .SetDefaultValue("./musun_gs_100M.dat")
-    //.SetStates(G4State_GeomClosed)
-    .SetToBeBroadcasted(false);
-
   // generator command
   // switch command
   fMessenger->DeclareMethod("setGenerator", &WLGDPrimaryGeneratorAction::SetGenerator)
@@ -229,7 +226,5 @@ void WLGDPrimaryGeneratorAction::DefineCommands()
     .SetGuidance("MeiAndHume = WW standard case")
     .SetGuidance("Musun = Used in previous MaGe simulation")
     .SetCandidates("MeiAndHume Musun")
-//    .SetStates(G4State_GeomClosed)
-    .SetToBeBroadcasted(false);
 }
 

@@ -79,6 +79,7 @@ void WLGDPrimaryGeneratorAction::ChangeFileName(G4String newFile)
 
   fInputFile >> nEvent >> particleID >> energy >> x >> y >> z >> theta >> phi;
 
+  G4cout << fInputFile.is_open() << " " << x << " " << y << " " << z << G4endl;
 }
 
 std::ifstream WLGDPrimaryGeneratorAction::GetFile(){

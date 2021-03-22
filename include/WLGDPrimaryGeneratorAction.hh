@@ -111,7 +111,7 @@ private:
   G4double           fDepth;
   G4String           fGenerator;
   static G4String           fFileName;
-  std::ifstream      fInputFile;
+  std::ifstream*      fInputFile;
   G4double           fZShift;
 };
 

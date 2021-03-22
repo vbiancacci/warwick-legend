@@ -50,32 +50,20 @@ WLGDPrimaryGeneratorAction::~WLGDPrimaryGeneratorAction()
 void WLGDPrimaryGeneratorAction::OpenFile()
 {
 
-  fInputFile.open(fFileName,std::ifstream::in);
+  fInputFile->open(fFileName,std::ifstream::in);
 
-  if (!(fInputFile.is_open())) {//not open correctly
+  if (!(fInputFile->is_open())) {//not open correctly
 
     G4cerr << "File not valid!" << G4endl;
   }
   G4cout << "Was opened!" << G4endl;
-
-  G4int nEvent=0;
-  G4double time=0.0;
-  G4double energy = 0.0*MeV;
-  G4double px,py,pz;
-  G4double theta,phi;
-  G4double x = 0, y = 0, z = 0;
-  G4int particleID = 0;
-
-  fInputFile >> nEvent >> particleID >> energy >> x >> y >> z >> theta >> phi;
-
-  G4cout << fInputFile.is_open() << " " << x << " " << y << " " << z << G4endl;
 }
 
 void WLGDPrimaryGeneratorAction::ChangeFileName(G4String newFile)
 {
   if (fFileName != newFile) //check if the new file is equal to the other
   {
-    if (fInputFile.is_open()) fInputFile.close(); //close the old file
+    if (fInputFile->is_open()) fInputFile.close(); //close the old file
     G4cout << "opening file: " << newFile << G4endl;
     fFileName = newFile;
     OpenFile(); //open the new one
@@ -141,12 +129,12 @@ void WLGDPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
     G4double x = 0, y = 0, z = 0;
     G4int particleID = 0;
 
-    fInputFile >> nEvent >> particleID >> energy >> x >> y >> z >> theta >> phi;
+    *fInputFile >> nEvent >> particleID >> energy >> x >> y >> z >> theta >> phi;
 
-    G4cout << fInputFile.is_open() << " " << x << " " << y << " " << z << G4endl;
-    if (fInputFile.eof())
+    G4cout << fInputFile->is_open() << " " << x << " " << y << " " << z << G4endl;
+    if (fInputFile->eof())
     {
-      fInputFile.close();
+      fInputFile->close();
       G4cerr << "File over: not enough events!" << G4endl;
       G4Exception("WLGDPrimaryGeneratorAction::GeneratePrimaryVertex()", "err001", FatalException, "Exit Warwick");
       return;

@@ -209,7 +209,7 @@ void WLGDPrimaryGeneratorAction::DefineCommands()
 
   // musun file command
   fMessenger->DeclareMethod("setMUSUNFile",&WLGDPrimaryGeneratorAction::ChangeFileName)
-    .SetGuidance("Set MUSUN file name");
+    .SetGuidance("Set MUSUN file name")
     .SetParameterName("filename", false)
     .SetDefaultValue("./musun_gs_100M.dat")
     .SetStates(G4State_Idle)

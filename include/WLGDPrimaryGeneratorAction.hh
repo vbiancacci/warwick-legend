@@ -95,8 +95,8 @@ public:
   void     SetGenerator(const G4String& name);
   void     SetZShift(G4double fZShift);
 
-  static void     ChangeFileName(G4String newFile);
-  static void     OpenFile();
+  void     ChangeFileName(G4String newFile);
+  void     OpenFile();
 
 private:
   void DefineCommands();

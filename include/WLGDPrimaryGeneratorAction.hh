@@ -4,7 +4,7 @@
 // std c++ includes
 #include <cmath>
 #include <random>
-#include <ifstream>
+#include <fstream>
 
 #include "G4GenericMessenger.hh"
 #include "G4VUserPrimaryGeneratorAction.hh"

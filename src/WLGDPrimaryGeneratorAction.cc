@@ -15,8 +15,8 @@
 #include <fstream>
 
 
-//G4String WLGDPrimaryGeneratorAction::fFileName;
-//std::ifstream WLGDPrimaryGeneratorAction::fInputFile;
+G4String WLGDPrimaryGeneratorAction::fFileName;
+std::ifstream WLGDPrimaryGeneratorAction::fInputFile;
 
 WLGDPrimaryGeneratorAction::WLGDPrimaryGeneratorAction(WLGDDetectorConstruction* det)
 : G4VUserPrimaryGeneratorAction()

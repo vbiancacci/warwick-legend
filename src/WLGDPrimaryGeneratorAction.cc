@@ -51,16 +51,7 @@ void WLGDPrimaryGeneratorAction::OpenFile()
 {
 
   fInputFile.open(fFileName,std::ifstream::in);
-  G4int nEvent=0;
-  G4double time=0.0;
-  G4double energy = 0.0*MeV;
-  G4double px,py,pz;
-  G4double theta,phi;
-  G4double x, y, z;
-  G4int particleID = 0;
-  fInputFile >> nEvent >> particleID >> energy >> x >> y >> z >> theta >> phi;
 
-  G4cout << fInputFile.is_open() << " " << x << " " << y << " " << z << G4endl;
   if (!(fInputFile.is_open())) {//not open correctly
 
     G4cerr << "File not valid!" << G4endl;
@@ -76,6 +67,18 @@ void WLGDPrimaryGeneratorAction::ChangeFileName(G4String newFile)
     G4cout << "opening file: " << newFile << G4endl;
     fFileName = newFile;
     OpenFile(); //open the new one
+
+    G4int nEvent=0;
+    G4double time=0.0;
+    G4double energy = 0.0*MeV;
+    G4double px,py,pz;
+    G4double theta,phi;
+    G4double x, y, z;
+    G4int particleID = 0;
+
+    fInputFile >> nEvent >> particleID >> energy >> x >> y >> z >> theta >> phi;
+
+    G4cout << fInputFile.is_open() << " " << x << " " << y << " " << z << G4endl;
   }
 }
 

@@ -39,6 +39,7 @@ WLGDPrimaryGeneratorAction::WLGDPrimaryGeneratorAction(WLGDDetectorConstruction*
 
   // define commands for this class
   DefineCommands();
+  fFileName = "";
 }
 
 WLGDPrimaryGeneratorAction::~WLGDPrimaryGeneratorAction()

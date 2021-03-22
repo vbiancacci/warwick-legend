@@ -1,6 +1,5 @@
 #include "WLGDRunAction.hh"
 #include "WLGDEventAction.hh"
-#include "WLGDPrimaryGeneratorAction.hh"
 #include "g4root.hh"
 
 #include <iostream>
@@ -11,7 +10,7 @@
 #include "G4UnitsTable.hh"
 using namespace std;
 
-WLGDRunAction::WLGDRunAction(WLGDEventAction* eventAction, G4String name, WLGDPrimaryGeneratorAction* primAction)
+WLGDRunAction::WLGDRunAction(WLGDEventAction* eventAction, G4String name)
 : G4UserRunAction()
 , fEventAction(eventAction)
 , fout(std::move(name))
@@ -28,11 +27,6 @@ WLGDRunAction::WLGDRunAction(WLGDEventAction* eventAction, G4String name, WLGDPr
 
   // Create analysis manager
   auto analysisManager = G4AnalysisManager::Instance();
-
-  string fileName_Musun = "musun_gs_100M.dat";
-  G4cout << "____________________________________________________________________________________________________" << G4endl;
-  G4cout  << "Musun filename: " << fileName_Musun << G4endl;
-  primAction->ChangeFileName(fileName_Musun);
 
   // Create directories
   analysisManager->SetVerboseLevel(1);
@@ -102,7 +96,7 @@ void WLGDRunAction::EndOfRunAction(const G4Run* /*run*/)
 
   for(int i = 0; i < vector_x_dir.size(); i++)
   {
-    outputStream_2 << vector_x_dir[i] << " " << vector_y_dir[i] << " " << vector_z_dir[i] << " " << vector_x_mom[i] << " " << vector_y_mom[i] << " " << vector_z_mom[i] << " " << vector_energy[i] << endl;
+    outputStream_2 << vector_x_dir[i] << " " << vector_y_dir[i] << " " << vector_z_dir[i] << " " << vector_x_mom[i] << " " << vector_y_mom[i] << " " << vector_z_mom[i] << endl;
   }
   outputStream_2.close();
 }

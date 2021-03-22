@@ -18,18 +18,16 @@ WLGDActionInitialization::~WLGDActionInitialization() = default;
 void WLGDActionInitialization::BuildForMaster() const
 {
   auto event = new WLGDEventAction;
-  auto prim = new WLGDPrimaryGeneratorAction(fDet);
-  SetUserAction(new WLGDRunAction(event, foutname, prim));
+  SetUserAction(new WLGDRunAction(event, foutname));
 }
 
 void WLGDActionInitialization::Build() const
 {
   // forward detector
-  auto prim = new WLGDPrimaryGeneratorAction(fDet);
-  SetUserAction(prim);
+  SetUserAction(new WLGDPrimaryGeneratorAction(fDet));
   auto event = new WLGDEventAction();
   SetUserAction(event);
-  auto run = new WLGDRunAction(event, foutname, prim);
+  auto run = new WLGDRunAction(event, foutname);
   SetUserAction(run);
   SetUserAction(new WLGDTrackingAction(event,run));
   SetUserAction(new WLGDSteppingAction(run));

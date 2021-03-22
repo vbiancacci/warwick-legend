@@ -16,7 +16,7 @@
 
 
 G4String WLGDPrimaryGeneratorAction::fFileName;
-//std::ifstream WLGDPrimaryGeneratorAction::fInputFile;
+std::ifstream WLGDPrimaryGeneratorAction::fInputFile;
 
 WLGDPrimaryGeneratorAction::WLGDPrimaryGeneratorAction(WLGDDetectorConstruction* det)
 : G4VUserPrimaryGeneratorAction()
@@ -68,24 +68,6 @@ void WLGDPrimaryGeneratorAction::ChangeFileName(G4String newFile)
     fFileName = newFile;
     OpenFile(); //open the new one
   }
-
-  G4int nEvent=0;
-  G4double time=0.0;
-  G4double energy = 0.0*MeV;
-  G4double px,py,pz;
-  G4double theta,phi;
-  G4double x = 0, y = 0, z = 0;
-  G4int particleID = 0;
-
-  fInputFile >> nEvent >> particleID >> energy >> x >> y >> z >> theta >> phi;
-
-  G4cout << fInputFile.is_open() << " " << x << " " << y << " " << z << G4endl;
-}
-
-std::ifstream WLGDPrimaryGeneratorAction::GetFile(){
-  std::ifstream t_fInputFile;
-  t_fInputFile.open(fFileName,std::ifstream::in);
-  return t_fInputFile;
 }
 
 
@@ -147,7 +129,7 @@ void WLGDPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
     G4double x = 0, y = 0, z = 0;
     G4int particleID = 0;
 
-    fInputFile >> nEvent >> particleID >> energy >> x >> y >> z >> theta >> phi;
+    WLGDPrimaryGeneratorAction::fInputFile >> nEvent >> particleID >> energy >> x >> y >> z >> theta >> phi;
 
     G4cout << fInputFile.is_open() << " " << x << " " << y << " " << z << G4endl;
     if (fInputFile.eof())

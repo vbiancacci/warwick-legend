@@ -215,11 +215,11 @@ void WLGDPrimaryGeneratorAction::DefineCommands()
   depthCmd.SetDefaultValue("0.");
 
   // musun file command
-  fMessenger->DeclareMethod("setMUSUNFile",&WLGDPrimaryGeneratorAction::shortcutToChangeFileName)
+  auto& musunfileCmd = fMessenger->DeclareMethod("setMUSUNFile",&WLGDPrimaryGeneratorAction::shortcutToChangeFileName)
     .SetGuidance("Set MUSUN file name")
     .SetParameterName("filename", false)
     .SetDefaultValue("./musun_gs_100M.dat")
-    .SetStates(G4State_Idle)
+    //.SetStates(G4State_GeomClosed)
     .SetToBeBroadcasted(false);
 
   // generator command

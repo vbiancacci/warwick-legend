@@ -63,7 +63,7 @@ void WLGDPrimaryGeneratorAction::ChangeFileName(G4String newFile)
 {
   if (fFileName != newFile) //check if the new file is equal to the other
   {
-    if (fInputFile->is_open()) fInputFile.close(); //close the old file
+    if (fInputFile->is_open()) fInputFile->close(); //close the old file
     G4cout << "opening file: " << newFile << G4endl;
     fFileName = newFile;
     OpenFile(); //open the new one

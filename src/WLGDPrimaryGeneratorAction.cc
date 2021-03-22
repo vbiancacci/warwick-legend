@@ -135,7 +135,7 @@ void WLGDPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
 
     fInputFile >> nEvent >> particleID >> energy >> x >> y >> z >> theta >> phi;
 
-    G4cout << fInputFile.is_open() << " " << x << " " << y << " " << z << G4endl;
+    G4cout << fInputFile.is_open() << " " << nEvent << " " << x << " " << y << " " << z << G4endl;
     if (fInputFile.eof())
     {
       fInputFile.close();

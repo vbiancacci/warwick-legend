@@ -95,8 +95,8 @@ public:
   void     SetGenerator(const G4String& name);
   void     SetZShift(G4double fZShift);
 
-  static void     ChangeFileName(G4String newFile);
-  static void     OpenFile();
+  void     ChangeFileName(const G4String& newFile);
+  void     OpenFile();
 private:
   void DefineCommands();
 
@@ -109,8 +109,8 @@ private:
   std::ranlux24      generator;
   G4double           fDepth;
   G4String           fGenerator;
-  static std::ifstream      fInputFile;
-  static G4String           fFileName;
+  std::ifstream      fInputFile;
+  G4String           fFileName;
   G4double           fZShift;
 };
 

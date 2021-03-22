@@ -15,8 +15,8 @@
 #include <fstream>
 
 
-G4String WLGDPrimaryGeneratorAction::fFileName;
-std::ifstream WLGDPrimaryGeneratorAction::fInputFile;
+//G4String WLGDPrimaryGeneratorAction::fFileName;
+//std::ifstream WLGDPrimaryGeneratorAction::fInputFile;
 
 WLGDPrimaryGeneratorAction::WLGDPrimaryGeneratorAction(WLGDDetectorConstruction* det)
 : G4VUserPrimaryGeneratorAction()
@@ -56,10 +56,11 @@ void WLGDPrimaryGeneratorAction::OpenFile()
 
     G4cerr << "File not valid!" << G4endl;
   }
-  G4cout << "Was opened!" << G4endl;
+  else
+    G4cout << "Was opened!" << G4endl;
 }
 
-void WLGDPrimaryGeneratorAction::ChangeFileName(G4String newFile)
+void WLGDPrimaryGeneratorAction::ChangeFileName(const G4String& newFile)
 {
   if (fFileName != newFile) //check if the new file is equal to the other
   {
@@ -206,6 +207,14 @@ void WLGDPrimaryGeneratorAction::DefineCommands()
   depthCmd.SetRange("d>=0.");
   depthCmd.SetDefaultValue("0.");
 
+  // musun file command
+  fMessenger->DeclareMethod("setMUSUNFile",&WLGDPrimaryGeneratorAction::ChangeFileName)
+    .SetGuidance("Set MUSUN file name");
+    .SetParameterName("filename", false)
+    .SetDefaultValue("./musun_gs_100M.dat")
+    .SetStates(G4State_Idle)
+    .SetToBeBroadcasted(false);
+
   // generator command
   // switch command
   fMessenger->DeclareMethod("setGenerator", &WLGDPrimaryGeneratorAction::SetGenerator)
@@ -216,3 +225,4 @@ void WLGDPrimaryGeneratorAction::DefineCommands()
 //    .SetStates(G4State_GeomClosed)
     .SetToBeBroadcasted(false);
 }
+

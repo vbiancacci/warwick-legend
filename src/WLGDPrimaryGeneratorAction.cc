@@ -218,13 +218,13 @@ void WLGDPrimaryGeneratorAction::DefineCommands()
   auto& musunfileCmd = fMessenger->DeclareMethod("setMUSUNFile",&WLGDPrimaryGeneratorAction::shortcutToChangeFileName)
     .SetGuidance("Set MUSUN file name")
     .SetParameterName("filename", false)
-    .SetDefaultValue("./musun_gs_100M.dat")
+    .SetDefaultValue("./musun_gs_100M.dat");
   // generator command
   // switch command
   fMessenger->DeclareMethod("setGenerator", &WLGDPrimaryGeneratorAction::SetGenerator)
     .SetGuidance("Set generator model of primary muons")
     .SetGuidance("MeiAndHume = WW standard case")
     .SetGuidance("Musun = Used in previous MaGe simulation")
-    .SetCandidates("MeiAndHume Musun")
+    .SetCandidates("MeiAndHume Musun");
 }
 

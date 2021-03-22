@@ -3,10 +3,10 @@
 #include "WLGDTrajectory.hh"
 
 #include "G4RunManager.hh"
-#include "G4UnitsTable.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4Track.hh"
 #include "G4TrackingManager.hh"
+#include "G4UnitsTable.hh"
 
 WLGDTrackingAction::WLGDTrackingAction() = default;
 
@@ -18,25 +18,26 @@ void WLGDTrackingAction::PreUserTrackingAction(const G4Track* aTrack)
     fpTrackingManager->SetTrajectory(new WLGDTrajectory(aTrack));
   }
 
-  if(aTrack->GetParticleDefinition()->GetParticleName() == "neutron"){
+  if(aTrack->GetParticleDefinition()->GetParticleName() == "neutron")
+  {
     auto tmp_vector = aTrack->GetVertexPosition();
-    tmp_neutronXpos = tmp_vector.getX()/m;
-    tmp_neutronYpos = tmp_vector.getY()/m;
-    tmp_neutronZpos = tmp_vector.getZ()/m;
-    tmp_vector = aTrack->GetMomentumDirection();
+    tmp_neutronXpos = tmp_vector.getX() / m;
+    tmp_neutronYpos = tmp_vector.getY() / m;
+    tmp_neutronZpos = tmp_vector.getZ() / m;
+    tmp_vector      = aTrack->GetMomentumDirection();
     tmp_neutronXmom = tmp_vector.getX();
     tmp_neutronYmom = tmp_vector.getY();
     tmp_neutronZmom = tmp_vector.getZ();
-    //G4cout << "Position of Neutron: " << tmp_neutronXpos << " " << tmp_neutronYpos << " " << tmp_neutronZpos << G4endl;
+    // G4cout << "Position of Neutron: " << tmp_neutronXpos << " " << tmp_neutronYpos << "
+    // " << tmp_neutronZpos << G4endl;
     if(aTrack->GetVolume()->GetName() == "Lar_phys")
     {
       fRunAction->increaseTotalNumberOfNeutronsInLAr();
-      fRunAction->addCoordinatsToFile(tmp_neutronXpos,tmp_neutronYpos,tmp_neutronZpos);
-      fRunAction->addMomentumToFile(tmp_neutronXmom,tmp_neutronYmom,tmp_neutronZmom);
-      fRunAction->addEnergyToFile(aTrack->GetKineticEnergy());
+      fRunAction->addCoordinatsToFile(tmp_neutronXpos, tmp_neutronYpos, tmp_neutronZpos);
+      fRunAction->addMomentumToFile(tmp_neutronXmom, tmp_neutronYmom, tmp_neutronZmom);
+      fRunAction->addEnergyToFile(aTrack->GetStep()->GetPreStepPoint()->GetKineticEnergy()/eV);
     }
   }
-
 }
 
 void WLGDTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
@@ -57,21 +58,18 @@ void WLGDTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
   }
   if(aTrack->GetParticleDefinition()->GetParticleName() == "neutron")
   {
-
-
-
-    //G4cout
-     // << "Step Process: "
-     // << aTrack->GetStep()->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName()
-     // << G4endl;
+    // G4cout
+    // << "Step Process: "
+    // << aTrack->GetStep()->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName()
+    // << G4endl;
     if(aTrack->GetStep()->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName() ==
        "biasWrapper(nCapture)")
     {
-      //G4cout << "Got through nCapture" << G4endl;
+      // G4cout << "Got through nCapture" << G4endl;
       int NumberOfSecundaries = aTrack->GetStep()->GetSecondaryInCurrentStep()->size();
       for(int i = 0; i < NumberOfSecundaries; i++)
       {
-        //G4cout << "Looking for Ge77" << G4endl;
+        // G4cout << "Looking for Ge77" << G4endl;
         if(aTrack->GetStep()
                ->GetSecondaryInCurrentStep()
                ->at(i)
@@ -83,20 +81,24 @@ void WLGDTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
                ->GetParticleDefinition()
                ->GetPDGCharge() == 32)
         {
- 	  double tmp_x, tmp_y, tmp_z;
-	  tmp_x = aTrack->GetStep()->GetPostStepPoint()->GetPosition().getX()/m;
-          tmp_y = aTrack->GetStep()->GetPostStepPoint()->GetPosition().getY()/m;
-          tmp_z = aTrack->GetStep()->GetPostStepPoint()->GetPosition().getZ()/m;
+          double tmp_x, tmp_y, tmp_z;
+          tmp_x = aTrack->GetStep()->GetPostStepPoint()->GetPosition().getX() / m;
+          tmp_y = aTrack->GetStep()->GetPostStepPoint()->GetPosition().getY() / m;
+          tmp_z = aTrack->GetStep()->GetPostStepPoint()->GetPosition().getZ() / m;
 
           G4cout << "Got it!" << G4endl;
-          G4cout << "Position: " << tmp_neutronXpos << " " << tmp_neutronYpos << " " << tmp_neutronZpos
+          G4cout << "Position: " << tmp_neutronXpos << " " << tmp_neutronYpos << " "
+                 << tmp_neutronZpos << G4endl;
+          G4cout << "Direction: " << tmp_neutronXmom << " " << tmp_neutronYmom << " "
+                 << tmp_neutronZmom << G4endl;
+          G4cout << "Energy: "
+                 << aTrack->GetStep()->GetPreStepPoint()->GetKineticEnergy() / eV
                  << G4endl;
-          G4cout << "Direction: " << tmp_neutronXmom << " " << tmp_neutronYmom << " " << tmp_neutronZmom
-                 << G4endl;
-          G4cout << "Energy: " << aTrack->GetStep()->GetPreStepPoint()->GetKineticEnergy()/eV << G4endl;
-	  G4cout << "Position of generated Ge-77: " << tmp_x << " " << tmp_y << " " << tmp_z << G4endl;
+          G4cout << "Position of generated Ge-77: " << tmp_x << " " << tmp_y << " "
+                 << tmp_z << G4endl;
 
-          fEventAction->AddEkin(aTrack->GetStep()->GetPreStepPoint()->GetKineticEnergy()/eV);
+          fEventAction->AddEkin(aTrack->GetStep()->GetPreStepPoint()->GetKineticEnergy() /
+                                eV);
           fEventAction->AddNeutronxLoc(tmp_neutronXpos);
           fEventAction->AddNeutronyLoc(tmp_neutronYpos);
           fEventAction->AddNeutronzLoc(tmp_neutronZpos);

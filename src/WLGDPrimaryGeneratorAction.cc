@@ -16,7 +16,7 @@
 
 
 G4String WLGDPrimaryGeneratorAction::fFileName;
-std::ifstream* WLGDPrimaryGeneratorAction::fInputFile;
+std::ifstream* WLGDPrimaryGeneratorAction::fInputFile = new std::ifstream() ;
 
 WLGDPrimaryGeneratorAction::WLGDPrimaryGeneratorAction(WLGDDetectorConstruction* det)
 : G4VUserPrimaryGeneratorAction()
@@ -61,7 +61,7 @@ void WLGDPrimaryGeneratorAction::OpenFile()
 
 void WLGDPrimaryGeneratorAction::ChangeFileName(G4String newFile)
 {
-  if (fFileName != newFile) //check if the new file is equal to the other
+  if (fFileName != newFile) //check if the nreadew file is equal to the other
   {
     if (fInputFile->is_open()) fInputFile->close(); //close the old file
     G4cout << "opening file: " << newFile << G4endl;

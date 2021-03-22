@@ -29,7 +29,7 @@ WLGDRunAction::WLGDRunAction(WLGDEventAction* eventAction, G4String name, WLGDPr
   // Create analysis manager
   auto analysisManager = G4AnalysisManager::Instance();
 
-  string fileName_Musun = "./musun_gs_100M.dat";
+  string fileName_Musun = "musun_gs_100M.dat";
   G4cout << "____________________________________________________________________________________________________" << G4endl;
   G4cout  << "Musun filename: " << fileName_Musun << G4endl;
   primAction->ChangeFileName(fileName_Musun);

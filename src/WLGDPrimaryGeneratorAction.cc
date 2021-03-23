@@ -132,7 +132,7 @@ void WLGDPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
     G4double theta,phi;
     G4double x = 0, y = 0, z = 0;
     G4int particleID = 0;
-/*
+
     fInputFile >> nEvent >> particleID >> energy >> x >> y >> z >> theta >> phi;
 
     G4cout  << nEvent << " " << x << " " << y << " " << z << G4endl;
@@ -142,7 +142,7 @@ void WLGDPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
       G4cerr << "File over: not enough events!" << G4endl;
       G4Exception("WLGDPrimaryGeneratorAction::GeneratePrimaryVertex()", "err001", FatalException, "Exit Warwick");
       return;
-    }*/
+    }
 
     G4double particle_time = time*s;
     energy = energy*GeV;
@@ -200,7 +200,7 @@ void WLGDPrimaryGeneratorAction::SetGenerator(const G4String& name)
 void WLGDPrimaryGeneratorAction::shortcutToChangeFileName(const G4String& newFile){
  // G4cout << "___________________________________________________________________________________-" << G4endl;
  // G4cout << "MUSUN FileName:    " << newFile << G4endl;
-  //ChangeFileName(newFile);
+  ChangeFileName(newFile);
 }
 
 void WLGDPrimaryGeneratorAction::DefineCommands()

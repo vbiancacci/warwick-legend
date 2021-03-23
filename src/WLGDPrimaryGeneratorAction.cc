@@ -56,10 +56,10 @@ void WLGDPrimaryGeneratorAction::OpenFile()
 
   if (!(fInputFile.is_open())) {//not open correctly
 
-    G4cerr << "File not valid!" << G4endl;
+  //  G4cerr << "File not valid!" << G4endl;
   }
   else
-    G4cout << "Was opened!" << G4endl;
+  //  G4cout << "Was opened!" << G4endl;
 }
 
 void WLGDPrimaryGeneratorAction::ChangeFileName(G4String newFile)
@@ -135,7 +135,7 @@ void WLGDPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
 
     fInputFile >> nEvent >> particleID >> energy >> x >> y >> z >> theta >> phi;
 
-    G4cout  << nEvent << " " << x << " " << y << " " << z << G4endl;
+  //  G4cout  << nEvent << " " << x << " " << y << " " << z << G4endl;
     if (fInputFile.eof())
     {
       fInputFile.close();
@@ -152,10 +152,10 @@ void WLGDPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
     y = y * cm;
     z = fZShift + (z * cm);
 
-    //G4cout << "Primary coordinates: " << position/m << " m" << G4endl;
-//    G4cout << "Primary coordinates: " << x/cm << " " <<  y/cm << " " << z/cm << " " << G4endl;
-    G4cout << "Primary energy: " << energy/GeV << " GeV" << G4endl;
-    G4cout << "Theta: " << theta/deg << " deg; Phi: " << phi/deg << " deg" << G4endl;
+ //   G4cout << "Primary coordinates: " << position/m << " m" << G4endl;
+ //   G4cout << "Primary coordinates: " << x/cm << " " <<  y/cm << " " << z/cm << " " << G4endl;
+ //   G4cout << "Primary energy: " << energy/GeV << " GeV" << G4endl;
+ //   G4cout << "Theta: " << theta/deg << " deg; Phi: " << phi/deg << " deg" << G4endl;
 
     G4ParticleTable* theParticleTable = G4ParticleTable::GetParticleTable();
 

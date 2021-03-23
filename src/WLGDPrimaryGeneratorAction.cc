@@ -133,6 +133,7 @@ void WLGDPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
     G4double x = 0, y = 0, z = 0;
     G4int particleID = 0;
 
+    G4cout  << nEvent << " " << x << " " << y << " " << z << G4endl;
     fInputFile >> nEvent >> particleID >> energy >> x >> y >> z >> theta >> phi;
 
     G4cout  << nEvent << " " << x << " " << y << " " << z << G4endl;

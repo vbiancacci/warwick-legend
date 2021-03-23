@@ -35,7 +35,7 @@ void WLGDTrackingAction::PreUserTrackingAction(const G4Track* aTrack)
       fRunAction->increaseTotalNumberOfNeutronsInLAr();
       fRunAction->addCoordinatsToFile(tmp_neutronXpos, tmp_neutronYpos, tmp_neutronZpos);
       fRunAction->addMomentumToFile(tmp_neutronXmom, tmp_neutronYmom, tmp_neutronZmom);
-      fRunAction->addEnergyToFile(aTrack->GetStep()->GetPreStepPoint()->GetKineticEnergy()/eV);
+      fRunAction->addEnergyToFile(aTrack->GetKineticEnergy()/eV);
     }
   }
 }

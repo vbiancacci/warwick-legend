@@ -133,16 +133,16 @@ void WLGDPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
     G4double x = 0, y = 0, z = 0;
     G4int particleID = 0;
 
-    //fInputFile >> nEvent >> particleID >> energy >> x >> y >> z >> theta >> phi;
+    fInputFile >> nEvent >> particleID >> energy >> x >> y >> z >> theta >> phi;
 
     G4cout  << nEvent << " " << x << " " << y << " " << z << G4endl;
-    if (fInputFile.eof())
+   /* if (fInputFile.eof())
     {
       fInputFile.close();
       G4cerr << "File over: not enough events!" << G4endl;
       G4Exception("WLGDPrimaryGeneratorAction::GeneratePrimaryVertex()", "err001", FatalException, "Exit Warwick");
       return;
-    }
+    }*/
 
     G4double particle_time = time*s;
     energy = energy*GeV;

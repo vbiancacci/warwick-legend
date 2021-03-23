@@ -133,7 +133,7 @@ void WLGDPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
     G4double x = 0, y = 0, z = 0;
     G4int particleID = 0;
 
-    fInputFile >> nEvent >> particleID >> energy >> x >> y >> z >> theta >> phi;
+    //fInputFile >> nEvent >> particleID >> energy >> x >> y >> z >> theta >> phi;
 
     G4cout  << nEvent << " " << x << " " << y << " " << z << G4endl;
     if (fInputFile.eof())
@@ -171,16 +171,12 @@ void WLGDPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
     py = std::sin(theta)*sin(phi);
     G4ThreeVector momentumDir(px, py, pz);
 
-    G4cout << "momDir" << G4endl;
     fParticleGun->SetParticleMomentumDirection(momentumDir);
 
-    G4cout << "Energy" << G4endl;
     fParticleGun->SetParticleEnergy(energy);
 
-    G4cout << "Position" << G4endl;
     fParticleGun->SetParticlePosition(G4ThreeVector(x, y, z));
 
-    G4cout << "Gen" << G4endl;
     fParticleGun->GeneratePrimaryVertex(event);
 
   }

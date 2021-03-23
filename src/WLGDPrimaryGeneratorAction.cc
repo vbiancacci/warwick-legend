@@ -15,8 +15,8 @@
 #include <fstream>
 
 
-G4String WLGDPrimaryGeneratorAction::fFileName;
-std::ifstream WLGDPrimaryGeneratorAction::fInputFile;
+//G4String WLGDPrimaryGeneratorAction::fFileName;
+//std::ifstream* WLGDPrimaryGeneratorAction::fInputFile;
 
 WLGDPrimaryGeneratorAction::WLGDPrimaryGeneratorAction(WLGDDetectorConstruction* det)
 : G4VUserPrimaryGeneratorAction()
@@ -135,7 +135,7 @@ void WLGDPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
 
     fInputFile >> nEvent >> particleID >> energy >> x >> y >> z >> theta >> phi;
 
-    G4cout << fInputFile.is_open() << " " << nEvent << " " << x << " " << y << " " << z << G4endl;
+    G4cout  << nEvent << " " << x << " " << y << " " << z << G4endl;
     if (fInputFile.eof())
     {
       fInputFile.close();

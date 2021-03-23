@@ -58,7 +58,7 @@ void WLGDPrimaryGeneratorAction::OpenFile()
 
   //  G4cerr << "File not valid!" << G4endl;
   }
-  else
+  //else
   //  G4cout << "Was opened!" << G4endl;
 }
 

@@ -24,9 +24,11 @@ public:
   virtual void EndOfRunAction(const G4Run*);
   void increaseNumberOfCrossingNeutrons(){fNumberOfCrossingNeutrons++;}
   void increaseTotalNumberOfNeutronsInLAr(){fTotalNumberOfNeutronsInLAr++;}
+  G4int getNumberOfNeutronsInLAr(){return fTotalNumberOfNeutronsInLAr;}
   void addCoordinatsToFile(G4double x, G4double y, G4double z){vector_x_dir.push_back(x);vector_y_dir.push_back(y);vector_z_dir.push_back(z);}//{outputStream_2 << x << " " << y << " " << z << endl;}
   void addMomentumToFile(G4double x, G4double y, G4double z){vector_x_mom.push_back(x);vector_y_mom.push_back(y);vector_z_mom.push_back(z);}//{outputStream_2 << x << " " << y << " " << z << endl;}
   void addEnergyToFile(G4double ekin){vector_energy.push_back(ekin);}//{outputStream_2 << x << " " << y << " " << z << endl;}
+  void addParentParticleType(G4int PDG_code){vector_parentParticleType.push_back(PDG_code);}
 
 private:
   WLGDEventAction* fEventAction;  // have event information for run
@@ -42,6 +44,7 @@ private:
   std::vector<G4double> vector_y_mom;
   std::vector<G4double> vector_z_mom;
   std::vector<G4double> vector_energy;
+  std::vector<G4int> vector_parentParticleType;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

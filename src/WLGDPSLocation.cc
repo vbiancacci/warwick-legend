@@ -41,9 +41,10 @@ G4bool WLGDPSLocation::ProcessHits(G4Step* aStep, G4TouchableHistory* /*unused*/
     G4StepPoint*  stepPoint = aStep->GetPreStepPoint();
     G4ThreeVector loc       = stepPoint->GetPosition();  // location at track creation
 
-    G4cout << "Position of Ge-77: " << loc.getX()/m << " " << loc.getY()/m << " " << loc.getZ()/m << G4endl;
-
+	G4cout << "Position of Ge-77: " << loc.getX()/m << " " << loc.getY()/m << " " << loc.getZ()/m << G4endl;
+	G4cout << "Index of Step: " << index << G4endl;
     EvtMap->add(index, loc);
+	G4cout << "EvtMap size while filling: " << EvtMap->size() << G4endl;
   }
   return true;
 }

@@ -48,6 +48,7 @@ WLGDRunAction::WLGDRunAction(WLGDEventAction* eventAction, G4String name)
   analysisManager->CreateNtupleDColumn("Neutronxmom", fEventAction->GetNeutronxMom());
   analysisManager->CreateNtupleDColumn("Neutronymom", fEventAction->GetNeutronyMom());
   analysisManager->CreateNtupleDColumn("Neutronzmom", fEventAction->GetNeutronzMom());
+  analysisManager->CreateNtupleIColumn("NeutronsInEvent", fEventAction->GetNumberOfNeutronsInEvent());
 
   analysisManager->CreateNtupleIColumn("Trjpdg", fEventAction->GetTrjPDG());
   analysisManager->CreateNtupleIColumn("Trjentries", fEventAction->GetTrjEntries());
@@ -96,7 +97,7 @@ void WLGDRunAction::EndOfRunAction(const G4Run* /*run*/)
 
   for(int i = 0; i < vector_x_dir.size(); i++)
   {
-    outputStream_2 << vector_x_dir[i] << " " << vector_y_dir[i] << " " << vector_z_dir[i] << " " << vector_x_mom[i] << " " << vector_y_mom[i] << " " << vector_z_mom[i] << endl;
+	outputStream_2 << vector_x_dir[i] << " " << vector_y_dir[i] << " " << vector_z_dir[i] << " " << vector_x_mom[i] << " " << vector_y_mom[i] << " " << vector_z_mom[i] << " " << vector_energy[i] << " " << vector_parentParticleType[i] << endl;
   }
   outputStream_2.close();
 }

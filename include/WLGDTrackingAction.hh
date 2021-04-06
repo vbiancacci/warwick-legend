@@ -4,6 +4,7 @@
 #include "G4UserTrackingAction.hh"
 #include "WLGDEventAction.hh"
 #include "WLGDRunAction.hh"
+#include <map>
 
 class WLGDTrackingAction : public G4UserTrackingAction
 {

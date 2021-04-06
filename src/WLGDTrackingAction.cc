@@ -7,6 +7,7 @@
 #include "G4Track.hh"
 #include "G4TrackingManager.hh"
 #include "G4UnitsTable.hh"
+#include <map>
 
 WLGDTrackingAction::WLGDTrackingAction() = default;
 
@@ -30,12 +31,15 @@ void WLGDTrackingAction::PreUserTrackingAction(const G4Track* aTrack)
     tmp_neutronZmom = tmp_vector.getZ();
     // G4cout << "Position of Neutron: " << tmp_neutronXpos << " " << tmp_neutronYpos << "
     // " << tmp_neutronZpos << G4endl;
-    if(aTrack->GetVolume()->GetName() == "Lar_phys")
+    fEventAction->IncreaseByOne_NeutronInEvent();
+    if(aTrack->GetLogicalVolumeAtVertex()->GetName() == "Lar_log" || aTrack->GetLogicalVolumeAtVertex()->GetName() == "ULar_log" || aTrack->GetLogicalVolumeAtVertex()->GetName() == "Ge_log" || aTrack->GetLogicalVolumeAtVertex()->GetName() == "Copper_log")// ULar_phys  Ge_phys
     {
       fRunAction->increaseTotalNumberOfNeutronsInLAr();
       fRunAction->addCoordinatsToFile(tmp_neutronXpos, tmp_neutronYpos, tmp_neutronZpos);
       fRunAction->addMomentumToFile(tmp_neutronXmom, tmp_neutronYmom, tmp_neutronZmom);
       fRunAction->addEnergyToFile(aTrack->GetKineticEnergy()/eV);
+//	G4cout << "Neutron produced by: "  << (fEventAction->neutronProducerMap.find((int)aTrack->GetParentID())->second) << " " << aTrack->GetParentID() << G4endl;
+      fRunAction->addParentParticleType(fEventAction->neutronProducerMap.find(aTrack->GetParentID())->second); 
     }
   }
 }
@@ -53,6 +57,10 @@ void WLGDTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
       {
         WLGDTrackInformation* infoNew = new WLGDTrackInformation(info);
         (*secondaries)[i]->SetUserInformation(infoNew);
+        if((*secondaries)[i]->GetParticleDefinition()->GetParticleName() == "neutron"){// && aTrack->GetParticleDefinition()->GetParticleName() != "neutron"){
+	 	//G4cout << aTrack->GetParticleDefinition()->GetPDGEncoding() << G4endl;
+	       	fEventAction->neutronProducerMap.insert(std::make_pair((int)aTrack->GetTrackID(),(int)aTrack->GetParticleDefinition()->GetPDGEncoding()));
+        }
       }
     }
   }

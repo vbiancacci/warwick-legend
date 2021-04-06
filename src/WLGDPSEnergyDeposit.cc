@@ -35,6 +35,7 @@ G4bool WLGDPSEnergyDeposit::ProcessHits(G4Step* aStep, G4TouchableHistory* /*unu
     edep *= aStep->GetPreStepPoint()->GetWeight();  // (Particle Weight)
     G4int index = GetIndex(aStep);
     EvtMap->add(index, edep);  // add all energy depositions, weighted
+    G4cout << "Energy depoited by Ge77: " << edep << G4endl;
   }
   else
     return false;

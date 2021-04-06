@@ -9,6 +9,7 @@
 #include "G4ThreeVector.hh"
 #include "G4UserEventAction.hh"
 #include "globals.hh"
+#include <map>
 
 /// Event action class
 ///
@@ -36,6 +37,7 @@ public:
   std::vector<G4double>& GetNeutronxMom() { return neutronxmom; }
   std::vector<G4double>& GetNeutronyMom() { return neutronymom; }
   std::vector<G4double>& GetNeutronzMom() { return neutronzmom; }
+  std::vector<G4int>& GetNumberOfNeutronsInEvent() { return NumberOfNeutronsProducedInEvent; }
 
   // tajectory methods
   std::vector<G4int>&    GetTrjPDG() { return trjpdg; }
@@ -55,6 +57,9 @@ public:
   void AddNeutronxMom(double posx){neutronxmom.push_back(posx);}
   void AddNeutronyMom(double posy){neutronymom.push_back(posy);}
   void AddNeutronzMom(double posz){neutronzmom.push_back(posz);}
+  std::map<int, int>         neutronProducerMap;
+  
+  void IncreaseByOne_NeutronInEvent(){NumberOfNeutronsProducedInEvent[0] += 1;}
 
 private:
   // methods
@@ -105,6 +110,7 @@ private:
   G4int                 fTimeID   = -1;
   G4int                 fWeightID = -1;
   G4int                 fEdepID   = -1;
+  std::vector<G4int>	NumberOfNeutronsProducedInEvent;
   std::vector<G4int>    htrid;
   std::vector<G4double> edep;
   std::vector<G4double> ekin;

@@ -462,6 +462,7 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
   // constants
   // size parameter, unit [cm]
   G4double offset = 200.0;  // shift cavern floor to keep detector centre at origin
+  G4double offset_2 = 100.0; // shift s.t. cavern, hall and tank are in line for different stone sizes
   // cavern
   G4double stone       = 500.0;  // Hall wall thickness 5 m
   G4double hallrad     = 600.0;  // Hall cylinder diam 12 m
@@ -474,7 +475,7 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
   // cryostat
   G4double cryowall   = 3.0;    // cryostat wall thickness from GERDA
   G4double vacgap     = 1.0;    // vacuum gap between walls
-  G4double cryrad     = 350.0;  // cryostat diam 7 m
+  G4double cryrad     = fCryostatOuterRadius; //350.0;  // cryostat diam 7 m
   G4double cryhheight = 350.0;  // cryostat height 7 m
   // copper tubes with Germanium ROI
   G4double copper    = 0.35;   // tube thickness 3.5 mm
@@ -518,7 +519,7 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
     new G4Tubs("Hall", 0.0 * cm, hallrad * cm, hallhheight * cm, 0.0, CLHEP::twopi);
   auto* fHallLogical = new G4LogicalVolume(hallSolid, airMat, "Hall_log");
   auto* fHallPhysical =
-    new G4PVPlacement(nullptr, G4ThreeVector(0., 0., -stone * cm), fHallLogical,
+    new G4PVPlacement(nullptr, G4ThreeVector(0., 0., /*-stone*/ -offset_2 * cm), fHallLogical,
                       "Hall_phys", fCavernLogical, false, 0, true);
 
   //
@@ -529,7 +530,7 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
                (tankrad + tankwalltop) * cm, tankhheight * cm, 0.0, CLHEP::twopi);
   auto* fTankLogical = new G4LogicalVolume(tankSolid, steelMat, "Tank_log");
   auto* fTankPhysical =
-    new G4PVPlacement(nullptr, G4ThreeVector(0., 0., -stone * cm), fTankLogical,
+    new G4PVPlacement(nullptr, G4ThreeVector(0., 0., /*-stone*/ -offset_2 * cm), fTankLogical,
                       "Tank_phys", fHallLogical, false, 0, true);
 
   //
@@ -931,6 +932,8 @@ void WLGDDetectorConstruction::SetXeConc(G4double nf) { fXeConc = nf*1e-3; WLGDD
 
 void WLGDDetectorConstruction::SetHe3Conc(G4double nf) { fHe3Conc = nf*1e-3; WLGDDetectorConstruction::DefineMaterials(); G4RunManager::GetRunManager()->ReinitializeGeometry();}
 
+void WLGDDetectorConstruction::SetOuterCryostatRadius(G4double rad) { fCryostatOuterRadius = rad*cm; WLGDDetectorConstruction::DefineMaterials(); G4RunManager::GetRunManager()->ReinitializeGeometry();}
+
 void WLGDDetectorConstruction::DefineCommands()
 {
   // Define geometry command directory using generic messenger class
@@ -983,6 +986,13 @@ void WLGDDetectorConstruction::DefineCommands()
     ->DeclareMethod("He3Conc", &WLGDDetectorConstruction::SetHe3Conc)
     .SetGuidance("Set concentration of He3 in the LAr [mg/g]")
     .SetDefaultValue("0.0")
+    .SetStates(G4State_PreInit)
+    .SetToBeBroadcasted(false);
+
+  fDetectorMessenger
+    ->DeclareMethod("Cryostat_Radius_Outer", &WLGDDetectorConstruction::SetOuterCryostatRadius)
+    .SetGuidance("Set the outer radius of the cryostat [m]")
+    .SetDefaultValue("350.0")
     .SetStates(G4State_PreInit)
     .SetToBeBroadcasted(false);
 

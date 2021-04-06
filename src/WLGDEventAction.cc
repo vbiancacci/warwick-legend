@@ -15,6 +15,7 @@
 #include <numeric>
 #include <vector>
 
+
 G4THitsMap<G4int>* WLGDEventAction::GetIntHitsCollection(G4int          hcID,
                                                          const G4Event* event) const
 {
@@ -128,6 +129,9 @@ void WLGDEventAction::BeginOfEventAction(const G4Event*
   trjypos.clear();
   trjzpos.clear();
 
+  NumberOfNeutronsProducedInEvent.clear();
+  NumberOfNeutronsProducedInEvent.push_back(0);
+
   makeMap();
 }
 
@@ -150,6 +154,10 @@ void WLGDEventAction::EndOfEventAction(const G4Event* event)
   G4THitsMap<G4ThreeVector>* LocMap    = GetVecHitsCollection(fLocID, event);
   G4THitsMap<G4double>*      TimeMap   = GetHitsCollection(fTimeID, event);
   G4THitsMap<G4double>*      WeightMap = GetHitsCollection(fWeightID, event);
+
+  if(ekin.size() > 0)
+	G4cout << "Ekin: " << ekin.size() << " ----- HitMap: " << HitsMap->entries() << "----- LocMap: " << LocMap->entries() << G4endl;
+
 
   if(HitsMap->entries() <= 0)
   {

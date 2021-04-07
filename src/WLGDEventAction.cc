@@ -95,7 +95,7 @@ G4int WLGDEventAction::GeomID(G4String name)
   if(it == lookup.end())
   {
     G4ExceptionDescription msg;
-    msg << "Name  " << name << " not in look up table";
+    msg << "Name  " << name << " Inot in look up table";
     G4Exception("WLGDEventAction::GeomID()", "MyCode0005", FatalException, msg);
   }
   return it->second;

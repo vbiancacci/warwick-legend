@@ -3,7 +3,7 @@
 #include "WLGDTrajectory.hh"
 
 #include "G4RunManager.hh"
-#include "G4SystemOfUnits.hh"c
+#include "G4SystemOfUnits.hh"
 #include "G4Track.hh"
 #include "G4TrackingManager.hh"
 #include "G4UnitsTable.hh"

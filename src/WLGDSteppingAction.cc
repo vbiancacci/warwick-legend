@@ -19,6 +19,8 @@ using namespace std;
 void WLGDSteppingAction::UserSteppingAction(const G4Step *aStep) {
 
 
+  // Edit: 2021/03/05 by Moritz Neuberger
+  // Adding tracking of amount of neutrons crossing the detectors
   if(aStep->GetTrack()->GetParticleDefinition()->GetParticleName() == "neutron")
   {
     if(aStep->GetTrack()->GetNextVolume())
@@ -30,6 +32,9 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step *aStep) {
       }
     }
   }
+
+  // Edit: 2021/04/07 by Moritz Neuberger
+  // Adding total energy deposition inside LAr
   if(aStep->GetTrack()->GetLogicalVolumeAtVertex()->GetName() == "Lar_log")
   {
     fEventAction->IncreaseLArEnergyDeposition(aStep->GetTotalEnergyDeposit());

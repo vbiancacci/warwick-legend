@@ -459,7 +459,13 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
 
   //if(fXeConc != 0 || fHe3Conc != 0)
     larMat        = larMat_alt;
-  // constants
+
+
+  // Edit: 2020/03/30 by Moritz Neuberger
+  // Adjusted size of stone (1m->5m) s.t. MUSUN cuboid lies inside.
+  // Also adjusted relative geometry relations s.t. they are independent of the stone size.
+
+    // constants
   // size parameter, unit [cm]
   G4double offset = 200.0;  // shift cavern floor to keep detector centre at origin
   G4double offset_2 = 100.0; // shift s.t. cavern, hall and tank are in line for different stone sizes
@@ -962,19 +968,7 @@ void WLGDDetectorConstruction::DefineCommands()
 
   // Edit: 2021/02/17 by Moritz Neuberger
   // Adding options to adjust the concentration of Xe and He-3 in the LAr to test change in Ge-77 production
-/*
-  auto& XeConcCmd = fDetectorMessenger->DeclareProperty("XeConc", fXeConc,
-                                               "Concentration of Xe in the LAr [mg/g]");
-  XeConcCmd.SetParameterName("cXe", true);
-  XeConcCmd.SetRange("cXe>=0.");
-  XeConcCmd.SetDefaultValue("0.");
 
-  auto& He3ConcCmd = fDetectorMessenger->DeclareProperty("He3Conc", fHe3Conc,
-                                                        "Concentration of He3 in the LAr [mg/g]");
-  He3ConcCmd.SetParameterName("cHe3", true);
-  He3ConcCmd.SetRange("cHe3>=0.");
-  He3ConcCmd.SetDefaultValue("0.");
-*/
   fDetectorMessenger
     ->DeclareMethod("XeConc", &WLGDDetectorConstruction::SetXeConc)
     .SetGuidance("Set concentration of Xe in the LAr [mg/g]")
@@ -988,6 +982,9 @@ void WLGDDetectorConstruction::DefineCommands()
     .SetDefaultValue("0.0")
     .SetStates(G4State_PreInit)
     .SetToBeBroadcasted(false);
+
+  // Edit: 2021/03/30 by Moritz Neuberger
+  // Adding options to adjust Cryostat Radius
 
   fDetectorMessenger
     ->DeclareMethod("Cryostat_Radius_Outer", &WLGDDetectorConstruction::SetOuterCryostatRadius)

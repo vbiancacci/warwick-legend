@@ -19,6 +19,8 @@ void WLGDTrackingAction::PreUserTrackingAction(const G4Track* aTrack)
     fpTrackingManager->SetTrajectory(new WLGDTrajectory(aTrack));
   }
 
+  // Edit: 2021/03/30 by Moritz Neuberger
+  // Adding tracking of neutrons being later captured by Ge-76 as well as general produced in LAr
   if(aTrack->GetParticleDefinition()->GetParticleName() == "neutron")
   {
     auto tmp_vector = aTrack->GetVertexPosition();
@@ -29,8 +31,6 @@ void WLGDTrackingAction::PreUserTrackingAction(const G4Track* aTrack)
     tmp_neutronXmom = tmp_vector.getX();
     tmp_neutronYmom = tmp_vector.getY();
     tmp_neutronZmom = tmp_vector.getZ();
-    // G4cout << "Position of Neutron: " << tmp_neutronXpos << " " << tmp_neutronYpos << "
-    // " << tmp_neutronZpos << G4endl;
     fEventAction->IncreaseByOne_NeutronInEvent();
     if(aTrack->GetLogicalVolumeAtVertex()->GetName() == "Lar_log" || aTrack->GetLogicalVolumeAtVertex()->GetName() == "ULar_log" || aTrack->GetLogicalVolumeAtVertex()->GetName() == "Ge_log" || aTrack->GetLogicalVolumeAtVertex()->GetName() == "Copper_log")// ULar_phys  Ge_phys
     {
@@ -38,7 +38,6 @@ void WLGDTrackingAction::PreUserTrackingAction(const G4Track* aTrack)
       fRunAction->addCoordinatsToFile(tmp_neutronXpos, tmp_neutronYpos, tmp_neutronZpos);
       fRunAction->addMomentumToFile(tmp_neutronXmom, tmp_neutronYmom, tmp_neutronZmom);
       fRunAction->addEnergyToFile(aTrack->GetKineticEnergy()/eV);
-//	G4cout << "Neutron produced by: "  << (fEventAction->neutronProducerMap.find((int)aTrack->GetParentID())->second) << " " << aTrack->GetParentID() << G4endl;
       fRunAction->addParentParticleType(fEventAction->neutronProducerMap.find(aTrack->GetParentID())->second); 
     }
   }
@@ -57,27 +56,27 @@ void WLGDTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
       {
         WLGDTrackInformation* infoNew = new WLGDTrackInformation(info);
         (*secondaries)[i]->SetUserInformation(infoNew);
-        if((*secondaries)[i]->GetParticleDefinition()->GetParticleName() == "neutron"){// && aTrack->GetParticleDefinition()->GetParticleName() != "neutron"){
-	 	//G4cout << aTrack->GetParticleDefinition()->GetPDGEncoding() << G4endl;
+
+        // Edit: 2021/03/30 by Moritz Neuberger
+        // Adding map of parent particles that create neutrons used above
+        if((*secondaries)[i]->GetParticleDefinition()->GetParticleName() == "neutron"){
 	       	fEventAction->neutronProducerMap.insert(std::make_pair((int)aTrack->GetTrackID(),(int)aTrack->GetParticleDefinition()->GetPDGEncoding()));
         }
       }
     }
   }
+
+  // Edit: 2021/03/30 by Moritz Neuberger
+  // Adding tracking of neutrons being later captured by Ge-76
+
   if(aTrack->GetParticleDefinition()->GetParticleName() == "neutron")
   {
-    // G4cout
-    // << "Step Process: "
-    // << aTrack->GetStep()->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName()
-    // << G4endl;
     if(aTrack->GetStep()->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName() ==
        "biasWrapper(nCapture)")
     {
-      // G4cout << "Got through nCapture" << G4endl;
       int NumberOfSecundaries = aTrack->GetStep()->GetSecondaryInCurrentStep()->size();
       for(int i = 0; i < NumberOfSecundaries; i++)
       {
-        // G4cout << "Looking for Ge77" << G4endl;
         if(aTrack->GetStep()
                ->GetSecondaryInCurrentStep()
                ->at(i)

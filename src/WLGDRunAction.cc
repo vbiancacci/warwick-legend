@@ -36,12 +36,15 @@ WLGDRunAction::WLGDRunAction(WLGDEventAction* eventAction, G4String name)
   //
   analysisManager->CreateNtuple("Score", "Hits");
   analysisManager->CreateNtupleDColumn("Edep", fEventAction->GetHitEdep());
-  analysisManager->CreateNtupleDColumn("Ekin", fEventAction->GetHitEkin());
   analysisManager->CreateNtupleDColumn("Time", fEventAction->GetHitTime());
   analysisManager->CreateNtupleDColumn("Weight", fEventAction->GetHitWeight());
   analysisManager->CreateNtupleDColumn("Hitxloc", fEventAction->GetHitxLoc());
   analysisManager->CreateNtupleDColumn("Hityloc", fEventAction->GetHityLoc());
   analysisManager->CreateNtupleDColumn("Hitzloc", fEventAction->GetHitzLoc());
+
+  // Edit: 2021/04/07 by Moritz Neuberger
+  // Adding additional outputs to further investigate situations in which Ge-77 is produced
+  analysisManager->CreateNtupleDColumn("Ekin", fEventAction->GetHitEkin());
   analysisManager->CreateNtupleDColumn("Neutronxloc", fEventAction->GetNeutronxLoc());
   analysisManager->CreateNtupleDColumn("Neutronyloc", fEventAction->GetNeutronyLoc());
   analysisManager->CreateNtupleDColumn("Neutronzloc", fEventAction->GetNeutronzLoc());
@@ -91,11 +94,15 @@ void WLGDRunAction::EndOfRunAction(const G4Run* /*run*/)
   analysisManager->Write();
   analysisManager->CloseFile();
 
+  // Edit: 2021/03/12 by Moritz Neuberger
+  // Adding output for number of neutrons crossing the detectors and total produced in LAr
   ofstream outputStream;
   outputStream.open(fout2.c_str(),ios::app);
   outputStream << fNumberOfCrossingNeutrons << "   " << fTotalNumberOfNeutronsInLAr << endl;
   outputStream.close();
 
+  // Edit: 2021/03/12 by Moritz Neuberger
+  // Adding detail output for neutron production information
   for(int i = 0; i < vector_x_dir.size(); i++)
   {
 	outputStream_2 << vector_x_dir[i] << " " << vector_y_dir[i] << " " << vector_z_dir[i] << " " << vector_x_mom[i] << " " << vector_y_mom[i] << " " << vector_z_mom[i] << " " << vector_energy[i] << " " << vector_parentParticleType[i] << endl;

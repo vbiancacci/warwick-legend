@@ -38,6 +38,7 @@ public:
   std::vector<G4double>& GetNeutronyMom() { return neutronymom; }
   std::vector<G4double>& GetNeutronzMom() { return neutronzmom; }
   std::vector<G4int>& GetNumberOfNeutronsInEvent() { return NumberOfNeutronsProducedInEvent; }
+  std::vector<G4double>& GetLArEnergyDeposition() { return TotalEnergyDepositionInLAr; }
 
   // tajectory methods
   std::vector<G4int>&    GetTrjPDG() { return trjpdg; }

@@ -30,6 +30,6 @@ void WLGDActionInitialization::Build() const
   auto run = new WLGDRunAction(event, foutname);
   SetUserAction(run);
   SetUserAction(new WLGDTrackingAction(event,run));
-  SetUserAction(new WLGDSteppingAction(run));
+  SetUserAction(new WLGDSteppingAction(event,run));
   SetUserAction(new WLGDStackingAction);
 }

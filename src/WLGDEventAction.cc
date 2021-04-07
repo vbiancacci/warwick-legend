@@ -132,6 +132,9 @@ void WLGDEventAction::BeginOfEventAction(const G4Event*
   NumberOfNeutronsProducedInEvent.clear();
   NumberOfNeutronsProducedInEvent.push_back(0);
 
+  TotalEnergyDepositionInLAr.clear();
+  TotalEnergyDepositionInLAr.push_back(0);
+
   makeMap();
 }
 

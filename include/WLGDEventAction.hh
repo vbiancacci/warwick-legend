@@ -58,8 +58,9 @@ public:
   void AddNeutronyMom(double posy){neutronymom.push_back(posy);}
   void AddNeutronzMom(double posz){neutronzmom.push_back(posz);}
   std::map<int, int>         neutronProducerMap;
-  
+
   void IncreaseByOne_NeutronInEvent(){NumberOfNeutronsProducedInEvent[0] += 1;}
+  void IncreaseLArEnergyDeposition(G4double Edep){TotalEnergyDepositionInLAr[0] += Edep;}
 
 private:
   // methods
@@ -111,6 +112,7 @@ private:
   G4int                 fWeightID = -1;
   G4int                 fEdepID   = -1;
   std::vector<G4int>	NumberOfNeutronsProducedInEvent;
+  std::vector<G4double>	TotalEnergyDepositionInLAr;
   std::vector<G4int>    htrid;
   std::vector<G4double> edep;
   std::vector<G4double> ekin;

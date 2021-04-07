@@ -6,7 +6,7 @@
 #include <iostream>
 
 using namespace std;
-
+#include "WLGDTrackingAction.hh"
 #include "WLGDSteppingAction.hh"
 #include "WLGDRunAction.hh"
 
@@ -29,6 +29,10 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step *aStep) {
         fRunAction->increaseNumberOfCrossingNeutrons();
       }
     }
+  }
+  if(aStep->GetTrack()->GetLogicalVolumeAtVertex()->GetName() == "Lar_log")
+  {
+    fEventAction->IncreaseLArEnergyDeposition(aStep->GetTotalEnergyDeposit());
   }
 
 }

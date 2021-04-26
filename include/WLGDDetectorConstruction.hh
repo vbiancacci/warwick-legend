@@ -45,10 +45,11 @@ private:
   G4double                            fXeConc            = 0.0;
   G4double                            fHe3Conc            = 0.0;
   G4double			      fCryostatOuterRadius = 350.0;
+  G4double 			      fCryostatHeight = 350.0;
   void                                SetXeConc(G4double nf);
   void                                SetHe3Conc(G4double nf);
   void 				      SetOuterCryostatRadius(G4double rad);
-
+  void 				      SetCryostatHeight(G4double height);
 };
 
 #endif

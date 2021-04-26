@@ -482,7 +482,7 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
   G4double cryowall   = 3.0;    // cryostat wall thickness from GERDA
   G4double vacgap     = 1.0;    // vacuum gap between walls
   G4double cryrad     = fCryostatOuterRadius; //350.0;  // cryostat diam 7 m
-  G4double cryhheight = 350.0;  // cryostat height 7 m
+  G4double cryhheight = fCryostatHeight; //350.0;  // cryostat height 7 m
   // copper tubes with Germanium ROI
   G4double copper    = 0.35;   // tube thickness 3.5 mm
   G4double curad     = 40.0;   // copper tube diam 80 cm
@@ -933,12 +933,13 @@ void WLGDDetectorConstruction::SetNeutronBiasFactor(G4double nf) { fNeutronBias 
 
 void WLGDDetectorConstruction::SetMuonBiasFactor(G4double mf) { fMuonBias = mf; }
 
-
 void WLGDDetectorConstruction::SetXeConc(G4double nf) { fXeConc = nf*1e-3; WLGDDetectorConstruction::DefineMaterials(); G4RunManager::GetRunManager()->ReinitializeGeometry();}
 
 void WLGDDetectorConstruction::SetHe3Conc(G4double nf) { fHe3Conc = nf*1e-3; WLGDDetectorConstruction::DefineMaterials(); G4RunManager::GetRunManager()->ReinitializeGeometry();}
 
-void WLGDDetectorConstruction::SetOuterCryostatRadius(G4double rad) { fCryostatOuterRadius = rad*cm; WLGDDetectorConstruction::DefineMaterials(); G4RunManager::GetRunManager()->ReinitializeGeometry();}
+void WLGDDetectorConstruction::SetOuterCryostatRadius(G4double rad) { fCryostatOuterRadius = rad; WLGDDetectorConstruction::DefineMaterials(); G4RunManager::GetRunManager()->ReinitializeGeometry();}
+
+void WLGDDetectorConstruction::SetCryostatHeight(G4double height) {fCryostatHeight = height; WLGDDetectorConstruction::DefineMaterials(); G4RunManager::GetRunManager()->ReinitializeGeometry();}
 
 void WLGDDetectorConstruction::DefineCommands()
 {
@@ -988,7 +989,14 @@ void WLGDDetectorConstruction::DefineCommands()
 
   fDetectorMessenger
     ->DeclareMethod("Cryostat_Radius_Outer", &WLGDDetectorConstruction::SetOuterCryostatRadius)
-    .SetGuidance("Set the outer radius of the cryostat [m]")
+    .SetGuidance("Set the outer radius of the cryostat [cm]")
+    .SetDefaultValue("350.0")
+    .SetStates(G4State_PreInit)
+    .SetToBeBroadcasted(false);
+
+  fDetectorMessenger
+    ->DeclareMethod("Cryostat_Height", &WLGDDetectorConstruction::SetCryostatHeight)
+    .SetGuidance("Set the height of the cryostat [cm]")
     .SetDefaultValue("350.0")
     .SetStates(G4State_PreInit)
     .SetToBeBroadcasted(false);

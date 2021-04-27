@@ -457,7 +457,7 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
   auto* stdRock       = G4Material::GetMaterial("StdRock");
   auto* roiMat        = G4Material::GetMaterial("enrGe");
   auto* larMat/*_alt*/        = G4Material::GetMaterial("CombinedArXeHe3");
-
+  G4cout << larMat << G4endl;
   //if(fXeConc != 0 || fHe3Conc != 0)
    // larMat        = larMat_alt;
 

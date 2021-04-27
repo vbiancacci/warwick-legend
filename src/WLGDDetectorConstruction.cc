@@ -139,7 +139,7 @@ void WLGDDetectorConstruction::DefineMaterials()
   G4Isotope *iHe3 = new G4Isotope("He3", 2, 3);
   eHe3->AddIsotope(iHe3, 1);
 
-  auto* CombinedArXeHe3 = new G4Material("CombinedArXeHe3", dComb, 3, kStateLiquid, 87.*kelvin);
+  CombinedArXeHe3 = new G4Material("CombinedArXeHe3", dComb, 3, kStateLiquid, 87.*kelvin);
   CombinedArXeHe3->AddMaterial(larMat, fArConc);
   CombinedArXeHe3->AddElement(eHe3, fHe3Conc);
   CombinedArXeHe3->AddElement(eLXe, fXeConc);
@@ -457,9 +457,9 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
   auto* stdRock       = G4Material::GetMaterial("StdRock");
   auto* roiMat        = G4Material::GetMaterial("enrGe");
   auto* larMat/*_alt*/        = G4Material::GetMaterial("CombinedArXeHe3");
-  G4cout << larMat << G4endl;
   //if(fXeConc != 0 || fHe3Conc != 0)
-   // larMat        = larMat_alt;
+    larMat        = CombinedArXeHe3;
+  G4cout << larMat << G4endl;
 
 
   // Edit: 2020/03/30 by Moritz Neuberger

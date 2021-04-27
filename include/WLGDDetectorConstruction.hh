@@ -5,6 +5,7 @@
 #include "G4GenericMessenger.hh"
 #include "G4VUserDetectorConstruction.hh"
 #include "globals.hh"
+#include "G4Material.hh"
 
 class G4VPhysicalVolume;
 class G4MultiFunctionalDetector;
@@ -46,6 +47,7 @@ private:
   G4double                            fHe3Conc            = 0.0;
   G4double			      fCryostatOuterRadius = 350.0;
   G4double 			      fCryostatHeight = 350.0;
+  G4Material*                                CombinedArXeHe3;
   void                                SetXeConc(G4double nf);
   void                                SetHe3Conc(G4double nf);
   void 				      SetOuterCryostatRadius(G4double rad);

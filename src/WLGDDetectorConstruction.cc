@@ -129,6 +129,7 @@ void WLGDDetectorConstruction::DefineMaterials()
   G4cout << "LAr:   " << fArConc << G4endl;
   G4cout << "LXe:   " << fXeConc << G4endl;
   G4cout << "LHe3:   " << fHe3Conc << G4endl;
+  G4cout << "dComb:   " << dComb << G4endl;
   G4cout << "___________________________________________" << G4endl;
 
   //auto* eLAr = new G4Element("LAr", "Ar", 18., 39.95 * g / mole);
@@ -448,17 +449,17 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
 {
   // Get materials
   auto* worldMaterial = G4Material::GetMaterial("G4_Galactic");
-  auto* larMat        = G4Material::GetMaterial("G4_lAr");
+  //auto* larMat        = G4Material::GetMaterial("G4_lAr");
   auto* airMat        = G4Material::GetMaterial("G4_AIR");
   auto* waterMat      = G4Material::GetMaterial("G4_WATER");
   auto* steelMat      = G4Material::GetMaterial("G4_STAINLESS-STEEL");
   auto* copperMat     = G4Material::GetMaterial("G4_Cu");
   auto* stdRock       = G4Material::GetMaterial("StdRock");
   auto* roiMat        = G4Material::GetMaterial("enrGe");
-  auto* larMat_alt        = G4Material::GetMaterial("CombinedArXeHe3");
+  auto* larMat/*_alt*/        = G4Material::GetMaterial("CombinedArXeHe3");
 
   //if(fXeConc != 0 || fHe3Conc != 0)
-    larMat        = larMat_alt;
+   // larMat        = larMat_alt;
 
 
   // Edit: 2020/03/30 by Moritz Neuberger

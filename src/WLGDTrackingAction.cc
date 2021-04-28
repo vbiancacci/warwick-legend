@@ -1,5 +1,5 @@
 #include "WLGDTrackingAction.hh"
-#include "WLGDTrackInformation.hh"
+// #include "WLGDTrackInformation.hh"
 #include "WLGDTrajectory.hh"
 
 #include "G4RunManager.hh"

@@ -100,6 +100,21 @@ void WLGDDetectorConstruction::DefineMaterials()
   puMat->AddElement(C, 8);
   puMat->AddElement(N, 2);
 
+  // Borated Polyethylene according to GEM TN-92-172 TART Calculations of Neutron Attenuation and Neutron-induced Photons on 5 % and 20 % Borated Polyethylene Slabs
+  auto* B10  = new G4Isotope("B10",5,10,10 * g / mole);
+  auto* B11  = new G4Isotope("B11",5,11,11 * g / mole);
+  auto* SpecialB = new G4Element("SpecialB", "SpecialB", 2);
+  G4double B_MassRatio = 0.2;
+  G4double B_NumberRatio = 1/(1 + (1-B_MassRatio)/B_MassRatio * 10./11.);
+  SpecialB->AddIsotope(B10, B_NumberRatio);
+  SpecialB->AddIsotope(B11, 1-B_NumberRatio);
+  auto* BoratedPET = new G4Material("BoratedPET", 0.95 * g / cm3, 4);  // high density foam
+  BoratedPET->AddElement(H,0.116);
+  BoratedPET->AddElement(C,0.612);
+  BoratedPET->AddElement(SpecialB,0.05);
+  BoratedPET->AddElement(O,0.222);
+
+
   // enriched Germanium from isotopes
   auto* Ge_74 = new G4Isotope("Ge74", 32, 74, 74.0 * g / mole);
   auto* Ge_76 = new G4Isotope("Ge76", 32, 76, 76.0 * g / mole);
@@ -221,7 +236,7 @@ void WLGDDetectorConstruction::ConstructSDandField()
     {
       G4LogicalVolume* logicCu = volumeStore->GetVolume("Copper_log");
       biasmuXS->AttachTo(logicCu);
-      G4LogicalVolume* logicULar = volumeStore->GetVolume("ULar_log");
+      G4LogicalVolume* logicULar = volumeStore->GetVG4Materialolume("ULar_log");
       biasmuXS->AttachTo(logicULar);
     }
 
@@ -456,10 +471,11 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
   auto* copperMat     = G4Material::GetMaterial("G4_Cu");
   auto* stdRock       = G4Material::GetMaterial("StdRock");
   auto* roiMat        = G4Material::GetMaterial("enrGe");
+  auto* BoratedPETMat        = G4Material::GetMaterial("BoratedPET");
   auto* larMat/*_alt*/        = G4Material::GetMaterial("CombinedArXeHe3");
-  //if(fXeConc != 0 || fHe3Conc != 0)
+  //if(fXeConc != 0 || fHe3Conc != 0) BoratedPET
     larMat        = CombinedArXeHe3;
-  G4cout << larMat << G4endl;
+  //G4cout << larMat << G4endl;
 
 
   // Edit: 2020/03/30 by Moritz Neuberger
@@ -484,11 +500,13 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
   G4double vacgap     = 1.0;    // vacuum gap between walls
   G4double cryrad     = fCryostatOuterRadius; //350.0;  // cryostat diam 7 m
   G4double cryhheight = fCryostatHeight; //350.0;  // cryostat height 7 m
+  // Borated PET tubes around copper tubes
+  G4double BoratedPETouterrad    = 5;    // tube thickness 5 cm
   // copper tubes with Germanium ROI
   G4double copper    = 0.35;   // tube thickness 3.5 mm
   G4double curad     = 40.0;   // copper tube diam 80 cm
-  G4double cuhheight = 200.0;  // copper tube height 4 m inside cryostat
-  G4double cushift   = 150.0;  // shift cu tube inside cryostat to top
+  G4double cuhheight = (400 - (350-fCryostatHeight))/2.;//200.0;  // copper tube height 4 m inside cryostat
+  G4double cushift   = fCryostatHeight - cuhheight;//150.0;  // shift cu tube inside cryostat to top
   G4double ringrad   = 100.0;  // cu tube placement ring radius
   // Ge cylinder for 250 kg at 5.32 g/cm3^
   G4double roiradius     = 25.0;   // detector region diam 50 cm
@@ -599,12 +617,18 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
     new G4PVPlacement(nullptr, G4ThreeVector(0., 0., -(cryhheight + cryowall / 2.0) * cm),
                       fBotLogical, "Bot_phys", fWaterLogical, false, 0, true);
 
+
   //
   // copper tubes, hollow cylinder shell
   //
-  auto* copperSolid = new G4Tubs("Copper", (curad - copper) * cm, curad * cm,
-                                 cuhheight * cm, 0.0, CLHEP::twopi);
+  auto* boratedPETSolid = new G4Tubs("BoratedPET", curad * cm, (BoratedPETouterrad + curad) * cm,
+                                     cuhheight * cm, 0.0, CLHEP::twopi);
 
+  //
+    // copper tubes, hollow cylinder shell
+    //
+    auto* copperSolid = new G4Tubs("Copper", (curad - copper) * cm, curad * cm,
+                                   cuhheight * cm, 0.0, CLHEP::twopi);
   //
   // ULAr bath, solid cylinder
   //
@@ -618,12 +642,16 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
     new G4Tubs("ROI", 0.0 * cm, roiradius * cm, roihalfheight * cm, 0.0, CLHEP::twopi);
 
   // tower; logical volumes
+  auto* fBoratedPETLogical = new G4LogicalVolume(boratedPETSolid, BoratedPETMat, "BoratedPET_Logical");
   auto* fCopperLogical = new G4LogicalVolume(copperSolid, copperMat, "Copper_log");
   auto* fUlarLogical   = new G4LogicalVolume(ularSolid, larMat, "ULar_log");
   auto* fGeLogical     = new G4LogicalVolume(geSolid, roiMat, "Ge_log");
 
   // placements
-  new G4PVPlacement(nullptr, G4ThreeVector(ringrad * cm, 0., cushift * cm),
+  if(fWithBoratedPET == 1) new G4PVPlacement(nullptr, G4ThreeVector(ringrad * cm, 0., cushift * cm),
+                    fBoratedPETLogical, "BoratedPET_phys", fLarLogical, false, 0, true);
+
+  if(fWithOutCupperTubes == 0) new G4PVPlacement(nullptr, G4ThreeVector(ringrad * cm, 0., cushift * cm),
                     fCopperLogical, "Copper_phys", fLarLogical, false, 0, true);
 
   new G4PVPlacement(nullptr, G4ThreeVector(ringrad * cm, 0., cushift * cm), fUlarLogical,
@@ -633,21 +661,30 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
                     "Ge_phys", fUlarLogical, false, 0, true);
 
   // tower 2
-  new G4PVPlacement(nullptr, G4ThreeVector(0., ringrad * cm, cushift * cm),
+  if(fWithBoratedPET == 1) new G4PVPlacement(nullptr, G4ThreeVector(0., ringrad * cm, cushift * cm),
+                                             fBoratedPETLogical, "BoratedPET_phys2", fLarLogical, false, 1, true);
+
+  if(fWithOutCupperTubes == 0) new G4PVPlacement(nullptr, G4ThreeVector(0., ringrad * cm, cushift * cm),
                     fCopperLogical, "Copper_phys2", fLarLogical, false, 1, true);
 
   new G4PVPlacement(nullptr, G4ThreeVector(0., ringrad * cm, cushift * cm), fUlarLogical,
                     "ULar_phys2", fLarLogical, false, 1, true);
 
   // tower 3
-  new G4PVPlacement(nullptr, G4ThreeVector(-ringrad * cm, 0., cushift * cm),
+  if(fWithBoratedPET == 1) new G4PVPlacement(nullptr, G4ThreeVector(-ringrad * cm, 0., cushift * cm),
+                                             fBoratedPETLogical, "BoratedPET_phys3", fLarLogical, false, 2, true);
+
+  if(fWithOutCupperTubes == 0) new G4PVPlacement(nullptr, G4ThreeVector(-ringrad * cm, 0., cushift * cm),
                     fCopperLogical, "Copper_phys3", fLarLogical, false, 2, true);
 
   new G4PVPlacement(nullptr, G4ThreeVector(-ringrad * cm, 0., cushift * cm), fUlarLogical,
                     "ULar_phys3", fLarLogical, false, 2, true);
 
   // tower 4
-  new G4PVPlacement(nullptr, G4ThreeVector(0., -ringrad * cm, cushift * cm),
+  if(fWithBoratedPET == 1) new G4PVPlacement(nullptr, G4ThreeVector(0., -ringrad * cm, cushift * cm),
+                                             fBoratedPETLogical, "BoratedPET_phys4", fLarLogical, false, 3, true);
+
+  if(fWithOutCupperTubes == 0) new G4PVPlacement(nullptr, G4ThreeVector(0., -ringrad * cm, cushift * cm),
                     fCopperLogical, "Copper_phys4", fLarLogical, false, 3, true);
 
   new G4PVPlacement(nullptr, G4ThreeVector(0., -ringrad * cm, cushift * cm), fUlarLogical,
@@ -905,7 +942,7 @@ auto WLGDDetectorConstruction::SetupHallA() -> G4VPhysicalVolume*
   fLayerLogical->SetVisAttributes(blueVisAtt);
   fGapLogical->SetVisAttributes(greyVisAtt);
   fGeLogical->SetVisAttributes(redVisAtt);
-
+fWithBoratedPET
   return fWorldPhysical;
 }
 
@@ -941,6 +978,10 @@ void WLGDDetectorConstruction::SetHe3Conc(G4double nf) { fHe3Conc = nf*1e-3; WLG
 void WLGDDetectorConstruction::SetOuterCryostatRadius(G4double rad) { fCryostatOuterRadius = rad; WLGDDetectorConstruction::DefineMaterials(); G4RunManager::GetRunManager()->ReinitializeGeometry();}
 
 void WLGDDetectorConstruction::SetCryostatHeight(G4double height) {fCryostatHeight = height; WLGDDetectorConstruction::DefineMaterials(); G4RunManager::GetRunManager()->ReinitializeGeometry();}
+
+void WLGDDetectorConstruction::SetWithoutCupperTubes(G4int answer) {fWithOutCupperTubes = answer; WLGDDetectorConstruction::DefineMaterials(); G4RunManager::GetRunManager()->ReinitializeGeometry();}
+
+void WLGDDetectorConstruction::SetBoratedPET(G4int answer){fWithBoratedPET = answer;  WLGDDetectorConstruction::DefineMaterials(); G4RunManager::GetRunManager()->ReinitializeGeometry();}
 
 void WLGDDetectorConstruction::DefineCommands()
 {
@@ -1001,6 +1042,25 @@ void WLGDDetectorConstruction::DefineCommands()
     .SetDefaultValue("350.0")
     .SetStates(G4State_PreInit)
     .SetToBeBroadcasted(false);
+
+
+  // musun file command
+
+  fDetectorMessenger
+    ->DeclareMethod("Without_Cupper_Tubes", &WLGDDetectorConstruction::SetWithoutCupperTubes)
+    .SetGuidance("Set whether to include cupper tubes or not")
+    .SetGuidance("0 = with cupper tubes")
+    .SetGuidance("1 = without cupper tubes")
+    .SetCandidates("0 1")
+    .SetDefaultValue("0");
+
+  fDetectorMessenger
+    ->DeclareMethod("With_Borated_PET", &WLGDDetectorConstruction::SetBoratedPET)
+    .SetGuidance("Set whether to include Borated PET tubes or not")
+    .SetGuidance("0 = without Borated PET")
+    .SetGuidance("1 = with Borated PET")
+    .SetCandidates("0 1")
+    .SetDefaultValue("0");
 
   // Define bias operator command directory using generic messenger class
   fBiasMessenger =

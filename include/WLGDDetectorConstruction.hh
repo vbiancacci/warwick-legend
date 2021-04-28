@@ -26,6 +26,8 @@ public:
   void     ExportGeometry(const G4String& file);
   void     SetNeutronBiasFactor(G4double nf);
   void     SetMuonBiasFactor(G4double mf);
+  void     SetWithoutCupperTubes(G4int answer);
+  void     SetBoratedPET(G4int answer);
 
 private:
   void DefineCommands();
@@ -47,6 +49,8 @@ private:
   G4double                            fHe3Conc            = 0.0;
   G4double			      fCryostatOuterRadius = 350.0;
   G4double 			      fCryostatHeight = 350.0;
+  G4int                               fWithOutCupperTubes = 0;
+  G4int                               fWithBoratedPET = 0;
   G4Material*                                CombinedArXeHe3;
   void                                SetXeConc(G4double nf);
   void                                SetHe3Conc(G4double nf);

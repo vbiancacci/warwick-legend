@@ -16,19 +16,7 @@ WLGDRunAction::WLGDRunAction(WLGDEventAction* eventAction, G4String name)
 , fout(std::move(name))
 {
 
-  ofstream outputStream;
-  if(fWriteOutGeneralNeutronInfo == 1)
-  {
-    fout2 = fout + "_NCrossing.txt";
-    outputStream.open(fout2.c_str(), ios::trunc);
-    outputStream.close();
-  }
-
-  if(fWriteOutNeutronProductionInfo == 1)
-  {
-    fout3 = fout + "_NCreationPosition.txt";
-    outputStream_2.open(fout3.c_str(), ios::trunc);
-  }
+  DefineCommands();
 
   // Create analysis manager
   auto analysisManager = G4AnalysisManager::Instance();
@@ -84,6 +72,20 @@ void WLGDRunAction::BeginOfRunAction(const G4Run* /*run*/)
 
   fNumberOfCrossingNeutrons = 0;
   fTotalNumberOfNeutronsInLAr = 0;
+
+  ofstream outputStream;
+  if(fWriteOutGeneralNeutronInfo == 1)
+  {
+    fout2 = fout + "_NCrossing.txt";
+    outputStream.open(fout2.c_str(), ios::trunc);
+    outputStream.close();
+  }
+
+  if(fWriteOutNeutronProductionInfo == 1)
+  {
+    fout3 = fout + "_NCreationPosition.txt";
+    outputStream_2.open(fout3.c_str(), ios::trunc);
+  }
 }
 
 void WLGDRunAction::EndOfRunAction(const G4Run* /*run*/)

@@ -1,6 +1,7 @@
 #ifndef WLGDRunAction_h
 #define WLGDRunAction_h 1
 
+#include "G4GenericMessenger.hh"
 #include "G4UserRunAction.hh"
 #include "globals.hh"
 
@@ -29,14 +30,20 @@ public:
   void addMomentumToFile(G4double x, G4double y, G4double z){vector_x_mom.push_back(x);vector_y_mom.push_back(y);vector_z_mom.push_back(z);}//{outputStream_2 << x << " " << y << " " << z << endl;}
   void addEnergyToFile(G4double ekin){vector_energy.push_back(ekin);}//{outputStream_2 << x << " " << y << " " << z << endl;}
   void addParentParticleType(G4int PDG_code){vector_parentParticleType.push_back(PDG_code);}
-
+  G4int getWriteOutNeutronProductionInfo(){return fWriteOutNeutronProductionInfo;}
+  G4int getWriteOutGeneralNeutronInfo(){return fWriteOutGeneralNeutronInfo;}
 private:
+  void DefineCommands();
+private:
+  G4GenericMessenger* fMessenger;
   WLGDEventAction* fEventAction;  // have event information for run
   G4String         fout;          // output file name
   G4int            fNumberOfCrossingNeutrons;
   G4int            fTotalNumberOfNeutronsInLAr;
   G4String         fout2, fout3;
   ofstream         outputStream_2;
+  G4int            fWriteOutNeutronProductionInfo = 0;
+  G4int            fWriteOutGeneralNeutronInfo = 0;
   std::vector<G4double> vector_x_dir;
   std::vector<G4double> vector_y_dir;
   std::vector<G4double> vector_z_dir;
@@ -45,6 +52,8 @@ private:
   std::vector<G4double> vector_z_mom;
   std::vector<G4double> vector_energy;
   std::vector<G4int> vector_parentParticleType;
+  void SetWriteOutNeutronProductionInfo(G4int answer);
+  void SetWriteOutGeneralNeutronInfo(G4int answer);
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

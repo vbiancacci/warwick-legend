@@ -17,13 +17,18 @@ WLGDRunAction::WLGDRunAction(WLGDEventAction* eventAction, G4String name)
 {
 
   ofstream outputStream;
-  fout2 = fout + "_NCrossing.txt";
-  outputStream.open(fout2.c_str(),ios::trunc);
-  outputStream.close();
+  if(fWriteOutGeneralNeutronInfo == 1)
+  {
+    fout2 = fout + "_NCrossing.txt";
+    outputStream.open(fout2.c_str(), ios::trunc);
+    outputStream.close();
+  }
 
-
-  fout3 = fout + "_NCreationPosition.txt";
-  outputStream_2.open(fout3.c_str(),ios::trunc);
+  if(fWriteOutNeutronProductionInfo == 1)
+  {
+    fout3 = fout + "_NCreationPosition.txt";
+    outputStream_2.open(fout3.c_str(), ios::trunc);
+  }
 
   // Create analysis manager
   auto analysisManager = G4AnalysisManager::Instance();
@@ -96,16 +101,51 @@ void WLGDRunAction::EndOfRunAction(const G4Run* /*run*/)
 
   // Edit: 2021/03/12 by Moritz Neuberger
   // Adding output for number of neutrons crossing the detectors and total produced in LAr
-  ofstream outputStream;
-  outputStream.open(fout2.c_str(),ios::app);
-  outputStream << fNumberOfCrossingNeutrons << "   " << fTotalNumberOfNeutronsInLAr << endl;
-  outputStream.close();
+  if(fWriteOutGeneralNeutronInfo == 1)
+  {
+    ofstream outputStream;
+    outputStream.open(fout2.c_str(), ios::app);
+    outputStream << fNumberOfCrossingNeutrons << "   " << fTotalNumberOfNeutronsInLAr
+                 << endl;
+    outputStream.close();
+  }
 
   // Edit: 2021/03/12 by Moritz Neuberger
   // Adding detail output for neutron production information
-  for(int i = 0; i < vector_x_dir.size(); i++)
-  {
-	outputStream_2 << vector_x_dir[i] << " " << vector_y_dir[i] << " " << vector_z_dir[i] << " " << vector_x_mom[i] << " " << vector_y_mom[i] << " " << vector_z_mom[i] << " " << vector_energy[i] << " " << vector_parentParticleType[i] << endl;
+  if(fWriteOutNeutronProductionInfo == 1){
+    for(int i = 0; i < vector_x_dir.size(); i++)
+    {
+      outputStream_2 << vector_x_dir[i] << " " << vector_y_dir[i] << " " << vector_z_dir[i] << " " << vector_x_mom[i] << " " << vector_y_mom[i] << " " << vector_z_mom[i] << " " << vector_energy[i] << " " << vector_parentParticleType[i] << endl;
+    }
+    outputStream_2.close();
   }
-  outputStream_2.close();
 }
+
+void WLGDRunAction::SetWriteOutNeutronProductionInfo(G4int answer){ fWriteOutNeutronProductionInfo = answer; }
+
+void WLGDRunAction::SetWriteOutGeneralNeutronInfo(G4int answer){ fWriteOutGeneralNeutronInfo = answer; }
+
+void WLGDRunAction::DefineCommands()
+{
+  // Define /WLGD/generator command directory using generic messenger class
+  fMessenger =
+    new G4GenericMessenger(this, "/WLGD/runaction/", "Run Action control");
+
+  fMessenger
+    ->DeclareMethod("WriteOutNeutronProductionInfo", &WLGDRunAction::SetWriteOutNeutronProductionInfo)
+    .SetGuidance("Set whether to write out Neutron Production Info")
+    .SetGuidance("0 = without write out")
+    .SetGuidance("1 = with write out")
+    .SetCandidates("0 1")
+    .SetDefaultValue("0");
+
+  fMessenger
+    ->DeclareMethod("WriteOutGeneralNeutronInfo", &WLGDRunAction::SetWriteOutGeneralNeutronInfo)
+    .SetGuidance("Set whether to write out General Neutron Info")
+    .SetGuidance("0 = without write out")
+    .SetGuidance("1 = with write out")
+    .SetCandidates("0 1")
+    .SetDefaultValue("0");
+
+}
+

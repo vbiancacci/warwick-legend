@@ -31,14 +31,24 @@ void WLGDTrackingAction::PreUserTrackingAction(const G4Track* aTrack)
     tmp_neutronXmom = tmp_vector.getX();
     tmp_neutronYmom = tmp_vector.getY();
     tmp_neutronZmom = tmp_vector.getZ();
-    fEventAction->IncreaseByOne_NeutronInEvent();
-    if(aTrack->GetLogicalVolumeAtVertex()->GetName() == "Lar_log" || aTrack->GetLogicalVolumeAtVertex()->GetName() == "ULar_log" || aTrack->GetLogicalVolumeAtVertex()->GetName() == "Ge_log" || aTrack->GetLogicalVolumeAtVertex()->GetName() == "Copper_log")// ULar_phys  Ge_phys
+    if(fRunAction->getWriteOutGeneralNeutronInfo() == 1) fEventAction->IncreaseByOne_NeutronInEvent();
+
+    if(fRunAction->getWriteOutNeutronProductionInfo() == 1)
     {
-      fRunAction->increaseTotalNumberOfNeutronsInLAr();
-      fRunAction->addCoordinatsToFile(tmp_neutronXpos, tmp_neutronYpos, tmp_neutronZpos);
-      fRunAction->addMomentumToFile(tmp_neutronXmom, tmp_neutronYmom, tmp_neutronZmom);
-      fRunAction->addEnergyToFile(aTrack->GetKineticEnergy()/eV);
-      fRunAction->addParentParticleType(fEventAction->neutronProducerMap.find(aTrack->GetParentID())->second); 
+      if(aTrack->GetLogicalVolumeAtVertex()->GetName() == "Lar_log" ||
+         aTrack->GetLogicalVolumeAtVertex()->GetName() == "ULar_log" ||
+         aTrack->GetLogicalVolumeAtVertex()->GetName() == "Ge_log" ||
+         aTrack->GetLogicalVolumeAtVertex()->GetName() ==
+           "Copper_log")  // ULar_phys  Ge_phys
+      {
+        fRunAction->increaseTotalNumberOfNeutronsInLAr();
+        fRunAction->addCoordinatsToFile(tmp_neutronXpos, tmp_neutronYpos,
+                                        tmp_neutronZpos);
+        fRunAction->addMomentumToFile(tmp_neutronXmom, tmp_neutronYmom, tmp_neutronZmom);
+        fRunAction->addEnergyToFile(aTrack->GetKineticEnergy() / eV);
+        fRunAction->addParentParticleType(
+          fEventAction->neutronProducerMap.find(aTrack->GetParentID())->second);
+      }
     }
   }
 }
@@ -59,8 +69,14 @@ void WLGDTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
 
         // Edit: 2021/03/30 by Moritz Neuberger
         // Adding map of parent particles that create neutrons used above
-        if((*secondaries)[i]->GetParticleDefinition()->GetParticleName() == "neutron"){
-	       	fEventAction->neutronProducerMap.insert(std::make_pair((int)aTrack->GetTrackID(),(int)aTrack->GetParticleDefinition()->GetPDGEncoding()));
+        if(fRunAction->getWriteOutNeutronProductionInfo() == 1)
+        {
+          if((*secondaries)[i]->GetParticleDefinition()->GetParticleName() == "neutron")
+          {
+            fEventAction->neutronProducerMap.insert(
+              std::make_pair((int) aTrack->GetTrackID(),
+                             (int) aTrack->GetParticleDefinition()->GetPDGEncoding()));
+          }
         }
       }
     }

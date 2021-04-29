@@ -28,16 +28,17 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step *aStep) {
       auto physVol1 = aStep->GetTrack()->GetVolume();
       auto physVol2 = aStep->GetTrack()->GetNextVolume();
       if(physVol1->GetName() != "Ge_phys" && physVol2->GetName() == "Ge_phys"){
-        fRunAction->increaseNumberOfCrossingNeutrons();
+        if(fRunAction->getWriteOutGeneralNeutronInfo() == 1) fRunAction->increaseNumberOfCrossingNeutrons();
       }
     }
   }
 
-  // Edit: 2021/04/07 by Moritz Neuberger
+  // Edit: 2021/04/07 by Moritz Neuberger TODO
   // Adding total energy deposition inside LAr
+  /*
   if(aStep->GetTrack()->GetLogicalVolumeAtVertex()->GetName() == "Lar_log")
   {
     fEventAction->IncreaseLArEnergyDeposition(aStep->GetTotalEnergyDeposit());
-  }
+  }*/
 
 }

@@ -24,6 +24,7 @@ public:
   virtual void EndOfEventAction(const G4Event* event);
 
   // to create columns for Ntuple
+  std::vector<G4int>& GetNGe77() { return nGe77; }
   std::vector<G4double>& GetHitEdep() { return edep; }
   std::vector<G4double>& GetHitEkin() { return ekin; }
   std::vector<G4double>& GetHitTime() { return thit; }
@@ -112,6 +113,7 @@ private:
   G4int                 fTimeID   = -1;
   G4int                 fWeightID = -1;
   G4int                 fEdepID   = -1;
+  std::vector<G4int>    nGe77;
   std::vector<G4int>	NumberOfNeutronsProducedInEvent;
   std::vector<G4double>	TotalEnergyDepositionInLAr;
   std::vector<G4int>    htrid;

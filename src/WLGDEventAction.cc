@@ -160,7 +160,7 @@ void WLGDEventAction::EndOfEventAction(const G4Event* event)
 
   if(ekin.size() > 0)
 	G4cout << "Ekin: " << ekin.size() << " ----- HitMap: " << HitsMap->entries() << "----- LocMap: " << LocMap->entries() << G4endl;
-
+  nGe77.push_back(ekin.size());
 
   if(HitsMap->entries() <= 0)
   {

@@ -17,6 +17,10 @@
 #include <numeric>
 #include <vector>
 
+WLGDEventAction::WLGDEventAction(){
+  DefineCommands();
+}
+
 WLGDCrystalHitsCollection* WLGDEventAction::GetHitsCollection(G4int hcID,
                                               const G4Event* event) const
 {
@@ -108,7 +112,6 @@ void WLGDEventAction::BeginOfEventAction(const G4Event*
   TotalEnergyDepositionInLAr.push_back(0);
 
   makeMap();
-  DefineCommands();
 }
 
 void WLGDEventAction::EndOfEventAction(const G4Event* event)

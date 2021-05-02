@@ -23,7 +23,7 @@ void WLGDTrackingAction::PreUserTrackingAction(const G4Track* aTrack)
   // Adding tracking of neutrons being later captured by Ge-76 as well as general produced in LAr
   if(aTrack->GetParticleDefinition()->GetParticleName() == "neutron")
   {
-    auto tmp_vector = aTrack->GetVertexPosition();
+    auto tmp_vector = aTraWLGDEventAction::ck->GetVertexPosition();
     tmp_neutronXpos = tmp_vector.getX() / m;
     tmp_neutronYpos = tmp_vector.getY() / m;
     tmp_neutronZpos = tmp_vector.getZ() / m;

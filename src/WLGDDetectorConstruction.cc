@@ -236,7 +236,7 @@ void WLGDDetectorConstruction::ConstructSDandField()
     {
       G4LogicalVolume* logicCu = volumeStore->GetVolume("Copper_log");
       biasmuXS->AttachTo(logicCu);
-      G4LogicalVolume* logicULar = volumeStore->GetVG4Materialolume("ULar_log");
+      G4LogicalVolume* logicULar = volumeStore->GetVolume("ULar_log");
       biasmuXS->AttachTo(logicULar);
     }
 
@@ -942,7 +942,6 @@ auto WLGDDetectorConstruction::SetupHallA() -> G4VPhysicalVolume*
   fLayerLogical->SetVisAttributes(blueVisAtt);
   fGapLogical->SetVisAttributes(greyVisAtt);
   fGeLogical->SetVisAttributes(redVisAtt);
-fWithBoratedPET
   return fWorldPhysical;
 }
 

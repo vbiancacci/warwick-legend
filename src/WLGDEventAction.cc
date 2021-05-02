@@ -152,6 +152,7 @@ void WLGDEventAction::EndOfEventAction(const G4Event* event)
     xloc.push_back((hh->GetPos()).x() / G4Analysis::GetUnitValue("m"));
     yloc.push_back((hh->GetPos()).y() / G4Analysis::GetUnitValue("m"));
     zloc.push_back((hh->GetPos()).z() / G4Analysis::GetUnitValue("m"));
+    G4cout << "VolCopyNumber: " << hh->GetVolCopyNumber() << G4endl;
     VolCopyNumber.push_back(hh->GetVolCopyNumber());
   }
 
@@ -231,9 +232,9 @@ void WLGDEventAction::EndOfEventAction(const G4Event* event)
 
   // printing
   G4int eventID = event->GetEventID();
-  G4cout << ">>> Event: " << eventID << G4endl;
+ /* G4cout << ">>> Event: " << eventID << G4endl;
   G4cout << "    " << edep.size() << " hits stored in this event." << G4endl;
-  G4cout << "    " << trjpdg.size() << " trajectories stored in this event." << G4endl;
+  G4cout << "    " << trjpdg.size() << " trajectories stored in this event." << G4endl;*/
 }
 
 void WLGDEventAction::SaveAllEvents(G4int answer){fAllEvents = answer;}

@@ -35,10 +35,18 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step *aStep) {
 
   // Edit: 2021/04/07 by Moritz Neuberger TODO
   // Adding total energy deposition inside LAr
-  /*
-  if(aStep->GetTrack()->GetLogicalVolumeAtVertex()->GetName() == "Lar_log")
+
+  if(aStep->GetTrack()->GetLogicalVolumeAtVertex()->GetName() == "ULar_log" || aStep->GetTrack()->GetLogicalVolumeAtVertex()->GetName() == "Ge_log")
   {
-    fEventAction->IncreaseLArEnergyDeposition(aStep->GetTotalEnergyDeposit());
-  }*/
+    G4double tmp_x = aStep->GetTrack()->GetPosition().getX();
+    G4double tmp_y = aStep->GetTrack()->GetPosition().getY();
+    G4int whichReentranceTube;
+    if(abs(tmp_x)>abs(tmp_y)&&tmp_x>0) whichReentranceTube = 0;
+    if(abs(tmp_x)>abs(tmp_y)&&tmp_x<0) whichReentranceTube = 2;
+    if(abs(tmp_x)<abs(tmp_y)&&tmp_y>0) whichReentranceTube = 1;
+    if(abs(tmp_x)<abs(tmp_y)&&tmp_y<0) whichReentranceTube = 3;
+
+    fEventAction->IncreaseLArEnergyDeposition(aStep->GetTotalEnergyDeposit(),whichReentranceTube);
+  }
 
 }

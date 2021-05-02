@@ -208,7 +208,7 @@ void WLGDDetectorConstruction::ConstructSDandField()
     {
       G4LogicalVolume* logicCu = volumeStore->GetVolume("Copper_log");
       biasmuXS->AttachTo(logicCu);
-      G4LogicalVolume* logicULar = volumeStore->GetVG4Materialolume("ULar_log");
+      G4LogicalVolume* logicULar = volumeStore->GetVolume("ULar_log");
       biasmuXS->AttachTo(logicULar);
     }
 
@@ -722,7 +722,7 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
   if(fWithBoratedPET == 1) new G4PVPlacement(nullptr, G4ThreeVector(0., ringrad * cm, cushift * cm),
                                              fBoratedPETLogical, "BoratedPET_phys2", fLarLogical, false, 1, true);
 
-  if(fWithOutCupperTubes == 0) new G4PVPlacement(nullptr, G4ThreeVector(0., ringrad * cm, cushift * cm),
+  if(fWithOutCupperTubes == 0) new G4PVPlacement(nullptr, GG4Material4ThreeVector(0., ringrad * cm, cushift * cm),
                     fCopperLogical, "Copper_phys2", fLarLogical, false, 1, true);
 
   new G4PVPlacement(nullptr, G4ThreeVector(0., ringrad * cm, cushift * cm), fUlarLogical,

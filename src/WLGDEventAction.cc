@@ -72,6 +72,7 @@ G4int WLGDEventAction::GeomID(G4String name)
 void WLGDEventAction::BeginOfEventAction(const G4Event*
                                          /*event*/)
 {
+  nGe77.clear();
   edep.clear();
   ekin.clear();
   htrid.clear();
@@ -102,8 +103,12 @@ void WLGDEventAction::BeginOfEventAction(const G4Event*
 
   TotalEnergyDepositionInLAr.clear();
   TotalEnergyDepositionInLAr.push_back(0);
+  TotalEnergyDepositionInLAr.push_back(0);
+  TotalEnergyDepositionInLAr.push_back(0);
+  TotalEnergyDepositionInLAr.push_back(0);
 
   makeMap();
+  DefineCommands();
 }
 
 void WLGDEventAction::EndOfEventAction(const G4Event* event)
@@ -117,14 +122,15 @@ void WLGDEventAction::EndOfEventAction(const G4Event* event)
   //
   auto CrysHC   = GetHitsCollection(fHID, event);
 
-  if(ekin.size() > 0)
-	G4cout << "Ekin: " << ekin.size() << " ----- HitMap: " << HitsMap->entries() << "----- LocMap: " << LocMap->entries() << G4endl;
   nGe77.push_back(ekin.size());
 
-  if(HitsMap->entries() <= 0)
+  if(CrysHC->entries() <= 0 && fAllEvents==0)
   {
     return;  // no action on no hit
   }
+
+
+
 
   // get analysis manager
   auto analysisManager = G4AnalysisManager::Instance();
@@ -143,6 +149,7 @@ void WLGDEventAction::EndOfEventAction(const G4Event* event)
     xloc.push_back((hh->GetPos()).x() / G4Analysis::GetUnitValue("m"));
     yloc.push_back((hh->GetPos()).y() / G4Analysis::GetUnitValue("m"));
     zloc.push_back((hh->GetPos()).z() / G4Analysis::GetUnitValue("m"));
+    VolCopyNumber.push_back(hh->GetVolCopyNumber());
   }
 
   G4cout << "Edep size: " <<  edep.size() << G4endl;
@@ -224,4 +231,21 @@ void WLGDEventAction::EndOfEventAction(const G4Event* event)
   G4cout << ">>> Event: " << eventID << G4endl;
   G4cout << "    " << edep.size() << " hits stored in this event." << G4endl;
   G4cout << "    " << trjpdg.size() << " trajectories stored in this event." << G4endl;
+}
+
+void WLGDEventAction::SaveAllEvents(G4int answer){fAllEvents = answer;}
+
+void WLGDEventAction::DefineCommands()
+{
+  // Define geometry command directory using generic messenger class
+  fEventMessenger = new G4GenericMessenger(this, "/WLGD/event/",
+                                              "Commands for controlling event action");
+
+  // switch command
+  fEventMessenger->DeclareMethod("saveAllEvents", &WLGDEventAction::SaveAllEvents)
+    .SetGuidance("Set whether to save not only Ge77 but all events")
+    .SetGuidance("0 = only Ge77 events")
+    .SetGuidance("1 = all events")
+    .SetCandidates("0 1")
+    .SetDefaultValue("0");
 }

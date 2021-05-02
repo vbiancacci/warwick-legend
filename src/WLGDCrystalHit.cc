@@ -10,7 +10,8 @@ WLGDCrystalHit::WLGDCrystalHit()
    fTime(0.),
    fWeight(0.),
    fEdep(0.),
-   fPos(G4ThreeVector())
+   fPos(G4ThreeVector()),
+   fVolCopyNumber(0)
 {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -27,6 +28,7 @@ WLGDCrystalHit::WLGDCrystalHit(const WLGDCrystalHit& right)
   fWeight    = right.fWeight;
   fEdep      = right.fEdep;
   fPos       = right.fPos;
+  fVolCopyNumber = right.fVolCopyNumber;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -38,6 +40,7 @@ const WLGDCrystalHit& WLGDCrystalHit::operator=(const WLGDCrystalHit& right)
   fWeight    = right.fWeight;
   fEdep      = right.fEdep;
   fPos       = right.fPos;
+  fVolCopyNumber = right.fVolCopyNumber;
 
   return *this;
 }

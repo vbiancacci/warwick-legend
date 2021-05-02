@@ -55,22 +55,18 @@ void WLGDTrackingAction::PreUserTrackingAction(const G4Track* aTrack)
 
 void WLGDTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
 {
+  if(fRunAction->getWriteOutNeutronProductionInfo() == 1)
+  {
   G4TrackVector* secondaries = fpTrackingManager->GimmeSecondaries();
   if(secondaries != nullptr)
   {
-    WLGDTrackInformation* info  = (WLGDTrackInformation*) (aTrack->GetUserInformation());
     size_t                nSeco = secondaries->size();
     if(nSeco > 0)
     {
       for(size_t i = 0; i < nSeco; i++)
       {
-        WLGDTrackInformation* infoNew = new WLGDTrackInformation(info);
-        (*secondaries)[i]->SetUserInformation(infoNew);
-
         // Edit: 2021/03/30 by Moritz Neuberger
         // Adding map of parent particles that create neutrons used above
-        if(fRunAction->getWriteOutNeutronProductionInfo() == 1)
-        {
           if((*secondaries)[i]->GetParticleDefinition()->GetParticleName() == "neutron")
           {
             fEventAction->neutronProducerMap.insert(

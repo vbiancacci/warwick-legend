@@ -8,6 +8,7 @@
 #include "WLGDCrystalHit.hh"
 
 #include "G4UserEventAction.hh"
+#include "G4GenericMessenger.hh"
 #include "globals.hh"
 #include <map>
 
@@ -41,6 +42,7 @@ public:
   std::vector<G4double>& GetNeutronzMom() { return neutronzmom; }
   std::vector<G4int>& GetNumberOfNeutronsInEvent() { return NumberOfNeutronsProducedInEvent; }
   std::vector<G4double>& GetLArEnergyDeposition() { return TotalEnergyDepositionInLAr; }
+  std::vector<G4int>& GetVolCopyNumber(){return VolCopyNumber;}
 
   // tajectory methods
   std::vector<G4int>&    GetTrjPDG() { return trjpdg; }
@@ -63,14 +65,18 @@ public:
   std::map<int, int>         neutronProducerMap;
 
   void IncreaseByOne_NeutronInEvent(){NumberOfNeutronsProducedInEvent[0] += 1;}
-  void IncreaseLArEnergyDeposition(G4double Edep){TotalEnergyDepositionInLAr[0] += Edep;}
-
+  void IncreaseLArEnergyDeposition(G4double Edep, G4int whichReEntranceTube){TotalEnergyDepositionInLAr[whichReEntranceTube] += Edep;}//SaveAllEvents
+  void SaveAllEvents(G4int answer);
+  void DefineCommands();
 private:
   // methods
   WLGDCrystalHitsCollection*   GetHitsCollection(G4int hcID,
                                                  const G4Event* event) const;
   G4int                      GeomID(G4String name);
   void                       makeMap();
+  G4GenericMessenger*        fEventMessenger;
+  G4int                      fAllEvents = 0;
+
 
   //! Brief description
   /*!
@@ -114,6 +120,7 @@ private:
   std::vector<G4int>	NumberOfNeutronsProducedInEvent;
   std::vector<G4double>	TotalEnergyDepositionInLAr;
   std::vector<G4int>    htrid;
+  std::vector<G4int>    VolCopyNumber;
   std::vector<G4double> edep;
   std::vector<G4double> ekin;
   std::vector<G4double> thit;

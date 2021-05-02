@@ -58,6 +58,7 @@ G4bool WLGDCrystalSD::ProcessHits(G4Step* aStep,
   newHit->SetWeight(aStep->GetTrack()->GetWeight());
   newHit->SetEdep(edep);
   newHit->SetPos (aStep->GetPostStepPoint()->GetPosition());
+  newHit->SetVolCopyNumber (aStep->GetTrack()->GetVolume()->GetCopyNo());
 
   fHitsCollection->insert( newHit );
 

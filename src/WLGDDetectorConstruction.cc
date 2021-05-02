@@ -516,7 +516,7 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
   G4double cryrad     = fCryostatOuterRadius; //350.0;  // cryostat diam 7 m
   G4double cryhheight = fCryostatHeight; //350.0;  // cryostat height 7 m
   // Borated PET tubes around copper tubes
-  G4double BoratedPETouterrad    = 5;    // tube thickness 5 cm
+  G4double BoratedPETouterrad    = 5.0;    // tube thickness 5 cm
   // copper tubes with Germanium ROI
   G4double copper    = 0.35;   // tube thickness 3.5 mm
   G4double curad     = 40.0;   // copper tube diam 80 cm
@@ -722,7 +722,7 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
   if(fWithBoratedPET == 1) new G4PVPlacement(nullptr, G4ThreeVector(0., ringrad * cm, cushift * cm),
                                              fBoratedPETLogical, "BoratedPET_phys2", fLarLogical, false, 1, true);
 
-  if(fWithOutCupperTubes == 0) new G4PVPlacement(nullptr, GG4Material4ThreeVector(0., ringrad * cm, cushift * cm),
+  if(fWithOutCupperTubes == 0) new G4PVPlacement(nullptr, G4ThreeVector(0., ringrad * cm, cushift * cm),
                     fCopperLogical, "Copper_phys2", fLarLogical, false, 1, true);
 
   new G4PVPlacement(nullptr, G4ThreeVector(0., ringrad * cm, cushift * cm), fUlarLogical,

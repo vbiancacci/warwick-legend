@@ -35,6 +35,7 @@ class WLGDCrystalHit : public G4VHit
     void SetWeight   (G4double we)      { fWeight = we; };
     void SetEdep     (G4double de)      { fEdep   = de; };
     void SetPos      (G4ThreeVector xyz){ fPos    = xyz; };
+    void SetVolCopyNumber      (G4int n){ fVolCopyNumber    = n; };
 
     // Get methods
     G4int    GetTID()  const     { return fTid; };
@@ -42,6 +43,7 @@ class WLGDCrystalHit : public G4VHit
     G4double GetWeight() const   { return fWeight; };
     G4double GetEdep() const     { return fEdep; };
     G4ThreeVector GetPos() const { return fPos; };
+    G4int GetVolCopyNumber() const { return fVolCopyNumber; };
 
   private:
 
@@ -50,6 +52,7 @@ class WLGDCrystalHit : public G4VHit
       G4double      fWeight;
       G4double      fEdep;
       G4ThreeVector fPos;
+      G4int         fVolCopyNumber;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

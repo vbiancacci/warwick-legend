@@ -18,7 +18,7 @@
 class WLGDEventAction : public G4UserEventAction
 {
 public:
-  WLGDEventAction()          = default;
+  WLGDEventAction();
   virtual ~WLGDEventAction() = default;
 
   virtual void BeginOfEventAction(const G4Event* event);

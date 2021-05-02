@@ -8,7 +8,7 @@
 #include "G4Material.hh"
 
 class G4VPhysicalVolume;
-class G4MultiFunctionalDetector;
+class WLGDCrystalSD;
 
 class WLGDDetectorConstruction : public G4VUserDetectorConstruction
 {
@@ -44,7 +44,7 @@ private:
   G4String                            fGeometryName      = "baseline";
   G4double                            fNeutronBias       = 1.0;
   G4double                            fMuonBias          = 1.0;
-  G4Cache<G4MultiFunctionalDetector*> fSD                = nullptr;
+  G4Cache<WLGDCrystalSD*> fSD                = nullptr;
   G4double                            fXeConc            = 0.0;
   G4double                            fHe3Conc            = 0.0;
   G4double			      fCryostatOuterRadius = 350.0;

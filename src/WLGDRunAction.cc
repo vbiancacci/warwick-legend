@@ -29,7 +29,7 @@ WLGDRunAction::WLGDRunAction(WLGDEventAction* eventAction, G4String name)
   //
   analysisManager->CreateNtuple("Score", "Hits");
   analysisManager->CreateNtupleIColumn("NGe77", fEventAction->GetNGe77());
-  analysisManager->CreateNtupleIColumn("VolCopyNumber", fEventAction->GetVolCopyNumber());
+  analysisManager->CreateNtupleIColumn("ReentranceTube", fEventAction->GetReentranceTube());
   analysisManager->CreateNtupleIColumn("HitID", fEventAction->GetHitTID());
   analysisManager->CreateNtupleDColumn("Edep", fEventAction->GetHitEdep());
   analysisManager->CreateNtupleDColumn("Time", fEventAction->GetHitTime());
@@ -48,7 +48,15 @@ WLGDRunAction::WLGDRunAction(WLGDEventAction* eventAction, G4String name)
   analysisManager->CreateNtupleDColumn("Neutronymom", fEventAction->GetNeutronyMom());
   analysisManager->CreateNtupleDColumn("Neutronzmom", fEventAction->GetNeutronzMom());
   analysisManager->CreateNtupleIColumn("NeutronsInEvent", fEventAction->GetNumberOfNeutronsInEvent());
-  analysisManager->CreateNtupleDColumn("TotalEdepInLAr", fEventAction->GetLArEnergyDeposition());
+  analysisManager->CreateNtupleDColumn("TotalEdepInReentranceTube", fEventAction->GetLArEnergyDeposition());
+
+  analysisManager->CreateNtupleDColumn("IndividualEnergyDeposition_Timing", fEventAction->GetIndividualEnergyDeposition_Timing());
+  analysisManager->CreateNtupleDColumn("IndividualEnergyDeposition_Energy", fEventAction->GetIndividualEnergyDeposition_Energy());
+  analysisManager->CreateNtupleDColumn("IndividualEnergyDeposition_Position_x", fEventAction->GetIndividualEnergyDeposition_Position_x());
+  analysisManager->CreateNtupleDColumn("IndividualEnergyDeposition_Position_y", fEventAction->GetIndividualEnergyDeposition_Position_y());
+  analysisManager->CreateNtupleDColumn("IndividualEnergyDeposition_Position_z", fEventAction->GetIndividualEnergyDeposition_Position_z());
+  analysisManager->CreateNtupleIColumn("IndividualEnergyDeposition_ReentranceTube", fEventAction->GetIndividualEnergyDeposition_ReentranceTube());
+  analysisManager->CreateNtupleIColumn("IndividualEnergyDeposition_LArOrGe", fEventAction->GetIndividualEnergyDeposition_LArOrGe());
 
   analysisManager->CreateNtupleIColumn("Trjpdg", fEventAction->GetTrjPDG());
   analysisManager->CreateNtupleIColumn("Trjentries", fEventAction->GetTrjEntries());

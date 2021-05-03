@@ -152,8 +152,7 @@ void WLGDEventAction::EndOfEventAction(const G4Event* event)
     xloc.push_back((hh->GetPos()).x() / G4Analysis::GetUnitValue("m"));
     yloc.push_back((hh->GetPos()).y() / G4Analysis::GetUnitValue("m"));
     zloc.push_back((hh->GetPos()).z() / G4Analysis::GetUnitValue("m"));
-    G4cout << "VolCopyNumber: " << hh->GetVolCopyNumber() << G4endl;
-    VolCopyNumber.push_back(hh->GetVolCopyNumber());
+    ReentranceTube.push_back(hh->GetWhichReentranceTube());
   }
 
   G4cout << "Edep size: " <<  edep.size() << G4endl;

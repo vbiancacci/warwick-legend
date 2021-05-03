@@ -40,13 +40,26 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step *aStep) {
   {
     G4double tmp_x = aStep->GetTrack()->GetPosition().getX();
     G4double tmp_y = aStep->GetTrack()->GetPosition().getY();
+    G4double tmp_z = aStep->GetTrack()->GetPosition().getZ();
+
     G4int whichReentranceTube;
     if(abs(tmp_x)>abs(tmp_y)&&tmp_x>0) whichReentranceTube = 0;
     if(abs(tmp_x)>abs(tmp_y)&&tmp_x<0) whichReentranceTube = 2;
     if(abs(tmp_x)<abs(tmp_y)&&tmp_y>0) whichReentranceTube = 1;
     if(abs(tmp_x)<abs(tmp_y)&&tmp_y<0) whichReentranceTube = 3;
 
-    fEventAction->IncreaseLArEnergyDeposition(aStep->GetTotalEnergyDeposit(),whichReentranceTube);
+    G4int whichVolume = -1;
+    if(aStep->GetTrack()->GetLogicalVolumeAtVertex()->GetName() == "ULar_log") whichVolume = 0;
+    if(aStep->GetTrack()->GetLogicalVolumeAtVertex()->GetName() == "Ge_log") whichVolume = 1;
+
+    fEventAction->IncreaseLArEnergyDeposition(aStep->GetTotalEnergyDeposit() / eV,whichReentranceTube);
+    fEventAction->AddIndividualEnergyDeposition_Timing(aStep->GetPostStepPoint()->GetGlobalTime() / s);
+    fEventAction->AddIndividualEnergyDeposition_Energy(aStep->GetTotalEnergyDeposit() / eV);
+    fEventAction->AddIndividualEnergyDeposition_ReentranceTube(whichReentranceTube);
+    fEventAction->AddIndividualEnergyDeposition_Position_x(tmp_x/m);
+    fEventAction->AddIndividualEnergyDeposition_Position_y(tmp_y/m);
+    fEventAction->AddIndividualEnergyDeposition_Position_z(tmp_z/m);
+    fEventAction->AddIndividualEnergyDeposition_LArOrGe(whichVolume);
   }
 
 }

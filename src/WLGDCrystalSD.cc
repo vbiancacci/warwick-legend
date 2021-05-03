@@ -58,8 +58,16 @@ G4bool WLGDCrystalSD::ProcessHits(G4Step* aStep,
   newHit->SetWeight(aStep->GetTrack()->GetWeight());
   newHit->SetEdep(edep);
   newHit->SetPos (aStep->GetPostStepPoint()->GetPosition());
-  newHit->SetVolCopyNumber (aStep->GetTrack()->GetVolume()->GetCopyNo());
-  G4cout << aStep->GetTrack()->GetVolume()->GetName() << " " << aStep->GetTrack()->GetVolume()->GetCopyNo() << G4endl;
+
+  G4double tmp_x = aStep->GetTrack()->GetPosition().getX();
+  G4double tmp_y = aStep->GetTrack()->GetPosition().getY();
+  G4int whichReentranceTube;
+  if(abs(tmp_x)>abs(tmp_y)&&tmp_x>0) whichReentranceTube = 0;
+  if(abs(tmp_x)>abs(tmp_y)&&tmp_x<0) whichReentranceTube = 2;
+  if(abs(tmp_x)<abs(tmp_y)&&tmp_y>0) whichReentranceTube = 1;
+  if(abs(tmp_x)<abs(tmp_y)&&tmp_y<0) whichReentranceTube = 3;
+  newHit->SetWhichReentranceTube (whichReentranceTube);
+
   fHitsCollection->insert( newHit );
 
   return true;

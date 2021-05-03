@@ -42,7 +42,15 @@ public:
   std::vector<G4double>& GetNeutronzMom() { return neutronzmom; }
   std::vector<G4int>& GetNumberOfNeutronsInEvent() { return NumberOfNeutronsProducedInEvent; }
   std::vector<G4double>& GetLArEnergyDeposition() { return TotalEnergyDepositionInLAr; }
-  std::vector<G4int>& GetVolCopyNumber(){return VolCopyNumber;}
+  std::vector<G4int>& GetReentranceTube(){return ReentranceTube;}
+
+  std::vector<G4double>& GetIndividualEnergyDeposition_Timing(){return IndividualEnergyDeposition_Timing;}
+  std::vector<G4double>& GetIndividualEnergyDeposition_Energy(){return IndividualEnergyDeposition_Energy;}
+  std::vector<G4double>& GetIndividualEnergyDeposition_Position_x(){return IndividualEnergyDeposition_Position_x;}
+  std::vector<G4double>& GetIndividualEnergyDeposition_Position_y(){return IndividualEnergyDeposition_Position_y;}
+  std::vector<G4double>& GetIndividualEnergyDeposition_Position_z(){return IndividualEnergyDeposition_Position_z;}
+  std::vector<G4int>& GetIndividualEnergyDeposition_ReentranceTube(){return IndividualEnergyDeposition_ReentranceTube;}
+  std::vector<G4int>& GetIndividualEnergyDeposition_LArOrGe(){return IndividualEnergyDeposition_LArOrGe;}
 
   // tajectory methods
   std::vector<G4int>&    GetTrjPDG() { return trjpdg; }
@@ -62,6 +70,14 @@ public:
   void AddNeutronxMom(double posx){neutronxmom.push_back(posx);}
   void AddNeutronyMom(double posy){neutronymom.push_back(posy);}
   void AddNeutronzMom(double posz){neutronzmom.push_back(posz);}
+
+  void AddIndividualEnergyDeposition_Timing(double time){IndividualEnergyDeposition_Timing.push_back(time);}
+  void AddIndividualEnergyDeposition_Energy(double energy){IndividualEnergyDeposition_Energy.push_back(energy);}
+  void AddIndividualEnergyDeposition_Position_x(double posx){IndividualEnergyDeposition_Position_x.push_back(posx);}
+  void AddIndividualEnergyDeposition_Position_y(double posy){IndividualEnergyDeposition_Position_y.push_back(posy);}
+  void AddIndividualEnergyDeposition_Position_z(double posz){IndividualEnergyDeposition_Position_z.push_back(posz);}
+  void AddIndividualEnergyDeposition_ReentranceTube(int n){IndividualEnergyDeposition_ReentranceTube.push_back(n);}
+  void AddIndividualEnergyDeposition_LArOrGe(int n){IndividualEnergyDeposition_LArOrGe.push_back(n);}
   std::map<int, int>         neutronProducerMap;
 
   void IncreaseByOne_NeutronInEvent(){NumberOfNeutronsProducedInEvent[0] += 1;}
@@ -117,10 +133,8 @@ private:
   
   std::vector<G4int>    nGe77;
   G4int                 fHID    = -1;
-  std::vector<G4int>	NumberOfNeutronsProducedInEvent;
-  std::vector<G4double>	TotalEnergyDepositionInLAr;
   std::vector<G4int>    htrid;
-  std::vector<G4int>    VolCopyNumber;
+  std::vector<G4int>    ReentranceTube;
   std::vector<G4double> edep;
   std::vector<G4double> ekin;
   std::vector<G4double> thit;
@@ -134,6 +148,18 @@ private:
   std::vector<G4double> neutronxmom;
   std::vector<G4double> neutronymom;
   std::vector<G4double> neutronzmom;
+
+  // additional data for other particles
+  std::vector<G4int>	NumberOfNeutronsProducedInEvent;
+  std::vector<G4double>	TotalEnergyDepositionInLAr;
+  std::vector<G4double> IndividualEnergyDeposition_Timing;
+  std::vector<G4double> IndividualEnergyDeposition_Energy;
+  std::vector<G4double> IndividualEnergyDeposition_Position_x;
+  std::vector<G4double> IndividualEnergyDeposition_Position_y;
+  std::vector<G4double> IndividualEnergyDeposition_Position_z;
+  std::vector<G4int> IndividualEnergyDeposition_ReentranceTube;
+  std::vector<G4int> IndividualEnergyDeposition_LArOrGe;
+
 
   // trajectory data
   std::vector<G4int>        trjpdg;

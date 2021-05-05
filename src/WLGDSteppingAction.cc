@@ -18,7 +18,11 @@ using namespace std;
 
 
 WLGDSteppingAction::WLGDSteppingAction(WLGDEventAction* event,WLGDRunAction* run)
-{fEventAction = event; fRunAction = run; WLGDSteppingAction(); DefineCommands();}
+{
+  fEventAction = event;
+  fRunAction = run;
+  DefineCommands();
+}
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void WLGDSteppingAction::UserSteppingAction(const G4Step *aStep) {

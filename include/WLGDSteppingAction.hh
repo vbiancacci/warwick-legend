@@ -18,7 +18,7 @@ class WLGDSteppingAction : public G4UserSteppingAction
 {
 public:
   WLGDSteppingAction() = default;
-  WLGDSteppingAction(WLGDEventAction* event,WLGDRunAction* run){fEventAction = event; fRunAction = run; WLGDSteppingAction(); DefineCommands();}
+  WLGDSteppingAction(WLGDEventAction* event,WLGDRunAction* run);
   virtual ~WLGDSteppingAction() = default;
 
   virtual void UserSteppingAction(const G4Step*);

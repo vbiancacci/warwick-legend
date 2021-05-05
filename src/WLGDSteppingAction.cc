@@ -14,6 +14,11 @@ using namespace std;
 
 #include "G4RunManager.hh"
 
+
+
+
+WLGDSteppingAction::WLGDSteppingAction(WLGDEventAction* event,WLGDRunAction* run)
+{fEventAction = event; fRunAction = run; WLGDSteppingAction(); DefineCommands();}
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void WLGDSteppingAction::UserSteppingAction(const G4Step *aStep) {

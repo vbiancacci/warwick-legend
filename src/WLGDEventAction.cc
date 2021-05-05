@@ -102,6 +102,8 @@ void WLGDEventAction::BeginOfEventAction(const G4Event*
   trjypos.clear();
   trjzpos.clear();
 
+  ReentranceTube.clear();
+
   NumberOfNeutronsProducedInEvent.clear();
   NumberOfNeutronsProducedInEvent.push_back(0);
 

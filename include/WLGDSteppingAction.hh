@@ -23,12 +23,12 @@ public:
 
   virtual void UserSteppingAction(const G4Step*);
   void GetDepositionInfo(G4int answer);
+  void DefineCommands();
 
 private:
   WLGDRunAction* fRunAction;
   WLGDEventAction* fEventAction;
   G4GenericMessenger*        fStepMessenger;
-  void DefineCommands();
   G4int fDepositionInfo = 0;
 };
 

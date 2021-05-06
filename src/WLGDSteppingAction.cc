@@ -67,12 +67,19 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step *aStep) {
 
         G4int whichVolume = -1;
         if(aStep->GetTrack()->GetLogicalVolumeAtVertex()->GetName() == "ULar_log")
+        {
           whichVolume = 0;
-        if(aStep->GetTrack()->GetLogicalVolumeAtVertex()->GetName() == "Ge_log")
-          whichVolume = 1;
+          fEventAction->IncreaseLArEnergyDeposition(aStep->GetTotalEnergyDeposit() / eV,
+                                                    whichReentranceTube);
+        }
 
-        fEventAction->IncreaseLArEnergyDeposition(aStep->GetTotalEnergyDeposit() / eV,
-                                                  whichReentranceTube);
+        if(aStep->GetTrack()->GetLogicalVolumeAtVertex()->GetName() == "Ge_log")
+        {
+          whichVolume = 1;
+          fEventAction->IncreaseGeEnergyDeposition(aStep->GetTotalEnergyDeposit() / eV,
+                                                    whichReentranceTube);
+        }
+
         fEventAction->AddIndividualEnergyDeposition_Timing(
           aStep->GetPostStepPoint()->GetGlobalTime() / s);
         fEventAction->AddIndividualEnergyDeposition_Energy(

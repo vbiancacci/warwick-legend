@@ -117,16 +117,12 @@ void WLGDEventAction::BeginOfEventAction(const G4Event*
   Multiplicity_delayed.push_back(0);
 
   v_EdepPerDetector_prompt.clear();
-  v_EdepPerDetector_prompt.push_back(0);
-  v_EdepPerDetector_prompt.push_back(0);
-  v_EdepPerDetector_prompt.push_back(0);
-  v_EdepPerDetector_prompt.push_back(0);
 
   v_EdepPerDetector_delayed.clear();
-  v_EdepPerDetector_delayed.push_back(0);
-  v_EdepPerDetector_delayed.push_back(0);
-  v_EdepPerDetector_delayed.push_back(0);
-  v_EdepPerDetector_delayed.push_back(0);
+
+  v_NDetector_prompt.clear();
+
+  v_NDetector_delayed.clear();
 
   NumberOfNeutronsProducedInEvent.clear();
   NumberOfNeutronsProducedInEvent.push_back(0);
@@ -155,17 +151,6 @@ void WLGDEventAction::BeginOfEventAction(const G4Event*
   TotalEnergyDepositionInGe_delayed.push_back(0);
   TotalEnergyDepositionInGe_delayed.push_back(0);
 
-  v_NDetector_prompt.clear();
-  v_NDetector_prompt.push_back(0);
-  v_NDetector_prompt.push_back(0);
-  v_NDetector_prompt.push_back(0);
-  v_NDetector_prompt.push_back(0);
-
-  v_NDetector_delayed.clear();
-  v_NDetector_delayed.push_back(0);
-  v_NDetector_delayed.push_back(0);
-  v_NDetector_delayed.push_back(0);
-  v_NDetector_delayed.push_back(0);
 
   IndividualEnergyDeposition_Timing.clear();
   IndividualEnergyDeposition_LArOrGe.clear();
@@ -207,7 +192,6 @@ void WLGDEventAction::EndOfEventAction(const G4Event* event)
   // fill Hits output from SD
   G4int nofHits = CrysHC->entries();
 
-  //G4cout << "ReentranceTube: ";
   for ( G4int i=0; i<nofHits; i++ ) 
   {
     auto hh = (*CrysHC)[i];
@@ -221,7 +205,6 @@ void WLGDEventAction::EndOfEventAction(const G4Event* event)
     zloc.push_back((hh->GetPos()).z() / G4Analysis::GetUnitValue("m"));
     ReentranceTube.push_back(hh->GetWhichReentranceTube());
   }
- // G4cout << G4endl;
 
   for(auto const& x : EdepPerDetector){
     int tmp_i = (int)(x.first/96);

@@ -104,6 +104,30 @@ void WLGDEventAction::BeginOfEventAction(const G4Event*
 
   ReentranceTube.clear();
 
+  Multiplicity_prompt.clear();
+  Multiplicity_prompt.push_back(0);
+  Multiplicity_prompt.push_back(0);
+  Multiplicity_prompt.push_back(0);
+  Multiplicity_prompt.push_back(0);
+
+  Multiplicity_delayed.clear();
+  Multiplicity_delayed.push_back(0);
+  Multiplicity_delayed.push_back(0);
+  Multiplicity_delayed.push_back(0);
+  Multiplicity_delayed.push_back(0);
+
+  v_EdepPerDetector_prompt.clear();
+  v_EdepPerDetector_prompt.push_back(0);
+  v_EdepPerDetector_prompt.push_back(0);
+  v_EdepPerDetector_prompt.push_back(0);
+  v_EdepPerDetector_prompt.push_back(0);
+
+  v_EdepPerDetector_delayed.clear();
+  v_EdepPerDetector_delayed.push_back(0);
+  v_EdepPerDetector_delayed.push_back(0);
+  v_EdepPerDetector_delayed.push_back(0);
+  v_EdepPerDetector_delayed.push_back(0);
+
   NumberOfNeutronsProducedInEvent.clear();
   NumberOfNeutronsProducedInEvent.push_back(0);
 
@@ -138,6 +162,8 @@ void WLGDEventAction::BeginOfEventAction(const G4Event*
   IndividualEnergyDeposition_Position_y.clear();
   IndividualEnergyDeposition_Position_z.clear();
   IndividualEnergyDeposition_ReentranceTube.clear();
+
+  EdepPerDetector.clear();
 
   makeMap();
 }
@@ -182,15 +208,22 @@ void WLGDEventAction::EndOfEventAction(const G4Event* event)
     yloc.push_back((hh->GetPos()).y() / G4Analysis::GetUnitValue("m"));
     zloc.push_back((hh->GetPos()).z() / G4Analysis::GetUnitValue("m"));
     ReentranceTube.push_back(hh->GetWhichReentranceTube());
-
-    G4cout << ReentranceTube[i] << " ";
   }
   G4cout << G4endl;
-  //G4cout << "Edep size: " <<  edep.size() << G4endl;
-  //G4cout << "Ekin size: " <<  ekin.size() << G4endl;
 
+  for(auto const& x : EdepPerDetector){
+    int tmp_i = (int)(x.first/96);
+    Multiplicity_prompt[tmp_i] += 1;
+    v_NDetector_prompt.push_back(x.first);
+    v_EdepPerDetector_prompt.push_back(x.second);
+  }
 
-  // fill trajectory data
+  for(auto const& x : EdepPerDetector_delayed){
+    int tmp_i = (int)(x.first/96);
+    Multiplicity_delayed[tmp_i] += 1;
+    v_NDetector_delayed.push_back(x.first);
+    v_EdepPerDetector_delayed.push_back(x.second);
+  }
 
   // fill trajectory data if available
   G4TrajectoryContainer* trajectoryContainer = event->GetTrajectoryContainer();

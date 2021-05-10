@@ -51,8 +51,8 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step *aStep) {
     {
       if(aStep->GetTotalEnergyDeposit() > 0)
       {
-        if(aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetCopyNo() == "Ge_log")
-        G4cout << "CopyNumber: " << aStep->GetPostStepPoint()->GetPhysicalVolume()->GetCopyNo() << G4endl;
+        if(aStep->GetTrack()->GetLogicalVolumeAtVertex()->GetName() == "Ge_log")
+        G4cout << "CopyNumber: " << aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetCopyNo() << G4endl;
 
         G4double tmp_x = aStep->GetTrack()->GetVertexPosition().getX();
         G4double tmp_y = aStep->GetTrack()->GetVertexPosition().getY();

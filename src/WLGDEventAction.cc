@@ -161,6 +161,7 @@ void WLGDEventAction::BeginOfEventAction(const G4Event*
   IndividualEnergyDeposition_ReentranceTube.clear();
 
   EdepPerDetector.clear();
+  EdepPerDetector_delayed.clear();
 
   makeMap();
 }

@@ -76,7 +76,7 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step *aStep) {
             fEventAction->IncreaseLArEnergyDeposition(aStep->GetTotalEnergyDeposit() / eV,
                                                       whichReentranceTube);
           }
-          else
+          else if(aStep->GetPostStepPoint()->GetGlobalTime() / s < 1.)
           {
             fEventAction->IncreaseLArEnergyDeposition_delayed(
               aStep->GetTotalEnergyDeposit() / eV, whichReentranceTube);
@@ -92,7 +92,7 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step *aStep) {
                                                     whichReentranceTube);
             if(aStep->GetTotalEnergyDeposit() / eV > 1e4) fEventAction->IncreaseEdepPerDetector(aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetCopyNo() + whichReentranceTube*96,aStep->GetTotalEnergyDeposit() / eV);
           }
-          else
+          else if(aStep->GetPostStepPoint()->GetGlobalTime() / s < 1.)
           {
             fEventAction->IncreaseGeEnergyDeposition_delayed(aStep->GetTotalEnergyDeposit() / eV,
                                                               whichReentranceTube);

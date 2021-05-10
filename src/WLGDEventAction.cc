@@ -207,7 +207,7 @@ void WLGDEventAction::EndOfEventAction(const G4Event* event)
   // fill Hits output from SD
   G4int nofHits = CrysHC->entries();
 
-  G4cout << "ReentranceTube: ";
+  //G4cout << "ReentranceTube: ";
   for ( G4int i=0; i<nofHits; i++ ) 
   {
     auto hh = (*CrysHC)[i];
@@ -221,7 +221,7 @@ void WLGDEventAction::EndOfEventAction(const G4Event* event)
     zloc.push_back((hh->GetPos()).z() / G4Analysis::GetUnitValue("m"));
     ReentranceTube.push_back(hh->GetWhichReentranceTube());
   }
-  G4cout << G4endl;
+ // G4cout << G4endl;
 
   for(auto const& x : EdepPerDetector){
     int tmp_i = (int)(x.first/96);

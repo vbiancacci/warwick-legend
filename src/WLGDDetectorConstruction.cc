@@ -1000,7 +1000,6 @@ auto WLGDDetectorConstruction::SetupHallA() -> G4VPhysicalVolume*
   fLayerLogical->SetVisAttributes(blueVisAtt);
   fGapLogical->SetVisAttributes(greyVisAtt);
   fGeLogical->SetVisAttributes(redVisAtt);
-fWithBoratedPET
   return fWorldPhysical;
 }
 

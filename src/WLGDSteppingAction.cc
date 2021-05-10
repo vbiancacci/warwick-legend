@@ -51,6 +51,8 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step *aStep) {
     {
       if(aStep->GetTotalEnergyDeposit() > 0)
       {
+
+
         G4double tmp_x = aStep->GetTrack()->GetVertexPosition().getX();
         G4double tmp_y = aStep->GetTrack()->GetVertexPosition().getY();
         G4double tmp_z = aStep->GetTrack()->GetVertexPosition().getZ();
@@ -69,15 +71,33 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step *aStep) {
         if(aStep->GetTrack()->GetLogicalVolumeAtVertex()->GetName() == "ULar_log")
         {
           whichVolume = 0;
-          fEventAction->IncreaseLArEnergyDeposition(aStep->GetTotalEnergyDeposit() / eV,
-                                                    whichReentranceTube);
+          if(aStep->GetPostStepPoint()->GetGlobalTime() / us < 10.)
+          {
+            fEventAction->IncreaseLArEnergyDeposition(aStep->GetTotalEnergyDeposit() / eV,
+                                                      whichReentranceTube);
+          }
+          else
+          {
+            fEventAction->IncreaseLArEnergyDeposition_delayed(
+              aStep->GetTotalEnergyDeposit() / eV, whichReentranceTube);
+          }
         }
 
         if(aStep->GetTrack()->GetLogicalVolumeAtVertex()->GetName() == "Ge_log")
         {
           whichVolume = 1;
-          fEventAction->IncreaseGeEnergyDeposition(aStep->GetTotalEnergyDeposit() / eV,
+          if(aStep->GetPostStepPoint()->GetGlobalTime() / us < 10.)
+          {
+            fEventAction->IncreaseGeEnergyDeposition(aStep->GetTotalEnergyDeposit() / eV,
                                                     whichReentranceTube);
+            if(aStep->GetTotalEnergyDeposit() / eV > 1e4) fEventAction->IncreaseEdepPerDetector(aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetCopyNo() + whichReentranceTube*96,aStep->GetTotalEnergyDeposit() / eV);
+          }
+          else
+          {
+            fEventAction->IncreaseGeEnergyDeposition_delayed(aStep->GetTotalEnergyDeposit() / eV,
+                                                              whichReentranceTube);
+            if(aStep->GetTotalEnergyDeposit() / eV > 1e4) fEventAction->IncreaseEdepPerDetector_delayed(aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetCopyNo() + whichReentranceTube*96,aStep->GetTotalEnergyDeposit() / eV);
+          }
         }
 
         fEventAction->AddIndividualEnergyDeposition_Timing(

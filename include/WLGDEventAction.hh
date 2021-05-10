@@ -34,6 +34,7 @@ public:
   std::vector<G4double>& GetHitxLoc() { return xloc; }
   std::vector<G4double>& GetHityLoc() { return yloc; }
   std::vector<G4double>& GetHitzLoc() { return zloc; }
+
   std::vector<G4double>& GetNeutronxLoc() { return neutronxloc; }
   std::vector<G4double>& GetNeutronyLoc() { return neutronyloc; }
   std::vector<G4double>& GetNeutronzLoc() { return neutronzloc; }
@@ -41,8 +42,11 @@ public:
   std::vector<G4double>& GetNeutronyMom() { return neutronymom; }
   std::vector<G4double>& GetNeutronzMom() { return neutronzmom; }
   std::vector<G4int>& GetNumberOfNeutronsInEvent() { return NumberOfNeutronsProducedInEvent; }
-  std::vector<G4double>& GetLArEnergyDeposition() { return TotalEnergyDepositionInLAr; }
-  std::vector<G4double>& GetGeEnergyDeposition() { return TotalEnergyDepositionInGe; }
+
+  std::vector<G4double>& GetLArEnergyDeposition() { return TotalEnergyDepositionInLAr_prompt; }
+  std::vector<G4double>& GetGeEnergyDeposition() { return TotalEnergyDepositionInGe_prompt; }
+  std::vector<G4double>& GetLArEnergyDeposition_delayed() { return TotalEnergyDepositionInLAr_delayed; }
+  std::vector<G4double>& GetGeEnergyDeposition_delayed() { return TotalEnergyDepositionInGe_delayed; }
   std::vector<G4int>& GetReentranceTube(){return ReentranceTube;}
 
   std::vector<G4double>& GetIndividualEnergyDeposition_Timing(){return IndividualEnergyDeposition_Timing;}
@@ -52,6 +56,13 @@ public:
   std::vector<G4double>& GetIndividualEnergyDeposition_Position_z(){return IndividualEnergyDeposition_Position_z;}
   std::vector<G4int>& GetIndividualEnergyDeposition_ReentranceTube(){return IndividualEnergyDeposition_ReentranceTube;}
   std::vector<G4int>& GetIndividualEnergyDeposition_LArOrGe(){return IndividualEnergyDeposition_LArOrGe;}
+
+  std::vector<G4int>& GetMultiplicity_prompt(){return Multiplicity_prompt;}
+  std::vector<G4int>& GetMultiplicity_delayed(){return Multiplicity_delayed;}
+  std::vector<G4double>& GetEdepPerDetector_prompt(){return v_EdepPerDetector_prompt;}
+  std::vector<G4double>& GetEdepPerDetector_delayed(){return v_EdepPerDetector_delayed;}
+  std::vector<G4double>& GetNDetector_prompt(){return v_NDetector_prompt;}
+  std::vector<G4double>& GetNDetector_delayed(){return v_NDetector_delayed;}
 
   // tajectory methods
   std::vector<G4int>&    GetTrjPDG() { return trjpdg; }
@@ -82,8 +93,12 @@ public:
   std::map<int, int>         neutronProducerMap;
 
   void IncreaseByOne_NeutronInEvent(){NumberOfNeutronsProducedInEvent[0] += 1;}
-  void IncreaseLArEnergyDeposition(G4double Edep, G4int whichReEntranceTube){TotalEnergyDepositionInLAr[whichReEntranceTube] += Edep;}//SaveAllEvents
-  void IncreaseGeEnergyDeposition(G4double Edep, G4int whichReEntranceTube){TotalEnergyDepositionInGe[whichReEntranceTube] += Edep;}//SaveAllEvents
+  void IncreaseLArEnergyDeposition(G4double Edep, G4int whichReEntranceTube){TotalEnergyDepositionInLAr_prompt[whichReEntranceTube] += Edep;}//SaveAllEvents
+  void IncreaseGeEnergyDeposition(G4double Edep, G4int whichReEntranceTube){TotalEnergyDepositionInGe_prompt[whichReEntranceTube] += Edep;}//SaveAllEvents
+  void IncreaseLArEnergyDeposition_delayed(G4double Edep, G4int whichReEntranceTube){TotalEnergyDepositionInLAr_delayed[whichReEntranceTube] += Edep;}//SaveAllEvents
+  void IncreaseGeEnergyDeposition_delayed(G4double Edep, G4int whichReEntranceTube){TotalEnergyDepositionInGe_delayed[whichReEntranceTube] += Edep;}//SaveAllEvents
+  void IncreaseEdepPerDetector(G4int copyNumber, G4double Edep){EdepPerDetector[copyNumber] = EdepPerDetector[copyNumber] + Edep;}
+  void IncreaseEdepPerDetector_delayed(G4int copyNumber, G4double Edep){EdepPerDetector_delayed[copyNumber] = EdepPerDetector_delayed[copyNumber] + Edep;}
   void SaveAllEvents(G4int answer);
   void DefineCommands();
 private:
@@ -153,8 +168,10 @@ private:
 
   // additional data for other particles
   std::vector<G4int>	NumberOfNeutronsProducedInEvent;
-  std::vector<G4double>	TotalEnergyDepositionInLAr;
-  std::vector<G4double>	TotalEnergyDepositionInGe;
+  std::vector<G4double>	TotalEnergyDepositionInLAr_prompt;
+  std::vector<G4double>	TotalEnergyDepositionInGe_prompt;
+  std::vector<G4double>	TotalEnergyDepositionInLAr_delayed;
+  std::vector<G4double>	TotalEnergyDepositionInGe_delayed;
   std::vector<G4double> IndividualEnergyDeposition_Timing;
   std::vector<G4double> IndividualEnergyDeposition_Energy;
   std::vector<G4double> IndividualEnergyDeposition_Position_x;
@@ -163,6 +180,14 @@ private:
   std::vector<G4int> IndividualEnergyDeposition_ReentranceTube;
   std::vector<G4int> IndividualEnergyDeposition_LArOrGe;
 
+  std::vector<G4int> Multiplicity_prompt;
+  std::vector<G4int> Multiplicity_delayed;
+  std::vector<G4double> v_EdepPerDetector_prompt;
+  std::vector<G4double> v_EdepPerDetector_delayed;
+  std::vector<G4double> v_NDetector_prompt;
+  std::vector<G4double> v_NDetector_delayed;
+  std::map<G4int, G4double> EdepPerDetector;
+  std::map<G4int, G4double> EdepPerDetector_delayed;
 
   // trajectory data
   std::vector<G4int>        trjpdg;

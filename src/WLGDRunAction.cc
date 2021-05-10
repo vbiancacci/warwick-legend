@@ -41,6 +41,7 @@ WLGDRunAction::WLGDRunAction(WLGDEventAction* eventAction, G4String name)
   // Edit: 2021/04/07 by Moritz Neuberger
   // Adding additional outputs to further investigate situations in which Ge-77 is produced
   analysisManager->CreateNtupleDColumn("Ekin", fEventAction->GetHitEkin());
+
   analysisManager->CreateNtupleDColumn("Neutronxloc", fEventAction->GetNeutronxLoc());
   analysisManager->CreateNtupleDColumn("Neutronyloc", fEventAction->GetNeutronyLoc());
   analysisManager->CreateNtupleDColumn("Neutronzloc", fEventAction->GetNeutronzLoc());
@@ -48,8 +49,11 @@ WLGDRunAction::WLGDRunAction(WLGDEventAction* eventAction, G4String name)
   analysisManager->CreateNtupleDColumn("Neutronymom", fEventAction->GetNeutronyMom());
   analysisManager->CreateNtupleDColumn("Neutronzmom", fEventAction->GetNeutronzMom());
   analysisManager->CreateNtupleIColumn("NeutronsInEvent", fEventAction->GetNumberOfNeutronsInEvent());
+
   analysisManager->CreateNtupleDColumn("LArEnergyDeposition", fEventAction->GetLArEnergyDeposition());
   analysisManager->CreateNtupleDColumn("GeEnergyDeposition", fEventAction->GetGeEnergyDeposition());
+  analysisManager->CreateNtupleDColumn("LArEnergyDeposition_delayed", fEventAction->GetLArEnergyDeposition_delayed());
+  analysisManager->CreateNtupleDColumn("GeEnergyDeposition_delayed", fEventAction->GetGeEnergyDeposition_delayed());
 
   analysisManager->CreateNtupleDColumn("IndividualEnergyDeposition_Timing", fEventAction->GetIndividualEnergyDeposition_Timing());
   analysisManager->CreateNtupleDColumn("IndividualEnergyDeposition_Energy", fEventAction->GetIndividualEnergyDeposition_Energy());
@@ -58,6 +62,13 @@ WLGDRunAction::WLGDRunAction(WLGDEventAction* eventAction, G4String name)
   analysisManager->CreateNtupleDColumn("IndividualEnergyDeposition_Position_z", fEventAction->GetIndividualEnergyDeposition_Position_z());
   analysisManager->CreateNtupleIColumn("IndividualEnergyDeposition_ReentranceTube", fEventAction->GetIndividualEnergyDeposition_ReentranceTube());
   analysisManager->CreateNtupleIColumn("IndividualEnergyDeposition_LArOrGe", fEventAction->GetIndividualEnergyDeposition_LArOrGe());
+
+  analysisManager->CreateNtupleIColumn("Multiplicity_prompt", fEventAction->GetMultiplicity_prompt());
+  analysisManager->CreateNtupleIColumn("Multiplicity_delayed", fEventAction->GetMultiplicity_delayed());
+  analysisManager->CreateNtupleDColumn("EdepPerDetector_prompt", fEventAction->GetEdepPerDetector_prompt());
+  analysisManager->CreateNtupleDColumn("EdepPerDetector_delayed", fEventAction->GetEdepPerDetector_delayed());
+  analysisManager->CreateNtupleDColumn("CopyNDetector_prompt", fEventAction->GetNDetector_prompt());
+  analysisManager->CreateNtupleDColumn("CopyNDetector_delayed", fEventAction->GetNDetector_delayed());
 
   analysisManager->CreateNtupleIColumn("Trjpdg", fEventAction->GetTrjPDG());
   analysisManager->CreateNtupleIColumn("Trjentries", fEventAction->GetTrjEntries());

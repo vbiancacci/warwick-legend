@@ -51,6 +51,9 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step *aStep) {
     {
       if(aStep->GetTotalEnergyDeposit() > 0)
       {
+
+        G4cout << "CopyNumber: " << aStep->GetPostStepPoint()->GetPhysicalVolume()->GetCopyNo() << G4endl;
+
         G4double tmp_x = aStep->GetTrack()->GetVertexPosition().getX();
         G4double tmp_y = aStep->GetTrack()->GetVertexPosition().getY();
         G4double tmp_z = aStep->GetTrack()->GetVertexPosition().getZ();
@@ -69,15 +72,23 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step *aStep) {
         if(aStep->GetTrack()->GetLogicalVolumeAtVertex()->GetName() == "ULar_log")
         {
           whichVolume = 0;
+          if(aStep->GetPostStepPoint()->GetGlobalTime() / us < 10.)
           fEventAction->IncreaseLArEnergyDeposition(aStep->GetTotalEnergyDeposit() / eV,
                                                     whichReentranceTube);
+          else
+            fEventAction->IncreaseLArEnergyDeposition_delayed(aStep->GetTotalEnergyDeposit() / eV,
+                                                      whichReentranceTube);
         }
 
         if(aStep->GetTrack()->GetLogicalVolumeAtVertex()->GetName() == "Ge_log")
         {
           whichVolume = 1;
+          if(aStep->GetPostStepPoint()->GetGlobalTime() / us < 10.)
           fEventAction->IncreaseGeEnergyDeposition(aStep->GetTotalEnergyDeposit() / eV,
                                                     whichReentranceTube);
+          else
+            fEventAction->IncreaseLArEnergyDeposition_delayed(aStep->GetTotalEnergyDeposit() / eV,
+                                                              whichReentranceTube);
         }
 
         fEventAction->AddIndividualEnergyDeposition_Timing(

@@ -41,8 +41,10 @@ public:
   std::vector<G4double>& GetNeutronyMom() { return neutronymom; }
   std::vector<G4double>& GetNeutronzMom() { return neutronzmom; }
   std::vector<G4int>& GetNumberOfNeutronsInEvent() { return NumberOfNeutronsProducedInEvent; }
-  std::vector<G4double>& GetLArEnergyDeposition() { return TotalEnergyDepositionInLAr; }
-  std::vector<G4double>& GetGeEnergyDeposition() { return TotalEnergyDepositionInGe; }
+  std::vector<G4double>& GetLArEnergyDeposition() { return TotalEnergyDepositionInLAr_prompt; }
+  std::vector<G4double>& GetGeEnergyDeposition() { return TotalEnergyDepositionInGe_prompt; }
+  std::vector<G4double>& GetLArEnergyDeposition_delayed() { return TotalEnergyDepositionInLAr_delayed; }
+  std::vector<G4double>& GetGeEnergyDeposition_delayed() { return TotalEnergyDepositionInGe_delayed; }
   std::vector<G4int>& GetReentranceTube(){return ReentranceTube;}
 
   std::vector<G4double>& GetIndividualEnergyDeposition_Timing(){return IndividualEnergyDeposition_Timing;}
@@ -82,8 +84,10 @@ public:
   std::map<int, int>         neutronProducerMap;
 
   void IncreaseByOne_NeutronInEvent(){NumberOfNeutronsProducedInEvent[0] += 1;}
-  void IncreaseLArEnergyDeposition(G4double Edep, G4int whichReEntranceTube){TotalEnergyDepositionInLAr[whichReEntranceTube] += Edep;}//SaveAllEvents
-  void IncreaseGeEnergyDeposition(G4double Edep, G4int whichReEntranceTube){TotalEnergyDepositionInGe[whichReEntranceTube] += Edep;}//SaveAllEvents
+  void IncreaseLArEnergyDeposition(G4double Edep, G4int whichReEntranceTube){TotalEnergyDepositionInLAr_prompt[whichReEntranceTube] += Edep;}//SaveAllEvents
+  void IncreaseGeEnergyDeposition(G4double Edep, G4int whichReEntranceTube){TotalEnergyDepositionInGe_prompt[whichReEntranceTube] += Edep;}//SaveAllEvents
+  void IncreaseLArEnergyDeposition_delayed(G4double Edep, G4int whichReEntranceTube){TotalEnergyDepositionInLAr_delayed[whichReEntranceTube] += Edep;}//SaveAllEvents
+  void IncreaseGeEnergyDeposition_delayed(G4double Edep, G4int whichReEntranceTube){TotalEnergyDepositionInGe_delayed[whichReEntranceTube] += Edep;}//SaveAllEvents
   void SaveAllEvents(G4int answer);
   void DefineCommands();
 private:
@@ -153,8 +157,10 @@ private:
 
   // additional data for other particles
   std::vector<G4int>	NumberOfNeutronsProducedInEvent;
-  std::vector<G4double>	TotalEnergyDepositionInLAr;
-  std::vector<G4double>	TotalEnergyDepositionInGe;
+  std::vector<G4double>	TotalEnergyDepositionInLAr_prompt;
+  std::vector<G4double>	TotalEnergyDepositionInGe_prompt;
+  std::vector<G4double>	TotalEnergyDepositionInLAr_delayed;
+  std::vector<G4double>	TotalEnergyDepositionInGe_delayed;
   std::vector<G4double> IndividualEnergyDeposition_Timing;
   std::vector<G4double> IndividualEnergyDeposition_Energy;
   std::vector<G4double> IndividualEnergyDeposition_Position_x;

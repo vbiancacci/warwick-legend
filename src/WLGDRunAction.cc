@@ -50,6 +50,8 @@ WLGDRunAction::WLGDRunAction(WLGDEventAction* eventAction, G4String name)
   analysisManager->CreateNtupleIColumn("NeutronsInEvent", fEventAction->GetNumberOfNeutronsInEvent());
   analysisManager->CreateNtupleDColumn("LArEnergyDeposition", fEventAction->GetLArEnergyDeposition());
   analysisManager->CreateNtupleDColumn("GeEnergyDeposition", fEventAction->GetGeEnergyDeposition());
+  analysisManager->CreateNtupleDColumn("LArEnergyDeposition_delayed", fEventAction->GetLArEnergyDeposition_delayed());
+  analysisManager->CreateNtupleDColumn("GeEnergyDeposition_delayed", fEventAction->GetGeEnergyDeposition_delayed());
 
   analysisManager->CreateNtupleDColumn("IndividualEnergyDeposition_Timing", fEventAction->GetIndividualEnergyDeposition_Timing());
   analysisManager->CreateNtupleDColumn("IndividualEnergyDeposition_Energy", fEventAction->GetIndividualEnergyDeposition_Energy());

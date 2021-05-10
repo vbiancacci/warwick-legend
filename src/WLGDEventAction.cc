@@ -107,17 +107,29 @@ void WLGDEventAction::BeginOfEventAction(const G4Event*
   NumberOfNeutronsProducedInEvent.clear();
   NumberOfNeutronsProducedInEvent.push_back(0);
 
-  TotalEnergyDepositionInLAr.clear();
-  TotalEnergyDepositionInLAr.push_back(0);
-  TotalEnergyDepositionInLAr.push_back(0);
-  TotalEnergyDepositionInLAr.push_back(0);
-  TotalEnergyDepositionInLAr.push_back(0);
+  TotalEnergyDepositionInLAr_prompt.clear();
+  TotalEnergyDepositionInLAr_prompt.push_back(0);
+  TotalEnergyDepositionInLAr_prompt.push_back(0);
+  TotalEnergyDepositionInLAr_prompt.push_back(0);
+  TotalEnergyDepositionInLAr_prompt.push_back(0);
 
-  TotalEnergyDepositionInGe.clear();
-  TotalEnergyDepositionInGe.push_back(0);
-  TotalEnergyDepositionInGe.push_back(0);
-  TotalEnergyDepositionInGe.push_back(0);
-  TotalEnergyDepositionInGe.push_back(0);
+  TotalEnergyDepositionInGe_prompt.clear();
+  TotalEnergyDepositionInGe_prompt.push_back(0);
+  TotalEnergyDepositionInGe_prompt.push_back(0);
+  TotalEnergyDepositionInGe_prompt.push_back(0);
+  TotalEnergyDepositionInGe_prompt.push_back(0);
+
+  TotalEnergyDepositionInLAr_delayed.clear();
+  TotalEnergyDepositionInLAr_delayed.push_back(0);
+  TotalEnergyDepositionInLAr_delayed.push_back(0);
+  TotalEnergyDepositionInLAr_delayed.push_back(0);
+  TotalEnergyDepositionInLAr_delayed.push_back(0);
+
+  TotalEnergyDepositionInGe_delayed.clear();
+  TotalEnergyDepositionInGe_delayed.push_back(0);
+  TotalEnergyDepositionInGe_delayed.push_back(0);
+  TotalEnergyDepositionInGe_delayed.push_back(0);
+  TotalEnergyDepositionInGe_delayed.push_back(0);
 
   IndividualEnergyDeposition_Timing.clear();
   IndividualEnergyDeposition_LArOrGe.clear();

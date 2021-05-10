@@ -51,7 +51,7 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step *aStep) {
     {
       if(aStep->GetTotalEnergyDeposit() > 0)
       {
-
+        if(aStep->GetTrack()->GetLogicalVolumeAtVertex()->GetName() == "Ge_log")
         G4cout << "CopyNumber: " << aStep->GetPostStepPoint()->GetPhysicalVolume()->GetCopyNo() << G4endl;
 
         G4double tmp_x = aStep->GetTrack()->GetVertexPosition().getX();

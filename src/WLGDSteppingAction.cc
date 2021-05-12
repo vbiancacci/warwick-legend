@@ -42,7 +42,7 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step *aStep) {
     }
   }
 
-  // Edit: 2021/04/07 by Moritz Neuberger TODO
+  // Edit: 2021/04/07 by Moritz Neuberger
   // Adding total energy deposition inside LAr
   if(fDepositionInfo == 1)
   {
@@ -75,6 +75,7 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step *aStep) {
           {
             fEventAction->IncreaseLArEnergyDeposition(aStep->GetTotalEnergyDeposit() / eV,
                                                       whichReentranceTube);
+            G4cout << aStep->GetTotalEnergyDeposit() / eV << " " << whichReentranceTube << G4endl;
           }
           else if(aStep->GetPostStepPoint()->GetGlobalTime() / s < 1.)
           {

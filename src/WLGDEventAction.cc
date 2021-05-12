@@ -151,6 +151,17 @@ void WLGDEventAction::BeginOfEventAction(const G4Event*
   TotalEnergyDepositionInGe_delayed.push_back(0);
   TotalEnergyDepositionInGe_delayed.push_back(0);
 
+  TotalEnergyDepositionInLAr_after_delayed.clear();
+  TotalEnergyDepositionInLAr_after_delayed.push_back(0);
+  TotalEnergyDepositionInLAr_after_delayed.push_back(0);
+  TotalEnergyDepositionInLAr_after_delayed.push_back(0);
+  TotalEnergyDepositionInLAr_after_delayed.push_back(0);
+
+  TotalEnergyDepositionInGe_after_delayed.clear();
+  TotalEnergyDepositionInGe_after_delayed.push_back(0);
+  TotalEnergyDepositionInGe_after_delayed.push_back(0);
+  TotalEnergyDepositionInGe_after_delayed.push_back(0);
+  TotalEnergyDepositionInGe_after_delayed.push_back(0);
 
   IndividualEnergyDeposition_Timing.clear();
   IndividualEnergyDeposition_LArOrGe.clear();

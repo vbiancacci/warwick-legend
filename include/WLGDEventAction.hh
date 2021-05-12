@@ -47,6 +47,8 @@ public:
   std::vector<G4double>& GetGeEnergyDeposition() { return TotalEnergyDepositionInGe_prompt; }
   std::vector<G4double>& GetLArEnergyDeposition_delayed() { return TotalEnergyDepositionInLAr_delayed; }
   std::vector<G4double>& GetGeEnergyDeposition_delayed() { return TotalEnergyDepositionInGe_delayed; }
+  std::vector<G4double>& GetLArEnergyDeposition_after_delayed() { return TotalEnergyDepositionInLAr_after_delayed; }
+  std::vector<G4double>& GetGeEnergyDeposition_after_delayed() { return TotalEnergyDepositionInGe_after_delayed; }
   std::vector<G4int>& GetReentranceTube(){return ReentranceTube;}
 
   std::vector<G4double>& GetIndividualEnergyDeposition_Timing(){return IndividualEnergyDeposition_Timing;}
@@ -97,6 +99,8 @@ public:
   void IncreaseGeEnergyDeposition(G4double Edep, G4int whichReEntranceTube){TotalEnergyDepositionInGe_prompt[whichReEntranceTube] += Edep;}//SaveAllEvents
   void IncreaseLArEnergyDeposition_delayed(G4double Edep, G4int whichReEntranceTube){TotalEnergyDepositionInLAr_delayed[whichReEntranceTube] += Edep;}//SaveAllEvents
   void IncreaseGeEnergyDeposition_delayed(G4double Edep, G4int whichReEntranceTube){TotalEnergyDepositionInGe_delayed[whichReEntranceTube] += Edep;}//SaveAllEvents
+  void IncreaseLArEnergyDeposition_after_delayed(G4double Edep, G4int whichReEntranceTube){TotalEnergyDepositionInLAr_after_delayed[whichReEntranceTube] += Edep;}//SaveAllEvents
+  void IncreaseGeEnergyDeposition_after_delayed(G4double Edep, G4int whichReEntranceTube){TotalEnergyDepositionInGe_after_delayed[whichReEntranceTube] += Edep;}//SaveAllEvents
   void IncreaseEdepPerDetector(G4int copyNumber, G4double Edep){EdepPerDetector[copyNumber] = EdepPerDetector[copyNumber] + Edep;}
   void IncreaseEdepPerDetector_delayed(G4int copyNumber, G4double Edep){EdepPerDetector_delayed[copyNumber] = EdepPerDetector_delayed[copyNumber] + Edep;}
   void SaveAllEvents(G4int answer);
@@ -172,6 +176,8 @@ private:
   std::vector<G4double>	TotalEnergyDepositionInGe_prompt;
   std::vector<G4double>	TotalEnergyDepositionInLAr_delayed;
   std::vector<G4double>	TotalEnergyDepositionInGe_delayed;
+  std::vector<G4double>	TotalEnergyDepositionInLAr_after_delayed;
+  std::vector<G4double>	TotalEnergyDepositionInGe_after_delayed;
   std::vector<G4double> IndividualEnergyDeposition_Timing;
   std::vector<G4double> IndividualEnergyDeposition_Energy;
   std::vector<G4double> IndividualEnergyDeposition_Position_x;

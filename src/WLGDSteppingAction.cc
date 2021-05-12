@@ -79,6 +79,11 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step *aStep) {
             fEventAction->IncreaseLArEnergyDeposition_delayed(
               aStep->GetTotalEnergyDeposit() / eV, whichReentranceTube);
           }
+          else
+          {
+            fEventAction->IncreaseLArEnergyDeposition_after_delayed(
+              aStep->GetTotalEnergyDeposit() / eV, whichReentranceTube);
+          }
         }
 
         if(aStep->GetTrack()->GetLogicalVolumeAtVertex()->GetName() == "Ge_log")
@@ -95,6 +100,11 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step *aStep) {
             fEventAction->IncreaseGeEnergyDeposition_delayed(aStep->GetTotalEnergyDeposit() / eV,
                                                               whichReentranceTube);
             fEventAction->IncreaseEdepPerDetector_delayed(aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetCopyNo() + whichReentranceTube*96,aStep->GetTotalEnergyDeposit() / eV);
+          }
+          else
+          {
+            fEventAction->IncreaseGeEnergyDeposition_after_delayed(
+              aStep->GetTotalEnergyDeposit() / eV, whichReentranceTube);
           }
         }
 

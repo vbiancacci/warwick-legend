@@ -51,8 +51,6 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step *aStep) {
     {
       if(aStep->GetTotalEnergyDeposit() > 0)
       {
-
-
         G4double tmp_x = aStep->GetTrack()->GetVertexPosition().getX();
         G4double tmp_y = aStep->GetTrack()->GetVertexPosition().getY();
         G4double tmp_z = aStep->GetTrack()->GetVertexPosition().getZ();
@@ -75,7 +73,6 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step *aStep) {
           {
             fEventAction->IncreaseLArEnergyDeposition(aStep->GetTotalEnergyDeposit() / eV,
                                                       whichReentranceTube);
-            G4cout << aStep->GetTotalEnergyDeposit() / eV << " " << whichReentranceTube << G4endl;
           }
           else if(aStep->GetPostStepPoint()->GetGlobalTime() / s < 1.)
           {

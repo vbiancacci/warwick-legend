@@ -184,9 +184,6 @@ void WLGDEventAction::EndOfEventAction(const G4Event* event)
     return;  // no action on no hit
   }
 
-  G4cout << G4endl << " --------------------------- " << G4endl << G4endl;
-  for(int i = 0; i < 4; i++)
-    G4cout << TotalEnergyDepositionInLAr_prompt[i] << G4endl;
 
 
 

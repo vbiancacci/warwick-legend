@@ -75,21 +75,21 @@ public:
   std::vector<G4double>& GetTrjYPos() { return trjypos; }
   std::vector<G4double>& GetTrjZPos() { return trjzpos; }
 
-  void AddEkin(double kin){ekin.push_back(kin);}
-  void AddNeutronxLoc(double posx){neutronxloc.push_back(posx);}
-  void AddNeutronyLoc(double posy){neutronyloc.push_back(posy);}
-  void AddNeutronzLoc(double posz){neutronzloc.push_back(posz);}
-  void AddNeutronxMom(double posx){neutronxmom.push_back(posx);}
-  void AddNeutronyMom(double posy){neutronymom.push_back(posy);}
-  void AddNeutronzMom(double posz){neutronzmom.push_back(posz);}
+  void AddEkin(G4double kin){ekin.push_back(kin);}
+  void AddNeutronxLoc(G4double posx){neutronxloc.push_back(posx);}
+  void AddNeutronyLoc(G4double posy){neutronyloc.push_back(posy);}
+  void AddNeutronzLoc(G4double posz){neutronzloc.push_back(posz);}
+  void AddNeutronxMom(G4double posx){neutronxmom.push_back(posx);}
+  void AddNeutronyMom(G4double posy){neutronymom.push_back(posy);}
+  void AddNeutronzMom(G4double posz){neutronzmom.push_back(posz);}
 
-  void AddIndividualEnergyDeposition_Timing(double time){IndividualEnergyDeposition_Timing.push_back(time);}
-  void AddIndividualEnergyDeposition_Energy(double energy){IndividualEnergyDeposition_Energy.push_back(energy);}
-  void AddIndividualEnergyDeposition_Position_x(double posx){IndividualEnergyDeposition_Position_x.push_back(posx);}
-  void AddIndividualEnergyDeposition_Position_y(double posy){IndividualEnergyDeposition_Position_y.push_back(posy);}
-  void AddIndividualEnergyDeposition_Position_z(double posz){IndividualEnergyDeposition_Position_z.push_back(posz);}
-  void AddIndividualEnergyDeposition_ReentranceTube(int n){IndividualEnergyDeposition_ReentranceTube.push_back(n);}
-  void AddIndividualEnergyDeposition_LArOrGe(int n){IndividualEnergyDeposition_LArOrGe.push_back(n);}
+  void AddIndividualEnergyDeposition_Timing(G4double time){IndividualEnergyDeposition_Timing.push_back(time);}
+  void AddIndividualEnergyDeposition_Energy(G4double energy){IndividualEnergyDeposition_Energy.push_back(energy);}
+  void AddIndividualEnergyDeposition_Position_x(G4double posx){IndividualEnergyDeposition_Position_x.push_back(posx);}
+  void AddIndividualEnergyDeposition_Position_y(G4double posy){IndividualEnergyDeposition_Position_y.push_back(posy);}
+  void AddIndividualEnergyDeposition_Position_z(G4double posz){IndividualEnergyDeposition_Position_z.push_back(posz);}
+  void AddIndividualEnergyDeposition_ReentranceTube(G4int n){IndividualEnergyDeposition_ReentranceTube.push_back(n);}
+  void AddIndividualEnergyDeposition_LArOrGe(G4int n){IndividualEnergyDeposition_LArOrGe.push_back(n);}
   std::map<int, int>         neutronProducerMap;
 
   void IncreaseByOne_NeutronInEvent(){NumberOfNeutronsProducedInEvent[0] += 1;}

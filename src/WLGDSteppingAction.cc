@@ -74,12 +74,20 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step *aStep) {
             fEventAction->IncreaseLArEnergyDeposition(aStep->GetTotalEnergyDeposit() / eV,
                                                       whichReentranceTube);
           }
-          else if(aStep->GetPostStepPoint()->GetGlobalTime() / s < 1.)
-          {
-            fEventAction->IncreaseLArEnergyDeposition_delayed(
-              aStep->GetTotalEnergyDeposit() / eV, whichReentranceTube);
-          }
           else
+          {
+            if(aStep->GetPostStepPoint()->GetGlobalTime() / ms < 10.)
+            {
+              fEventAction->IncreaseLArEnergyDeposition_delayed(aStep->GetTotalEnergyDeposit() / eV,
+                                                               whichReentranceTube);
+            }
+            if(aStep->GetPostStepPoint()->GetGlobalTime() / s < 1.)
+            {
+              fEventAction->IncreaseLArEnergyDeposition_delayed_long(
+                aStep->GetTotalEnergyDeposit() / eV, whichReentranceTube);
+            }
+          }
+          if(aStep->GetPostStepPoint()->GetGlobalTime() / s > 1.)
           {
             fEventAction->IncreaseLArEnergyDeposition_after_delayed(
               aStep->GetTotalEnergyDeposit() / eV, whichReentranceTube);
@@ -97,11 +105,11 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step *aStep) {
           }
           else {
             if(aStep->GetPostStepPoint()->GetGlobalTime() / ms < 10.)
-          {
-            fEventAction->IncreaseGeEnergyDeposition_delayed(aStep->GetTotalEnergyDeposit() / eV,
+            {
+              fEventAction->IncreaseGeEnergyDeposition_delayed(aStep->GetTotalEnergyDeposit() / eV,
                                                               whichReentranceTube);
-            fEventAction->IncreaseEdepPerDetector_delayed(aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetCopyNo() + whichReentranceTube*96,aStep->GetTotalEnergyDeposit() / eV);
-          }
+              fEventAction->IncreaseEdepPerDetector_delayed(aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetCopyNo() + whichReentranceTube*96,aStep->GetTotalEnergyDeposit() / eV);
+            }
             if(aStep->GetPostStepPoint()->GetGlobalTime() / s < 1.)
             {
               fEventAction->IncreaseGeEnergyDeposition_delayed_long(aStep->GetTotalEnergyDeposit() / eV,

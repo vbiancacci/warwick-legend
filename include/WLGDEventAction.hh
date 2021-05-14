@@ -66,8 +66,10 @@ public:
   std::vector<G4int>& GetMultiplicity_delayed_long(){return Multiplicity_delayed_long;}
   std::vector<G4double>& GetEdepPerDetector_prompt(){return v_EdepPerDetector_prompt;}
   std::vector<G4double>& GetEdepPerDetector_delayed(){return v_EdepPerDetector_delayed;}
+  std::vector<G4double>& GetEdepPerDetector_delayed_long(){return v_EdepPerDetector_delayed_long;}
   std::vector<G4double>& GetNDetector_prompt(){return v_NDetector_prompt;}
   std::vector<G4double>& GetNDetector_delayed(){return v_NDetector_delayed;}
+  std::vector<G4double>& GetNDetector_delayed_long(){return v_NDetector_delayed_long;}
 
   // tajectory methods
   std::vector<G4int>&    GetTrjPDG() { return trjpdg; }
@@ -199,8 +201,10 @@ private:
   std::vector<G4int> Multiplicity_delayed_long;
   std::vector<G4double> v_EdepPerDetector_prompt;
   std::vector<G4double> v_EdepPerDetector_delayed;
+  std::vector<G4double> v_EdepPerDetector_delayed_long;
   std::vector<G4double> v_NDetector_prompt;
   std::vector<G4double> v_NDetector_delayed;
+  std::vector<G4double> v_NDetector_delayed_long;
   std::map<G4int, G4double> EdepPerDetector;
   std::map<G4int, G4double> EdepPerDetector_delayed;
   std::map<G4int, G4double> EdepPerDetector_delayed_long;

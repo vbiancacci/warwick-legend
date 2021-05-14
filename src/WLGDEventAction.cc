@@ -157,6 +157,18 @@ void WLGDEventAction::BeginOfEventAction(const G4Event*
   TotalEnergyDepositionInGe_delayed.push_back(0);
   TotalEnergyDepositionInGe_delayed.push_back(0);
 
+  TotalEnergyDepositionInLAr_delayed_long.clear();
+  TotalEnergyDepositionInLAr_delayed_long.push_back(0);
+  TotalEnergyDepositionInLAr_delayed_long.push_back(0);
+  TotalEnergyDepositionInLAr_delayed_long.push_back(0);
+  TotalEnergyDepositionInLAr_delayed_long.push_back(0);
+
+  TotalEnergyDepositionInGe_delayed_long.clear();
+  TotalEnergyDepositionInGe_delayed_long.push_back(0);
+  TotalEnergyDepositionInGe_delayed_long.push_back(0);
+  TotalEnergyDepositionInGe_delayed_long.push_back(0);
+  TotalEnergyDepositionInGe_delayed_long.push_back(0);
+
   TotalEnergyDepositionInLAr_after_delayed.clear();
   TotalEnergyDepositionInLAr_after_delayed.push_back(0);
   TotalEnergyDepositionInLAr_after_delayed.push_back(0);
@@ -244,6 +256,8 @@ void WLGDEventAction::EndOfEventAction(const G4Event* event)
     if(x.second / G4Analysis::GetUnitValue("eV") < 1e4) continue;
     int tmp_i = (int)(x.first/96);
     Multiplicity_delayed_long[tmp_i] += 1;
+    v_NDetector_delayed_long.push_back(x.first);
+    v_EdepPerDetector_delayed_long.push_back(x.second);
   }
 
   // fill trajectory data if available

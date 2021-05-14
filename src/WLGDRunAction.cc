@@ -72,8 +72,10 @@ WLGDRunAction::WLGDRunAction(WLGDEventAction* eventAction, G4String name)
   analysisManager->CreateNtupleIColumn("Multiplicity_delayed_long", fEventAction->GetMultiplicity_delayed_long());
   analysisManager->CreateNtupleDColumn("EdepPerDetector_prompt", fEventAction->GetEdepPerDetector_prompt());
   analysisManager->CreateNtupleDColumn("EdepPerDetector_delayed", fEventAction->GetEdepPerDetector_delayed());
+  analysisManager->CreateNtupleDColumn("EdepPerDetector_delayed_long", fEventAction->GetEdepPerDetector_delayed_long());
   analysisManager->CreateNtupleDColumn("CopyNDetector_prompt", fEventAction->GetNDetector_prompt());
   analysisManager->CreateNtupleDColumn("CopyNDetector_delayed", fEventAction->GetNDetector_delayed());
+  analysisManager->CreateNtupleDColumn("CopyNDetector_delayed_long", fEventAction->GetNDetector_delayed_long());
 
   analysisManager->CreateNtupleIColumn("Trjpdg", fEventAction->GetTrjPDG());
   analysisManager->CreateNtupleIColumn("Trjentries", fEventAction->GetTrjEntries());

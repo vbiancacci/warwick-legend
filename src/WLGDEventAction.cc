@@ -195,6 +195,7 @@ void WLGDEventAction::BeginOfEventAction(const G4Event*
 
   EdepPerDetector.clear();
   EdepPerDetector_delayed.clear();
+  EdepPerDetector_delayed_long.clear();
 
   makeMap();
 }

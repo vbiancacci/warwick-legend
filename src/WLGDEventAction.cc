@@ -116,6 +116,12 @@ void WLGDEventAction::BeginOfEventAction(const G4Event*
   Multiplicity_delayed.push_back(0);
   Multiplicity_delayed.push_back(0);
 
+  Multiplicity_delayed_long.clear();
+  Multiplicity_delayed_long.push_back(0);
+  Multiplicity_delayed_long.push_back(0);
+  Multiplicity_delayed_long.push_back(0);
+  Multiplicity_delayed_long.push_back(0);
+
   v_EdepPerDetector_prompt.clear();
 
   v_EdepPerDetector_delayed.clear();

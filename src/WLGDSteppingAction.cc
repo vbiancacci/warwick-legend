@@ -95,13 +95,21 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step *aStep) {
                                                     whichReentranceTube);
             fEventAction->IncreaseEdepPerDetector(aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetCopyNo() + whichReentranceTube*96,aStep->GetTotalEnergyDeposit() / eV);
           }
-          else if(aStep->GetPostStepPoint()->GetGlobalTime() / s < 1.)
+          else {
+            if(aStep->GetPostStepPoint()->GetGlobalTime() / ms < 10.)
           {
             fEventAction->IncreaseGeEnergyDeposition_delayed(aStep->GetTotalEnergyDeposit() / eV,
                                                               whichReentranceTube);
             fEventAction->IncreaseEdepPerDetector_delayed(aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetCopyNo() + whichReentranceTube*96,aStep->GetTotalEnergyDeposit() / eV);
           }
-          else
+            if(aStep->GetPostStepPoint()->GetGlobalTime() / s < 1.)
+            {
+              fEventAction->IncreaseGeEnergyDeposition_delayed_long(aStep->GetTotalEnergyDeposit() / eV,
+                                                               whichReentranceTube);
+              fEventAction->IncreaseEdepPerDetector_delayed_long(aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetCopyNo() + whichReentranceTube*96,aStep->GetTotalEnergyDeposit() / eV);
+            }
+          }
+          if(aStep->GetPostStepPoint()->GetGlobalTime() / s > 1.)
           {
             fEventAction->IncreaseGeEnergyDeposition_after_delayed(
               aStep->GetTotalEnergyDeposit() / eV, whichReentranceTube);

@@ -47,6 +47,8 @@ public:
   std::vector<G4double>& GetGeEnergyDeposition() { return TotalEnergyDepositionInGe_prompt; }
   std::vector<G4double>& GetLArEnergyDeposition_delayed() { return TotalEnergyDepositionInLAr_delayed; }
   std::vector<G4double>& GetGeEnergyDeposition_delayed() { return TotalEnergyDepositionInGe_delayed; }
+  std::vector<G4double>& GetLArEnergyDeposition_delayed_long() { return TotalEnergyDepositionInLAr_delayed_long; }
+  std::vector<G4double>& GetGeEnergyDeposition_delayed_long() { return TotalEnergyDepositionInGe_delayed_long; }
   std::vector<G4double>& GetLArEnergyDeposition_after_delayed() { return TotalEnergyDepositionInLAr_after_delayed; }
   std::vector<G4double>& GetGeEnergyDeposition_after_delayed() { return TotalEnergyDepositionInGe_after_delayed; }
   std::vector<G4int>& GetReentranceTube(){return ReentranceTube;}
@@ -61,6 +63,7 @@ public:
 
   std::vector<G4int>& GetMultiplicity_prompt(){return Multiplicity_prompt;}
   std::vector<G4int>& GetMultiplicity_delayed(){return Multiplicity_delayed;}
+  std::vector<G4int>& GetMultiplicity_delayed_long(){return Multiplicity_delayed_long;}
   std::vector<G4double>& GetEdepPerDetector_prompt(){return v_EdepPerDetector_prompt;}
   std::vector<G4double>& GetEdepPerDetector_delayed(){return v_EdepPerDetector_delayed;}
   std::vector<G4double>& GetNDetector_prompt(){return v_NDetector_prompt;}
@@ -99,10 +102,13 @@ public:
   void IncreaseGeEnergyDeposition(G4double Edep, G4int whichReEntranceTube){TotalEnergyDepositionInGe_prompt[whichReEntranceTube] += Edep;}//SaveAllEvents
   void IncreaseLArEnergyDeposition_delayed(G4double Edep, G4int whichReEntranceTube){TotalEnergyDepositionInLAr_delayed[whichReEntranceTube] += Edep;}//SaveAllEvents
   void IncreaseGeEnergyDeposition_delayed(G4double Edep, G4int whichReEntranceTube){TotalEnergyDepositionInGe_delayed[whichReEntranceTube] += Edep;}//SaveAllEvents
+  void IncreaseLArEnergyDeposition_delayed_long(G4double Edep, G4int whichReEntranceTube){TotalEnergyDepositionInLAr_delayed_long[whichReEntranceTube] += Edep;}//SaveAllEvents
+  void IncreaseGeEnergyDeposition_delayed_long(G4double Edep, G4int whichReEntranceTube){TotalEnergyDepositionInGe_delayed_long[whichReEntranceTube] += Edep;}//SaveAllEvents
   void IncreaseLArEnergyDeposition_after_delayed(G4double Edep, G4int whichReEntranceTube){TotalEnergyDepositionInLAr_after_delayed[whichReEntranceTube] += Edep;}//SaveAllEvents
   void IncreaseGeEnergyDeposition_after_delayed(G4double Edep, G4int whichReEntranceTube){TotalEnergyDepositionInGe_after_delayed[whichReEntranceTube] += Edep;}//SaveAllEvents
   void IncreaseEdepPerDetector(G4int copyNumber, G4double Edep){EdepPerDetector[copyNumber] = EdepPerDetector[copyNumber] + Edep;}
   void IncreaseEdepPerDetector_delayed(G4int copyNumber, G4double Edep){EdepPerDetector_delayed[copyNumber] = EdepPerDetector_delayed[copyNumber] + Edep;}
+  void IncreaseEdepPerDetector_delayed_long(G4int copyNumber, G4double Edep){EdepPerDetector_delayed_long[copyNumber] = EdepPerDetector_delayed_long[copyNumber] + Edep;}
   void SaveAllEvents(G4int answer);
   void DefineCommands();
 private:
@@ -176,6 +182,8 @@ private:
   std::vector<G4double>	TotalEnergyDepositionInGe_prompt;
   std::vector<G4double>	TotalEnergyDepositionInLAr_delayed;
   std::vector<G4double>	TotalEnergyDepositionInGe_delayed;
+  std::vector<G4double>	TotalEnergyDepositionInLAr_delayed_long;
+  std::vector<G4double>	TotalEnergyDepositionInGe_delayed_long;
   std::vector<G4double>	TotalEnergyDepositionInLAr_after_delayed;
   std::vector<G4double>	TotalEnergyDepositionInGe_after_delayed;
   std::vector<G4double> IndividualEnergyDeposition_Timing;
@@ -188,12 +196,14 @@ private:
 
   std::vector<G4int> Multiplicity_prompt;
   std::vector<G4int> Multiplicity_delayed;
+  std::vector<G4int> Multiplicity_delayed_long;
   std::vector<G4double> v_EdepPerDetector_prompt;
   std::vector<G4double> v_EdepPerDetector_delayed;
   std::vector<G4double> v_NDetector_prompt;
   std::vector<G4double> v_NDetector_delayed;
   std::map<G4int, G4double> EdepPerDetector;
   std::map<G4int, G4double> EdepPerDetector_delayed;
+  std::map<G4int, G4double> EdepPerDetector_delayed_long;
 
   // trajectory data
   std::vector<G4int>        trjpdg;

@@ -54,6 +54,8 @@ WLGDRunAction::WLGDRunAction(WLGDEventAction* eventAction, G4String name)
   analysisManager->CreateNtupleDColumn("GeEnergyDeposition", fEventAction->GetGeEnergyDeposition());
   analysisManager->CreateNtupleDColumn("LArEnergyDeposition_delayed", fEventAction->GetLArEnergyDeposition_delayed());
   analysisManager->CreateNtupleDColumn("GeEnergyDeposition_delayed", fEventAction->GetGeEnergyDeposition_delayed());
+  analysisManager->CreateNtupleDColumn("LArEnergyDeposition_delayed_long", fEventAction->GetLArEnergyDeposition_delayed_long());
+  analysisManager->CreateNtupleDColumn("GeEnergyDeposition_delayed_long", fEventAction->GetGeEnergyDeposition_delayed_long());
   analysisManager->CreateNtupleDColumn("LArEnergyDeposition_after_delayed", fEventAction->GetLArEnergyDeposition_after_delayed());
   analysisManager->CreateNtupleDColumn("GeEnergyDeposition_after_delayed", fEventAction->GetGeEnergyDeposition_after_delayed());
 
@@ -67,6 +69,7 @@ WLGDRunAction::WLGDRunAction(WLGDEventAction* eventAction, G4String name)
 
   analysisManager->CreateNtupleIColumn("Multiplicity_prompt", fEventAction->GetMultiplicity_prompt());
   analysisManager->CreateNtupleIColumn("Multiplicity_delayed", fEventAction->GetMultiplicity_delayed());
+  analysisManager->CreateNtupleIColumn("Multiplicity_delayed_long", fEventAction->GetMultiplicity_delayed_long());
   analysisManager->CreateNtupleDColumn("EdepPerDetector_prompt", fEventAction->GetEdepPerDetector_prompt());
   analysisManager->CreateNtupleDColumn("EdepPerDetector_delayed", fEventAction->GetEdepPerDetector_delayed());
   analysisManager->CreateNtupleDColumn("CopyNDetector_prompt", fEventAction->GetNDetector_prompt());

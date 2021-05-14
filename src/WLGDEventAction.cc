@@ -234,6 +234,12 @@ void WLGDEventAction::EndOfEventAction(const G4Event* event)
     v_EdepPerDetector_delayed.push_back(x.second);
   }
 
+  for(auto const& x : EdepPerDetector_delayed_long){
+    if(x.second / G4Analysis::GetUnitValue("eV") < 1e4) continue;
+    int tmp_i = (int)(x.first/96);
+    Multiplicity_delayed_long[tmp_i] += 1;
+  }
+
   // fill trajectory data if available
   G4TrajectoryContainer* trajectoryContainer = event->GetTrajectoryContainer();
   G4int                  n_trajectories =

@@ -126,9 +126,13 @@ void WLGDEventAction::BeginOfEventAction(const G4Event*
 
   v_EdepPerDetector_delayed.clear();
 
+  v_EdepPerDetector_delayed_long.clear();
+
   v_NDetector_prompt.clear();
 
   v_NDetector_delayed.clear();
+
+  v_NDetector_delayed_long.clear();
 
   NumberOfNeutronsProducedInEvent.clear();
   NumberOfNeutronsProducedInEvent.push_back(0);

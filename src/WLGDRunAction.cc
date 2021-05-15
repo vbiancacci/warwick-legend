@@ -29,7 +29,6 @@ WLGDRunAction::WLGDRunAction(WLGDEventAction* eventAction, G4String name)
   //
   analysisManager->CreateNtuple("Score", "Hits");
   analysisManager->CreateNtupleIColumn("NGe77", fEventAction->GetNGe77());
-  analysisManager->CreateNtupleIColumn("ReentranceTube", fEventAction->GetReentranceTube());
   analysisManager->CreateNtupleIColumn("HitID", fEventAction->GetHitTID());
   analysisManager->CreateNtupleDColumn("Edep", fEventAction->GetHitEdep());
   analysisManager->CreateNtupleDColumn("Time", fEventAction->GetHitTime());
@@ -37,6 +36,8 @@ WLGDRunAction::WLGDRunAction(WLGDEventAction* eventAction, G4String name)
   analysisManager->CreateNtupleDColumn("Hitxloc", fEventAction->GetHitxLoc());
   analysisManager->CreateNtupleDColumn("Hityloc", fEventAction->GetHityLoc());
   analysisManager->CreateNtupleDColumn("Hitzloc", fEventAction->GetHitzLoc());
+  analysisManager->CreateNtupleIColumn("ReentranceTube", fEventAction->GetReentranceTube());
+  analysisManager->CreateNtupleIColumn("DetectorNumber", fEventAction->GetDetectorNumber());
 
   // Edit: 2021/04/07 by Moritz Neuberger
   // Adding additional outputs to further investigate situations in which Ge-77 is produced

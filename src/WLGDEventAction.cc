@@ -103,6 +103,7 @@ void WLGDEventAction::BeginOfEventAction(const G4Event*
   trjzpos.clear();
 
   ReentranceTube.clear();
+  DetectorNumber.clear();
 
   Multiplicity_prompt.clear();
   Multiplicity_prompt.push_back(0);
@@ -239,6 +240,7 @@ void WLGDEventAction::EndOfEventAction(const G4Event* event)
     yloc.push_back((hh->GetPos()).y() / G4Analysis::GetUnitValue("m"));
     zloc.push_back((hh->GetPos()).z() / G4Analysis::GetUnitValue("m"));
     ReentranceTube.push_back(hh->GetWhichReentranceTube());
+    DetectorNumber.push_back(hh->GetWhichDetector());
   }
 
   for(auto const& x : EdepPerDetector){

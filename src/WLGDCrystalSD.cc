@@ -67,7 +67,7 @@ G4bool WLGDCrystalSD::ProcessHits(G4Step* aStep,
   if(abs(tmp_x)<abs(tmp_y)&&tmp_y>0) whichReentranceTube = 1;
   if(abs(tmp_x)<abs(tmp_y)&&tmp_y<0) whichReentranceTube = 3;
   newHit->SetWhichReentranceTube (whichReentranceTube);
-
+  newHit->SetWhichDetector(aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetCopyNo() + whichReentranceTube*96);
   fHitsCollection->insert( newHit );
 
   return true;

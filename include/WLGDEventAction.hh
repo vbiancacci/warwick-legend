@@ -52,6 +52,7 @@ public:
   std::vector<G4double>& GetLArEnergyDeposition_after_delayed() { return TotalEnergyDepositionInLAr_after_delayed; }
   std::vector<G4double>& GetGeEnergyDeposition_after_delayed() { return TotalEnergyDepositionInGe_after_delayed; }
   std::vector<G4int>& GetReentranceTube(){return ReentranceTube;}
+  std::vector<G4int>& GetDetectorNumber(){return DetectorNumber;}
 
   std::vector<G4double>& GetIndividualEnergyDeposition_Timing(){return IndividualEnergyDeposition_Timing;}
   std::vector<G4double>& GetIndividualEnergyDeposition_Energy(){return IndividualEnergyDeposition_Energy;}
@@ -164,6 +165,7 @@ private:
   G4int                 fHID    = -1;
   std::vector<G4int>    htrid;
   std::vector<G4int>    ReentranceTube;
+  std::vector<G4int>    DetectorNumber;
   std::vector<G4double> edep;
   std::vector<G4double> ekin;
   std::vector<G4double> thit;

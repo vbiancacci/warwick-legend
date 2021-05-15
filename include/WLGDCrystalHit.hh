@@ -36,6 +36,7 @@ class WLGDCrystalHit : public G4VHit
     void SetEdep     (G4double de)      { fEdep   = de; };
     void SetPos      (G4ThreeVector xyz){ fPos    = xyz; };
     void SetWhichReentranceTube      (G4int n){ fwhichReentranceTuber    = n; };
+    void SetWhichDetector      (G4int n){ fwhichDetector    = n; };
 
     // Get methods
     G4int    GetTID()  const     { return fTid; };
@@ -44,6 +45,7 @@ class WLGDCrystalHit : public G4VHit
     G4double GetEdep() const     { return fEdep; };
     G4ThreeVector GetPos() const { return fPos; };
     G4int GetWhichReentranceTube() const { return fwhichReentranceTuber; };
+    G4int GetWhichDetector() const { return fwhichDetector; };
 
   private:
 
@@ -53,6 +55,7 @@ class WLGDCrystalHit : public G4VHit
       G4double      fEdep;
       G4ThreeVector fPos;
       G4int         fwhichReentranceTuber;
+      G4int         fwhichDetector;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

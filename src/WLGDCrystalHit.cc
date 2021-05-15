@@ -11,7 +11,8 @@ WLGDCrystalHit::WLGDCrystalHit()
    fWeight(0.),
    fEdep(0.),
    fPos(G4ThreeVector()),
-   fwhichReentranceTuber(-1)
+   fwhichReentranceTuber(-1),
+   fwhichDetector(-1)
 {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -29,6 +30,7 @@ WLGDCrystalHit::WLGDCrystalHit(const WLGDCrystalHit& right)
   fEdep      = right.fEdep;
   fPos       = right.fPos;
   fwhichReentranceTuber = right.fwhichReentranceTuber;
+  fwhichDetector = right.fwhichDetector;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -41,6 +43,7 @@ const WLGDCrystalHit& WLGDCrystalHit::operator=(const WLGDCrystalHit& right)
   fEdep      = right.fEdep;
   fPos       = right.fPos;
   fwhichReentranceTuber = right.fwhichReentranceTuber;
+  fwhichDetector = right.fwhichDetector;
 
   return *this;
 }

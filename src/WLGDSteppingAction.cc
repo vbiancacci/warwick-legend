@@ -66,7 +66,7 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step *aStep) {
           whichReentranceTube = 3;
 
         G4int whichVolume = -1;
-        if(aStep->GetTrack()->GetLogicalVolumeAtVertex()->GetName() == "ULar_log")
+        if(aStep->GetPostStepPoint()->GetTouchable()->GetVolume(0)->GetLogicalVolume()->GetName() == "ULar_log")
         {
           whichVolume = 0;
           if(aStep->GetPostStepPoint()->GetGlobalTime() / us < 10.)
@@ -94,7 +94,7 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step *aStep) {
           }
         }
 
-        if(aStep->GetTrack()->GetLogicalVolumeAtVertex()->GetName() == "Ge_log")
+        if(aStep->GetPostStepPoint()->GetTouchable()->GetVolume(0)->GetLogicalVolume()->GetName() == "Ge_log")
         {
           whichVolume = 1;
           if(aStep->GetPostStepPoint()->GetGlobalTime() / us < 10.)

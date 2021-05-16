@@ -51,9 +51,9 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step *aStep) {
     {
       if(aStep->GetTotalEnergyDeposit() > 0)
       {
-        G4double tmp_x = aStep->GetTrack()->GetVertexPosition().getX();
-        G4double tmp_y = aStep->GetTrack()->GetVertexPosition().getY();
-        G4double tmp_z = aStep->GetTrack()->GetVertexPosition().getZ();
+        G4double tmp_x = aStep->GetPostStepPoint()->GetPosition().getX();
+        G4double tmp_y = aStep->GetPostStepPoint()->GetPosition().getY();
+        G4double tmp_z = aStep->GetPostStepPoint()->GetPosition().getZ();
 
         G4int whichReentranceTube;
         if(abs(tmp_x) > abs(tmp_y) && tmp_x > 0)

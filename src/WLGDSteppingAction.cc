@@ -101,14 +101,20 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step *aStep) {
           {
             fEventAction->IncreaseGeEnergyDeposition(aStep->GetTotalEnergyDeposit() / eV,
                                                     whichReentranceTube);
-            fEventAction->IncreaseEdepPerDetector(aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetCopyNo() + whichReentranceTube*96,aStep->GetTotalEnergyDeposit() / eV);
+            if(aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetLogicalVolume()->GetName() == "Layer_log")
+              fEventAction->IncreaseEdepPerDetector(aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetCopyNo() + whichReentranceTube*96,aStep->GetTotalEnergyDeposit() / eV);
+            else
+              G4cout << "Trying to access Layer_log for the prompt multiplicity but it is " << aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetLogicalVolume()->GetName() << G4endl;
           }
           else {
             if(aStep->GetPostStepPoint()->GetGlobalTime() / ms < 10.)
             {
               fEventAction->IncreaseGeEnergyDeposition_delayed(aStep->GetTotalEnergyDeposit() / eV,
                                                               whichReentranceTube);
-              fEventAction->IncreaseEdepPerDetector_delayed(aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetCopyNo() + whichReentranceTube*96,aStep->GetTotalEnergyDeposit() / eV);
+              if(aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetLogicalVolume()->GetName() == "Layer_log")
+                fEventAction->IncreaseEdepPerDetector_delayed(aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetCopyNo() + whichReentranceTube*96,aStep->GetTotalEnergyDeposit() / eV);
+              else
+                G4cout << "Trying to access Layer_log for the delayed multiplicity but it is " << aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetLogicalVolume()->GetName() << G4endl;
             }
             if(aStep->GetPostStepPoint()->GetGlobalTime() / s < 1.)
             {

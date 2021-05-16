@@ -244,7 +244,7 @@ void WLGDEventAction::EndOfEventAction(const G4Event* event)
   }
 
   for(auto const& x : EdepPerDetector){
-    if(x.second / G4Analysis::GetUnitValue("eV") < 1e4) continue;
+    if(x.second  < 1e4) continue;
     int tmp_i = (int)(x.first/96);
     Multiplicity_prompt[tmp_i] += 1;
     v_NDetector_prompt.push_back(x.first);
@@ -252,7 +252,7 @@ void WLGDEventAction::EndOfEventAction(const G4Event* event)
   }
 
   for(auto const& x : EdepPerDetector_delayed){
-    if(x.second / G4Analysis::GetUnitValue("eV") < 1e4) continue;
+    if(x.second  < 1e4) continue;
     int tmp_i = (int)(x.first/96);
     Multiplicity_delayed[tmp_i] += 1;
     v_NDetector_delayed.push_back(x.first);
@@ -260,7 +260,7 @@ void WLGDEventAction::EndOfEventAction(const G4Event* event)
   }
 
   for(auto const& x : EdepPerDetector_delayed_long){
-    if(x.second / G4Analysis::GetUnitValue("eV") < 1e4) continue;
+    if(x.second  < 1e4) continue;
     int tmp_i = (int)(x.first/96);
     Multiplicity_delayed_long[tmp_i] += 1;
     v_NDetector_delayed_long.push_back(x.first);

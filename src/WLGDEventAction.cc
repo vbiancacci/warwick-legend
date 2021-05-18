@@ -249,6 +249,7 @@ void WLGDEventAction::EndOfEventAction(const G4Event* event)
     Multiplicity_prompt[tmp_i] += 1;
     v_NDetector_prompt.push_back(x.first);
     v_EdepPerDetector_prompt.push_back(x.second);
+    IncreaseGeEnergyDeposition( x.second, tmp_i);
   }
 
   for(auto const& x : EdepPerDetector_delayed){
@@ -257,6 +258,7 @@ void WLGDEventAction::EndOfEventAction(const G4Event* event)
     Multiplicity_delayed[tmp_i] += 1;
     v_NDetector_delayed.push_back(x.first);
     v_EdepPerDetector_delayed.push_back(x.second);
+    IncreaseGeEnergyDeposition_delayed(x.second,tmp_i);
   }
 
   for(auto const& x : EdepPerDetector_delayed_long){
@@ -265,6 +267,7 @@ void WLGDEventAction::EndOfEventAction(const G4Event* event)
     Multiplicity_delayed_long[tmp_i] += 1;
     v_NDetector_delayed_long.push_back(x.first);
     v_EdepPerDetector_delayed_long.push_back(x.second);
+    IncreaseGeEnergyDeposition_delayed_long(x.second,tmp_i);
   }
 
   // fill trajectory data if available

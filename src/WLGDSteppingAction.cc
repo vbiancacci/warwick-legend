@@ -47,8 +47,7 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step *aStep) {
   // Adding total energy deposition inside LAr
   if(fDepositionInfo == 1)
   {
-    if((fDetectorConstruction->GetGeometryName() == "hallA" && aStep->GetTrack()->GetLogicalVolumeAtVertex()->GetName() == "Lar_log") || aStep->GetTrack()->GetLogicalVolumeAtVertex()->GetName() == "ULar_log") ||
-       aStep->GetTrack()->GetLogicalVolumeAtVertex()->GetName() == "Ge_log")
+    if((fDetectorConstruction->GetGeometryName() == "hallA" && aStep->GetTrack()->GetLogicalVolumeAtVertex()->GetName() == "Lar_log") || aStep->GetTrack()->GetLogicalVolumeAtVertex()->GetName() == "ULar_log" ||  aStep->GetTrack()->GetLogicalVolumeAtVertex()->GetName() == "Ge_log")
     {
       if(aStep->GetTotalEnergyDeposit() > 0)
       {

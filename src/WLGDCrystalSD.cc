@@ -8,11 +8,13 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 WLGDCrystalSD::WLGDCrystalSD(const G4String& name,
-                         const G4String& hitsCollectionName) 
+                         const G4String& hitsCollectionName, G4String setupName)
  : G4VSensitiveDetector(name),
-   fHitsCollection(NULL)
+   fHitsCollection(NULL),
+   fGeometryName("baseline")
 {
   collectionName.insert(hitsCollectionName);
+  fGeometryName = setupName;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -66,6 +68,7 @@ G4bool WLGDCrystalSD::ProcessHits(G4Step* aStep,
   if(abs(tmp_x)>abs(tmp_y)&&tmp_x<0) whichReentranceTube = 2;
   if(abs(tmp_x)<abs(tmp_y)&&tmp_y>0) whichReentranceTube = 1;
   if(abs(tmp_x)<abs(tmp_y)&&tmp_y<0) whichReentranceTube = 3;
+  if(fGeometryName == "hallA") whichReentranceTube = 0;
   newHit->SetWhichReentranceTube (whichReentranceTube);
   newHit->SetWhichDetector(aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetCopyNo() + whichReentranceTube*96);
   fHitsCollection->insert( newHit );

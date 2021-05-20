@@ -7,6 +7,7 @@
 
 #include "G4UserSteppingAction.hh"
 #include "WLGDRunAction.hh"
+#include "WLGDDetectorConstruction.hh"
 #include "G4GenericMessenger.hh"
 #include "globals.hh"
 
@@ -18,7 +19,7 @@ class WLGDSteppingAction : public G4UserSteppingAction
 {
 public:
   WLGDSteppingAction() = default;
-  WLGDSteppingAction(WLGDEventAction* event,WLGDRunAction* run);
+  WLGDSteppingAction(WLGDEventAction* event, WLGDRunAction* run, WLGDDetectorConstruction* det);
   virtual ~WLGDSteppingAction() = default;
 
   virtual void UserSteppingAction(const G4Step*);
@@ -28,6 +29,7 @@ public:
 private:
   WLGDRunAction* fRunAction;
   WLGDEventAction* fEventAction;
+  WLGDDetectorConstruction* fDetectorConstruction;
   G4GenericMessenger*        fStepMessenger;
   G4int fDepositionInfo = 0;
 };

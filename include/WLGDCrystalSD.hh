@@ -20,7 +20,7 @@ class WLGDCrystalSD : public G4VSensitiveDetector
 {
   public:
     WLGDCrystalSD(const G4String& name, 
-                const G4String& hitsCollectionName);
+                const G4String& hitsCollectionName, G4String setupName);
     virtual ~WLGDCrystalSD();
   
     // methods from base class
@@ -30,6 +30,7 @@ class WLGDCrystalSD : public G4VSensitiveDetector
 
   private:
     WLGDCrystalHitsCollection* fHitsCollection;
+    G4String fGeometryName;
 };
 
 #endif

@@ -165,7 +165,7 @@ void WLGDDetectorConstruction::ConstructSDandField()
   {
     G4String crystalSDname  = "CrystalSD";
     WLGDCrystalSD* aCrystalSD = new WLGDCrystalSD(crystalSDname,
-                                                  "CrystalHitsCollection");
+                                                  "CrystalHitsCollection",fGeometryName);
     fSD.Put(aCrystalSD);
 
     // Also only add it once to the SD manager!

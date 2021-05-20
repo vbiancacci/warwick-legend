@@ -17,10 +17,11 @@ using namespace std;
 
 
 
-WLGDSteppingAction::WLGDSteppingAction(WLGDEventAction* event,WLGDRunAction* run)
+WLGDSteppingAction::WLGDSteppingAction(WLGDEventAction* event,WLGDRunAction* run, WLGDDetectorConstruction* det)
 {
   fEventAction = event;
   fRunAction = run;
+  fDetectorConstruction = det;
   DefineCommands();
 }
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -46,7 +47,7 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step *aStep) {
   // Adding total energy deposition inside LAr
   if(fDepositionInfo == 1)
   {
-    if(aStep->GetTrack()->GetLogicalVolumeAtVertex()->GetName() == "ULar_log" ||
+    if((fDetectorConstruction->GetGeometryName() == "hallA" && aStep->GetTrack()->GetLogicalVolumeAtVertex()->GetName() == "Lar_log") || aStep->GetTrack()->GetLogicalVolumeAtVertex()->GetName() == "ULar_log") ||
        aStep->GetTrack()->GetLogicalVolumeAtVertex()->GetName() == "Ge_log")
     {
       if(aStep->GetTotalEnergyDeposit() > 0)
@@ -65,8 +66,11 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step *aStep) {
         if(abs(tmp_x) < abs(tmp_y) && tmp_y < 0)
           whichReentranceTube = 3;
 
+        if(fDetectorConstruction->GetGeometryName() == "hallA")
+          whichReentranceTube = 0;
+
         G4int whichVolume = -1;
-        if(aStep->GetPostStepPoint()->GetTouchable()->GetVolume(0)->GetLogicalVolume()->GetName() == "ULar_log")
+        if(aStep->GetPostStepPoint()->GetTouchable()->GetVolume(0)->GetLogicalVolume()->GetName() == "ULar_log" || (fDetectorConstruction->GetGeometryName() == "hallA" && aStep->GetTrack()->GetLogicalVolumeAtVertex()->GetName() == "Lar_log"))
         {
           whichVolume = 0;
           if(aStep->GetPostStepPoint()->GetGlobalTime() / us < 10.)

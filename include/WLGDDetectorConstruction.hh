@@ -22,12 +22,14 @@ public:
 
   G4double GetWorldSizeZ() { return fvertexZ; }  // inline
   G4double GetWorldExtent() { return fmaxrad; }  // --"--
+  G4String GetGeometryName() { return fGeometryName; }
   void     SetGeometry(const G4String& name);
   void     ExportGeometry(const G4String& file);
   void     SetNeutronBiasFactor(G4double nf);
   void     SetMuonBiasFactor(G4double mf);
   void     SetWithoutCupperTubes(G4int answer);
   void     SetBoratedPET(G4int answer);
+
 
 private:
   void DefineCommands();

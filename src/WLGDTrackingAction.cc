@@ -125,6 +125,28 @@ void WLGDTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
           fEventAction->AddNeutronyMom(tmp_neutronYmom);
           fEventAction->AddNeutronzMom(tmp_neutronZmom);
         }
+        if(aTrack->GetStep()
+               ->GetSecondaryInCurrentStep()
+               ->at(i)
+               ->GetParticleDefinition()
+               ->GetPDGCharge() == 18)
+        {
+	  fEventAction->AddnCAr_timing(aTrack->GetStep()->GetPostStepPoint()->GetGlobalTime() / s);
+          fEventAction->AddnCAr_x(aTrack->GetStep()->GetPostStepPoint()->GetPosition().getX() / m);
+          fEventAction->AddnCAr_y(aTrack->GetStep()->GetPostStepPoint()->GetPosition().getY() / m);
+          fEventAction->AddnCAr_z(aTrack->GetStep()->GetPostStepPoint()->GetPosition().getZ() / m);
+	}
+        if(aTrack->GetStep()
+               ->GetSecondaryInCurrentStep()
+               ->at(i)
+               ->GetParticleDefinition()
+               ->GetPDGCharge() == 64)
+        {
+          fEventAction->AddnCGd_timing(aTrack->GetStep()->GetPostStepPoint()->GetGlobalTime() / s);
+          fEventAction->AddnCGd_x(aTrack->GetStep()->GetPostStepPoint()->GetPosition().getX() / m);
+          fEventAction->AddnCGd_y(aTrack->GetStep()->GetPostStepPoint()->GetPosition().getY() / m);
+          fEventAction->AddnCGd_z(aTrack->GetStep()->GetPostStepPoint()->GetPosition().getZ() / m);
+        }
       }
     }
   }

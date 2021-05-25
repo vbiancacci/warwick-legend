@@ -72,6 +72,9 @@ public:
   std::vector<G4double>& GetNDetector_delayed(){return v_NDetector_delayed;}
   std::vector<G4double>& GetNDetector_delayed_long(){return v_NDetector_delayed_long;}
 
+  std::vector<G4double>& GetEdepWater_prompt(){return v_EdepWater_prompt;}
+  std::vector<G4int>&	 GetMuonVeto_flag(){return v_MuonVeto_flag;}
+
   // tajectory methods
   std::vector<G4int>&    GetTrjPDG() { return trjpdg; }
   std::vector<G4int>&    GetTrjEntries() { return trjnpts; }
@@ -82,6 +85,27 @@ public:
   std::vector<G4double>& GetTrjXPos() { return trjxpos; }
   std::vector<G4double>& GetTrjYPos() { return trjypos; }
   std::vector<G4double>& GetTrjZPos() { return trjzpos; }
+
+  std::vector<G4double>& GetnCAr_timing(){return v_nCAr_timing;}
+  std::vector<G4double>& GetnCAr_x(){return v_nCAr_x;}
+  std::vector<G4double>& GetnCAr_y(){return v_nCAr_y;}
+  std::vector<G4double>& GetnCAr_z(){return v_nCAr_z;}
+
+  std::vector<G4double>& GetnCGd_timing(){return v_nCGd_timing;}
+  std::vector<G4double>& GetnCGd_x(){return v_nCGd_x;}
+  std::vector<G4double>& GetnCGd_y(){return v_nCGd_y;}
+  std::vector<G4double>& GetnCGd_z(){return v_nCGd_z;}
+
+
+  void AddnCAr_timing(double time){v_nCAr_timing.push_back(time);}
+  void AddnCAr_x(double x){v_nCAr_x.push_back(x);}
+  void AddnCAr_y(double y){v_nCAr_y.push_back(y);}
+  void AddnCAr_z(double z){v_nCAr_z.push_back(z);}
+
+  void AddnCGd_timing(double time){v_nCGd_timing.push_back(time);}
+  void AddnCGd_x(double x){v_nCGd_x.push_back(x);}
+  void AddnCGd_y(double y){v_nCGd_y.push_back(y);}
+  void AddnCGd_z(double z){v_nCGd_z.push_back(z);}
 
   void AddEkin(G4double kin){ekin.push_back(kin);}
   void AddNeutronxLoc(G4double posx){neutronxloc.push_back(posx);}
@@ -112,6 +136,8 @@ public:
   void IncreaseEdepPerDetector(G4int copyNumber, G4double Edep){EdepPerDetector[copyNumber] = EdepPerDetector[copyNumber] + Edep;}
   void IncreaseEdepPerDetector_delayed(G4int copyNumber, G4double Edep){EdepPerDetector_delayed[copyNumber] = EdepPerDetector_delayed[copyNumber] + Edep;}
   void IncreaseEdepPerDetector_delayed_long(G4int copyNumber, G4double Edep){EdepPerDetector_delayed_long[copyNumber] = EdepPerDetector_delayed_long[copyNumber] + Edep;}
+  void IncreaseEdepWater_prompt (G4double Edep){v_EdepWater_prompt[0] += Edep;}
+
   void SaveAllEvents(G4int answer);
   void DefineCommands();
 private:
@@ -181,6 +207,16 @@ private:
   std::vector<G4double> neutronzmom;
 
   // additional data for other particles
+  std::vector<G4double> v_nCAr_timing;
+  std::vector<G4double> v_nCAr_x;
+  std::vector<G4double> v_nCAr_y;
+  std::vector<G4double> v_nCAr_z;
+
+  std::vector<G4double> v_nCGd_timing;
+  std::vector<G4double> v_nCGd_x;
+  std::vector<G4double> v_nCGd_y;
+  std::vector<G4double> v_nCGd_z;
+
   std::vector<G4int>	NumberOfNeutronsProducedInEvent;
   std::vector<G4double>	TotalEnergyDepositionInLAr_prompt;
   std::vector<G4double>	TotalEnergyDepositionInGe_prompt;
@@ -210,6 +246,10 @@ private:
   std::map<G4int, G4double> EdepPerDetector;
   std::map<G4int, G4double> EdepPerDetector_delayed;
   std::map<G4int, G4double> EdepPerDetector_delayed_long;
+
+  std::vector<G4double> v_EdepWater_prompt;
+  std::vector<G4double> v_EdepWater_delayed;
+  std::vector<G4int>    v_MuonVeto_flag;
 
   // trajectory data
   std::vector<G4int>        trjpdg;

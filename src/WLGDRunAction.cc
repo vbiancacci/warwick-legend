@@ -78,6 +78,21 @@ WLGDRunAction::WLGDRunAction(WLGDEventAction* eventAction, G4String name)
   analysisManager->CreateNtupleDColumn("CopyNDetector_delayed", fEventAction->GetNDetector_delayed());
   analysisManager->CreateNtupleDColumn("CopyNDetector_delayed_long", fEventAction->GetNDetector_delayed_long());
 
+  analysisManager->CreateNtupleDColumn("EdepWater_prompt",fEventAction->GetEdepWater_prompt());
+  analysisManager->CreateNtupleDColumn("EdepWater_delayed",fEventAction->GetEdepWater_delayed());
+  analysisManager->CreateNtupleIColumn("MunoVeto",fEventAction->GetMuonVeto_flag());
+
+  analysisManager->CreateNtupleDColumn("nCAr_timing",fEventAction->GetnCAr_timing());
+  analysisManager->CreateNtupleDColumn("nCAr_x",fEventAction->GetnCAr_x());
+  analysisManager->CreateNtupleDColumn("nCAr_y",fEventAction->GetnCAr_y());
+  analysisManager->CreateNtupleDColumn("nCAr_z",fEventAction->GetnCAr_z());
+
+  analysisManager->CreateNtupleDColumn("nCGd_timing",fEventAction->GetnCGd_timing());
+  analysisManager->CreateNtupleDColumn("nCGd_x",fEventAction->GetnCGd_x());
+  analysisManager->CreateNtupleDColumn("nCGd_y",fEventAction->GetnCGd_y());
+  analysisManager->CreateNtupleDColumn("nCGd_z",fEventAction->GetnCGd_z());
+
+//GetnCAr_timing
   analysisManager->CreateNtupleIColumn("Trjpdg", fEventAction->GetTrjPDG());
   analysisManager->CreateNtupleIColumn("Trjentries", fEventAction->GetTrjEntries());
   analysisManager->CreateNtupleIColumn("VtxName", fEventAction->GetNameID());

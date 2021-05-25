@@ -138,6 +138,12 @@ void WLGDEventAction::BeginOfEventAction(const G4Event*
   NumberOfNeutronsProducedInEvent.clear();
   NumberOfNeutronsProducedInEvent.push_back(0);
 
+  v_EdepWater_prompt.clear();
+  v_EdepWater_prompt.push_back(0);
+
+  v_MuonVeto_flag.clear();
+  v_MuonVeto_flag.push_back(0);
+
   TotalEnergyDepositionInLAr_prompt.clear();
   TotalEnergyDepositionInLAr_prompt.push_back(0);
   TotalEnergyDepositionInLAr_prompt.push_back(0);
@@ -269,6 +275,9 @@ void WLGDEventAction::EndOfEventAction(const G4Event* event)
     v_EdepPerDetector_delayed_long.push_back(x.second);
     IncreaseGeEnergyDeposition_delayed_long(x.second,tmp_i);
   }
+
+  if(v_EdepWater_prompt[0] > 120e6) 
+  	v_MuonVeto_flag[0] = 1;
 
   // fill trajectory data if available
   G4TrajectoryContainer* trajectoryContainer = event->GetTrajectoryContainer();

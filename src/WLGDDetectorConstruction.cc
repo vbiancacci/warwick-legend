@@ -107,6 +107,23 @@ void WLGDDetectorConstruction::DefineMaterials()
   BoratedPET->AddElement(SpecialB,0.05);
   BoratedPET->AddElement(O,0.222);
 
+  G4Element* elGd = new G4Element
+    (name="Gadolinium",symbol="Gd",z=64,a=157.25*g/mole);
+  G4Element* elS = new G4Element
+     (name="Sulfur",symbol="S",z=16.,a=32.066*g/mole);
+
+
+  density = 3.01*g/cm3; //https://www.sigmaaldrich.com/catalog/product/aldrich/203300?lang=de&region=DE room temp
+  G4Material* gadoliniumSulfate = new G4Material(name = "GadoliniumSulfate", density, 3);   //Gd2(SO4)3
+  gadoliniumSulfate->AddElement(elGd, 2);
+  gadoliniumSulfate->AddElement(elS, 3);
+  gadoliniumSulfate->AddElement(O, 12);
+
+
+  G4Material* purewater           = G4Material::GetMaterial("Water");   //EDIT: changed water to purewater & use it to create "special" water
+  water = new G4Material("GdLoadedWater", 1.000000*g/cm3,2);
+  water->AddMaterial(purewater, 1.-0.002);//0.2%
+  water->AddMaterial(gadoliniumSulfate, 0.002);
 
   // enriched Germanium from isotopes
   auto* Ge_74 = new G4Isotope("Ge74", 32, 74, 74.0 * g / mole);
@@ -482,6 +499,7 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
   //auto* larMat        = G4Material::GetMaterial("G4_lAr");
   auto* airMat        = G4Material::GetMaterial("G4_AIR");
   auto* waterMat      = G4Material::GetMaterial("G4_WATER");
+  if(fWithGdWater == 1) waterMat = water;
   auto* steelMat      = G4Material::GetMaterial("G4_STAINLESS-STEEL");
   auto* copperMat     = G4Material::GetMaterial("G4_Cu");
   auto* stdRock       = G4Material::GetMaterial("StdRock");
@@ -787,6 +805,7 @@ auto WLGDDetectorConstruction::SetupHallA() -> G4VPhysicalVolume*
   auto* larMat        = G4Material::GetMaterial("G4_lAr");
   auto* airMat        = G4Material::GetMaterial("G4_AIR");
   auto* waterMat      = G4Material::GetMaterial("G4_WATER");
+  if(fWithGdWater == 1) waterMat = water;
   auto* steelMat      = G4Material::GetMaterial("G4_STAINLESS-STEEL");
   auto* copperMat     = G4Material::GetMaterial("G4_Cu");
   auto* stdRock       = G4Material::GetMaterial("StdRock");
@@ -1040,6 +1059,8 @@ void WLGDDetectorConstruction::SetWithoutCupperTubes(G4int answer) {fWithOutCupp
 
 void WLGDDetectorConstruction::SetBoratedPET(G4int answer){fWithBoratedPET = answer;  WLGDDetectorConstruction::DefineMaterials(); G4RunManager::GetRunManager()->ReinitializeGeometry();}
 
+void WLGDDetectorConstruction::SetGdWater(G4int answer){fWithGdWater = answer;  WLGDDetectorConstruction::DefineMaterials(); G4RunManager::GetRunManager()->ReinitializeGeometry();}
+
 void WLGDDetectorConstruction::DefineCommands()
 {
   // Define geometry command directory using generic messenger class
@@ -1116,6 +1137,14 @@ void WLGDDetectorConstruction::DefineCommands()
     .SetGuidance("Set whether to include Borated PET tubes or not")
     .SetGuidance("0 = without Borated PET")
     .SetGuidance("1 = with Borated PET")
+    .SetCandidates("0 1")
+    .SetDefaultValue("0");
+
+  fDetectorMessenger
+    ->DeclareMethod("With_Gd_Water", &WLGDDetectorConstruction::SetGdWater)
+    .SetGuidance("Set whether to include Gd water or not")
+    .SetGuidance("0 = without Gd water")
+    .SetGuidance("1 = with Gd water")
     .SetCandidates("0 1")
     .SetDefaultValue("0");
 

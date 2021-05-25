@@ -102,8 +102,6 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step *aStep) {
           whichVolume = 1;
           if(aStep->GetPostStepPoint()->GetGlobalTime() / us < 10.)
           {
-            //fEventAction->IncreaseGeEnergyDeposition(aStep->GetTotalEnergyDeposit() / eV,
-            //                                        whichReentranceTube);
             if(aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetLogicalVolume()->GetName() == "Layer_log")
               fEventAction->IncreaseEdepPerDetector(aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetCopyNo() + whichReentranceTube*96,aStep->GetTotalEnergyDeposit() / eV);
             else
@@ -112,8 +110,6 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step *aStep) {
           else {
             if(aStep->GetPostStepPoint()->GetGlobalTime() / ms < 10.)
             {
-              //fEventAction->IncreaseGeEnergyDeposition_delayed(aStep->GetTotalEnergyDeposit() / eV,
-              //                                                whichReentranceTube);
               if(aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetLogicalVolume()->GetName() == "Layer_log")
                 fEventAction->IncreaseEdepPerDetector_delayed(aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetCopyNo() + whichReentranceTube*96,aStep->GetTotalEnergyDeposit() / eV);
               else
@@ -121,8 +117,6 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step *aStep) {
             }
             if(aStep->GetPostStepPoint()->GetGlobalTime() / s < 1.)
             {
-              //fEventAction->IncreaseGeEnergyDeposition_delayed_long(aStep->GetTotalEnergyDeposit() / eV,
-               //                                                whichReentranceTube);
               fEventAction->IncreaseEdepPerDetector_delayed_long(aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetCopyNo() + whichReentranceTube*96,aStep->GetTotalEnergyDeposit() / eV);
             }
           }
@@ -132,6 +126,8 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step *aStep) {
               aStep->GetTotalEnergyDeposit() / eV, whichReentranceTube);
           }
         }
+
+	if (aStep->GetPostStepPoint()->GetGlobalTime() / s > 1) return;
 
         fEventAction->AddIndividualEnergyDeposition_Timing(
           aStep->GetPostStepPoint()->GetGlobalTime() / s);

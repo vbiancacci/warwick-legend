@@ -30,6 +30,7 @@ public:
   void     SetMuonBiasFactor(G4double mf);
   void     SetWithoutCupperTubes(G4int answer);
   void     SetBoratedPET(G4int answer);
+  void     SetGdWater(G4int answer);
 
 
 private:

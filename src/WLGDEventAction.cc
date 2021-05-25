@@ -141,8 +141,23 @@ void WLGDEventAction::BeginOfEventAction(const G4Event*
   v_EdepWater_prompt.clear();
   v_EdepWater_prompt.push_back(0);
 
+  v_EdepWater_delayed.clear();
+  v_EdepWater_delayed.push_back(0);
+
   v_MuonVeto_flag.clear();
   v_MuonVeto_flag.push_back(0);
+
+  v_nCAr_timing.clear();
+  v_nCAr_x.clear();
+  v_nCAr_y.clear();
+  v_nCAr_z.clear();
+  v_nCAr_A.clear();
+
+  v_nCGd_timing.clear();
+  v_nCGd_x.clear();
+  v_nCGd_y.clear();
+  v_nCGd_z.clear();
+  v_nCGd_A.clear();
 
   TotalEnergyDepositionInLAr_prompt.clear();
   TotalEnergyDepositionInLAr_prompt.push_back(0);

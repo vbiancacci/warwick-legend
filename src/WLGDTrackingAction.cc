@@ -131,11 +131,12 @@ void WLGDTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
                ->GetParticleDefinition()
                ->GetPDGCharge() == 18)
         {
-	  fEventAction->AddnCAr_timing(aTrack->GetStep()->GetPostStepPoint()->GetGlobalTime() / s);
+          fEventAction->AddnCAr_timing(aTrack->GetStep()->GetPostStepPoint()->GetGlobalTime() / s);
           fEventAction->AddnCAr_x(aTrack->GetStep()->GetPostStepPoint()->GetPosition().getX() / m);
           fEventAction->AddnCAr_y(aTrack->GetStep()->GetPostStepPoint()->GetPosition().getY() / m);
           fEventAction->AddnCAr_z(aTrack->GetStep()->GetPostStepPoint()->GetPosition().getZ() / m);
-	}
+          fEventAction->AddnCAr_A(aTrack->GetStep()->GetSecondaryInCurrentStep()->at(i)->GetParticleDefinition()->GetAtomicMass());
+        }
         if(aTrack->GetStep()
                ->GetSecondaryInCurrentStep()
                ->at(i)
@@ -146,6 +147,7 @@ void WLGDTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
           fEventAction->AddnCGd_x(aTrack->GetStep()->GetPostStepPoint()->GetPosition().getX() / m);
           fEventAction->AddnCGd_y(aTrack->GetStep()->GetPostStepPoint()->GetPosition().getY() / m);
           fEventAction->AddnCGd_z(aTrack->GetStep()->GetPostStepPoint()->GetPosition().getZ() / m);
+          fEventAction->AddnCGd_A(aTrack->GetStep()->GetSecondaryInCurrentStep()->at(i)->GetParticleDefinition()->GetAtomicMass());
         }
       }
     }

@@ -86,11 +86,13 @@ WLGDRunAction::WLGDRunAction(WLGDEventAction* eventAction, G4String name)
   analysisManager->CreateNtupleDColumn("nCAr_x",fEventAction->GetnCAr_x());
   analysisManager->CreateNtupleDColumn("nCAr_y",fEventAction->GetnCAr_y());
   analysisManager->CreateNtupleDColumn("nCAr_z",fEventAction->GetnCAr_z());
+  analysisManager->CreateNtupleIColumn("nCAr_A",fEventAction->GetnCAr_A());
 
   analysisManager->CreateNtupleDColumn("nCGd_timing",fEventAction->GetnCGd_timing());
   analysisManager->CreateNtupleDColumn("nCGd_x",fEventAction->GetnCGd_x());
   analysisManager->CreateNtupleDColumn("nCGd_y",fEventAction->GetnCGd_y());
   analysisManager->CreateNtupleDColumn("nCGd_z",fEventAction->GetnCGd_z());
+  analysisManager->CreateNtupleIColumn("nCGd_A",fEventAction->GetnCGd_A());
 
 //GetnCAr_timing
   analysisManager->CreateNtupleIColumn("Trjpdg", fEventAction->GetTrjPDG());

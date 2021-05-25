@@ -118,7 +118,7 @@ void WLGDDetectorConstruction::DefineMaterials()
   gadoliniumSulfate->AddElement(O, 12);
 
 
-  G4Material* purewater           = G4Material::GetMaterial("Water");   //EDIT: changed water to purewater & use it to create "special" water
+  G4Material* purewater           = G4Material::GetMaterial("G4_WATER");  //EDIT: changed water to purewater & use it to create "special" water
   water = new G4Material("GdLoadedWater", 1.000000*g/cm3,2);
   water->AddMaterial(purewater, 1.-0.002);//0.2%
   water->AddMaterial(gadoliniumSulfate, 0.002);

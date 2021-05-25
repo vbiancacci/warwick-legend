@@ -23,6 +23,7 @@ public:
   G4double GetWorldSizeZ() { return fvertexZ; }  // inline
   G4double GetWorldExtent() { return fmaxrad; }  // --"--
   G4String GetGeometryName() { return fGeometryName; }
+  G4int    isSetWithGdWater() {return fWithGdWater; }
   void     SetGeometry(const G4String& name);
   void     ExportGeometry(const G4String& file);
   void     SetNeutronBiasFactor(G4double nf);
@@ -53,7 +54,9 @@ private:
   G4double 			      fCryostatHeight = 350.0;
   G4int                               fWithOutCupperTubes = 0;
   G4int                               fWithBoratedPET = 0;
-  G4Material*                                CombinedArXeHe3;
+  G4int				      fWithGdWater = 0;
+  G4Material*                         CombinedArXeHe3;
+  G4Material*			      water;	
   void                                SetXeConc(G4double nf);
   void                                SetHe3Conc(G4double nf);
   void 				      SetOuterCryostatRadius(G4double rad);

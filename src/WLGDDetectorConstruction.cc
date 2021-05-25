@@ -107,14 +107,12 @@ void WLGDDetectorConstruction::DefineMaterials()
   BoratedPET->AddElement(SpecialB,0.05);
   BoratedPET->AddElement(O,0.222);
 
-  G4Element* elGd = new G4Element
-    (name="Gadolinium",symbol="Gd",z=64,a=157.25*g/mole);
-  G4Element* elS = new G4Element
-     (name="Sulfur",symbol="S",z=16.,a=32.066*g/mole);
+  G4Element* elGd = new G4Element ("Gadolinium","Gd",64,157.25*g/mole);
+  G4Element* elS = new G4Element  ("Sulfur","S",16.,32.066*g/mole);
 
 
-  density = 3.01*g/cm3; //https://www.sigmaaldrich.com/catalog/product/aldrich/203300?lang=de&region=DE room temp
-  G4Material* gadoliniumSulfate = new G4Material(name = "GadoliniumSulfate", density, 3);   //Gd2(SO4)3
+  G4double density = 3.01*g/cm3; //https://www.sigmaaldrich.com/catalog/product/aldrich/203300?lang=de&region=DE room temp
+  G4Material* gadoliniumSulfate = new G4Material("GadoliniumSulfate", density, 3);   //Gd2(SO4)3
   gadoliniumSulfate->AddElement(elGd, 2);
   gadoliniumSulfate->AddElement(elS, 3);
   gadoliniumSulfate->AddElement(O, 12);
@@ -133,7 +131,7 @@ void WLGDDetectorConstruction::DefineMaterials()
   eGe->AddIsotope(Ge_76, 87. * perCent);
   eGe->AddIsotope(Ge_74, 13. * perCent);
 
-  G4double density = 5.323 * g / cm3;
+  density = 5.323 * g / cm3;
   auto*    roiMat  = new G4Material("enrGe", density, 1);
   roiMat->AddElement(eGe, 1);
 

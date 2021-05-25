@@ -51,14 +51,15 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step *aStep) {
     {
       if(aStep->GetTotalEnergyDeposit() > 0)
       {
-	if(aStep->GetTrack()->GetLogicalVolumeAtVertex()->GetName() == "Water_log"){
-		if(aStep->GetPostStepPoint()->GetGlobalTime() / us < 10.)
-			fEventAction->IncreaseEdepWater_prompt(aStep->GetTotalEnergyDeposit() / eV);
-		else if(aStep->GetPostStepPoint()->GetGlobalTime() / ms < 1.)
-			fEventAction->IncreaseEdepWater_delayed(aStep->GetTotalEnergyDeposit() / eV);
-	}     
+        if(aStep->GetTrack()->GetLogicalVolumeAtVertex()->GetName() == "Water_log"){
+          if(aStep->GetPostStepPoint()->GetGlobalTime() / us < 10.)
+            fEventAction->IncreaseEdepWater_prompt(aStep->GetTotalEnergyDeposit() / eV);
+          else if(aStep->GetPostStepPoint()->GetGlobalTime() / ms < 1.)
+            fEventAction->IncreaseEdepWater_delayed(aStep->GetTotalEnergyDeposit() / eV);
+          return;
+        }
 
-	G4double tmp_x = aStep->GetPostStepPoint()->GetPosition().getX();
+        G4double tmp_x = aStep->GetPostStepPoint()->GetPosition().getX();
         G4double tmp_y = aStep->GetPostStepPoint()->GetPosition().getY();
         G4double tmp_z = aStep->GetPostStepPoint()->GetPosition().getZ();
 
@@ -134,7 +135,7 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step *aStep) {
           }
         }
 
-	if (aStep->GetPostStepPoint()->GetGlobalTime() / s > 1) return;
+	      if (aStep->GetPostStepPoint()->GetGlobalTime() / s > 1) return;
 
         fEventAction->AddIndividualEnergyDeposition_Timing(
           aStep->GetPostStepPoint()->GetGlobalTime() / s);

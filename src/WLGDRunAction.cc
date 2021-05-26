@@ -36,12 +36,16 @@ WLGDRunAction::WLGDRunAction(WLGDEventAction* eventAction, G4String name)
   analysisManager->CreateNtupleDColumn("Hitxloc", fEventAction->GetHitxLoc());
   analysisManager->CreateNtupleDColumn("Hityloc", fEventAction->GetHityLoc());
   analysisManager->CreateNtupleDColumn("Hitzloc", fEventAction->GetHitzLoc());
-  analysisManager->CreateNtupleIColumn("ReentranceTube", fEventAction->GetReentranceTube());
-  analysisManager->CreateNtupleIColumn("DetectorNumber", fEventAction->GetDetectorNumber());
 
   // Edit: 2021/04/07 by Moritz Neuberger
   // Adding additional outputs to further investigate situations in which Ge-77 is produced
   analysisManager->CreateNtupleDColumn("Ekin", fEventAction->GetHitEkin());
+  analysisManager->CreateNtupleIColumn("ReentranceTube", fEventAction->GetReentranceTube());
+  analysisManager->CreateNtupleIColumn("DetectorNumber", fEventAction->GetDetectorNumber());
+
+  analysisManager->CreateNtupleDColumn("EdepWater_prompt",fEventAction->GetEdepWater_prompt());
+  analysisManager->CreateNtupleDColumn("EdepWater_delayed",fEventAction->GetEdepWater_delayed());
+  analysisManager->CreateNtupleIColumn("MunoVeto",fEventAction->GetMuonVeto_flag());
 
   analysisManager->CreateNtupleDColumn("Neutronxloc", fEventAction->GetNeutronxLoc());
   analysisManager->CreateNtupleDColumn("Neutronyloc", fEventAction->GetNeutronyLoc());
@@ -78,9 +82,14 @@ WLGDRunAction::WLGDRunAction(WLGDEventAction* eventAction, G4String name)
   analysisManager->CreateNtupleDColumn("CopyNDetector_delayed", fEventAction->GetNDetector_delayed());
   analysisManager->CreateNtupleDColumn("CopyNDetector_delayed_long", fEventAction->GetNDetector_delayed_long());
 
-  analysisManager->CreateNtupleDColumn("EdepWater_prompt",fEventAction->GetEdepWater_prompt());
-  analysisManager->CreateNtupleDColumn("EdepWater_delayed",fEventAction->GetEdepWater_delayed());
-  analysisManager->CreateNtupleIColumn("MunoVeto",fEventAction->GetMuonVeto_flag());
+  analysisManager->CreateNtupleDColumn("Ge77Siblings_timing", fEventAction->GetGe77Siblings_timing());
+  analysisManager->CreateNtupleDColumn("Ge77Siblings_x", fEventAction->GetGe77Siblings_x());
+  analysisManager->CreateNtupleDColumn("Ge77Siblings_y", fEventAction->GetGe77Siblings_y());
+  analysisManager->CreateNtupleDColumn("Ge77Siblings_z", fEventAction->GetGe77Siblings_z());
+  analysisManager->CreateNtupleDColumn("Ge77Siblings_edep", fEventAction->GetGe77Siblings_edep());
+  analysisManager->CreateNtupleIColumn("Ge77Siblings_id", fEventAction->GetGe77Siblings_id());
+  analysisManager->CreateNtupleIColumn("Ge77Siblings_type", fEventAction->GetGe77Siblings_type());
+  analysisManager->CreateNtupleIColumn("Ge77Siblings_whichVolume", fEventAction->GetGe77Siblings_whichVolume());
 
   analysisManager->CreateNtupleDColumn("nCAr_timing",fEventAction->GetnCAr_timing());
   analysisManager->CreateNtupleDColumn("nCAr_x",fEventAction->GetnCAr_x());

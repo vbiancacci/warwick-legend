@@ -219,6 +219,17 @@ void WLGDEventAction::BeginOfEventAction(const G4Event*
   EdepPerDetector_delayed.clear();
   EdepPerDetector_delayed_long.clear();
 
+  IDListOfGe77SiblingParticles.clear();
+
+  v_Ge77Siblings_timing.clear();
+  v_Ge77Siblings_x.clear();
+  v_Ge77Siblings_y.clear();
+  v_Ge77Siblings_z.clear();
+  v_Ge77Siblings_edep.clear();
+  v_Ge77Siblings_id.clear();
+  v_Ge77Siblings_type.clear();
+  v_Ge77Siblings_whichVolume.clear();
+
   makeMap();
 }
 

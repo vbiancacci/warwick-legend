@@ -81,6 +81,13 @@ void WLGDTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
   // Edit: 2021/03/30 by Moritz Neuberger
   // Adding tracking of neutrons being later captured by Ge-76
 
+  //RemoveIDListOfGe77SiblingParticles
+  for(int i = 0; i < fEventAction->GetIDListOfGe77SiblingParticles().size(); i++)
+  {
+    if(aTrack->GetTrackID() == fEventAction->GetIDListOfGe77SiblingParticles()[i])
+      fEventAction->RemoveIDListOfGe77SiblingParticles(aTrack->GetTrackID());
+  }
+
   if(aTrack->GetParticleDefinition()->GetParticleName() == "neutron")
   {
     if(aTrack->GetStep()->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName() ==
@@ -124,6 +131,10 @@ void WLGDTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
           fEventAction->AddNeutronxMom(tmp_neutronXmom);
           fEventAction->AddNeutronyMom(tmp_neutronYmom);
           fEventAction->AddNeutronzMom(tmp_neutronZmom);
+          for(int j = 0; j < NumberOfSecundaries;j++){
+            if(j == i) continue;
+            fEventAction->AddIDListOfGe77SiblingParticles(aTrack->GetTrackID());
+          }
         }
         if(aTrack->GetStep()
                ->GetSecondaryInCurrentStep()

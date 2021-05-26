@@ -99,6 +99,23 @@ public:
   std::vector<G4double>& GetnCGd_z(){return v_nCGd_z;}
   std::vector<G4int>&    GetnCGd_A(){return v_nCGd_A;}
 
+  std::vector<G4double>& GetGe77Siblings_timing(){return v_Ge77Siblings_timing;}
+  std::vector<G4double>& GetGe77Siblings_x(){return v_Ge77Siblings_x;}
+  std::vector<G4double>& GetGe77Siblings_y(){return v_Ge77Siblings_y;}
+  std::vector<G4double>& GetGe77Siblings_z(){return v_Ge77Siblings_z;}
+  std::vector<G4double>& GetGe77Siblings_edep(){return v_Ge77Siblings_edep;}
+  std::vector<G4int>& GetGe77Siblings_id(){return v_Ge77Siblings_id;}
+  std::vector<G4int>& GetGe77Siblings_type(){return v_Ge77Siblings_type;}
+  std::vector<G4int>& GetGe77Siblings_whichVolume(){return v_Ge77Siblings_whichVolume;}
+
+  void AddGe77Siblings_timing(double timing){ v_Ge77Siblings_timing.push_back(timing);}
+  void AddGe77Siblings_x(double x){ v_Ge77Siblings_x.push_back(x);}
+  void AddGe77Siblings_y(double y){ v_Ge77Siblings_y.push_back(y);}
+  void AddGe77Siblings_z(double z){ v_Ge77Siblings_z.push_back(z);}
+  void AddGe77Siblings_edep(double edep){ v_Ge77Siblings_edep.push_back(edep);}
+  void AddGe77Siblings_id(int id){ v_Ge77Siblings_id.push_back(id);}
+  void AddGe77Siblings_type(int type){ v_Ge77Siblings_type.push_back(type);}
+  void AddGe77Siblings_whichVolume(int volume){ v_Ge77Siblings_whichVolume.push_back(volume);}
 
   void AddnCAr_timing(double time){v_nCAr_timing.push_back(time);}
   void AddnCAr_x(double x){v_nCAr_x.push_back(x);}
@@ -127,6 +144,10 @@ public:
   void AddIndividualEnergyDeposition_Position_z(G4double posz){IndividualEnergyDeposition_Position_z.push_back(posz);}
   void AddIndividualEnergyDeposition_ReentranceTube(G4int n){IndividualEnergyDeposition_ReentranceTube.push_back(n);}
   void AddIndividualEnergyDeposition_LArOrGe(G4int n){IndividualEnergyDeposition_LArOrGe.push_back(n);}
+
+  void AddIDListOfGe77SiblingParticles(G4int ID){IDListOfGe77SiblingParticles.push_back(ID);}
+  void RemoveIDListOfGe77SiblingParticles(G4int ID){IDListOfGe77SiblingParticles.erase(std::remove(IDListOfGe77SiblingParticles.begin(),IDListOfGe77SiblingParticles.end(),ID),IDListOfGe77SiblingParticles.end());}
+  std::vector<G4int> GetIDListOfGe77SiblingParticles(){return IDListOfGe77SiblingParticles;}
   std::map<int, int>         neutronProducerMap;
 
   void IncreaseByOne_NeutronInEvent(){NumberOfNeutronsProducedInEvent[0] += 1;}
@@ -259,6 +280,18 @@ private:
   std::vector<G4double> v_EdepWater_delayed;
   std::vector<G4int>    v_MuonVeto_flag;
 
+  std::vector<G4int> IDListOfGe77SiblingParticles;
+
+  std::vector<G4double> v_Ge77Siblings_timing;
+  std::vector<G4double>  v_Ge77Siblings_x;
+  std::vector<G4double> v_Ge77Siblings_y;
+  std::vector<G4double>  v_Ge77Siblings_z;
+  std::vector<G4double>  v_Ge77Siblings_edep;
+  std::vector<G4int>  v_Ge77Siblings_id;
+  std::vector<G4int>  v_Ge77Siblings_type;
+  std::vector<G4int>  v_Ge77Siblings_whichVolume;
+
+
   // trajectory data
   std::vector<G4int>        trjpdg;
   std::vector<G4int>        trjnpts;
@@ -269,7 +302,8 @@ private:
   std::vector<G4double>     trjxpos;
   std::vector<G4double>     trjypos;
   std::vector<G4double>     trjzpos;
-  std::map<G4String, G4int> lookup;
+  std::map<G4String, G4int> lookup
+
 };
 
 #endif

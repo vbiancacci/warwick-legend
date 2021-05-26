@@ -53,8 +53,6 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step *aStep) {
       if(aStep->GetTotalEnergyDeposit() > 0)
       {
 
-
-
         if(aStep->GetTrack()->GetLogicalVolumeAtVertex()->GetName() == "Water_log"){
           if(aStep->GetPostStepPoint()->GetGlobalTime() / us < 10.)
             fEventAction->IncreaseEdepWater_prompt(aStep->GetTotalEnergyDeposit() / eV);
@@ -79,7 +77,6 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step *aStep) {
 
         if(fDetectorConstruction->GetGeometryName() == "hallA")
           whichReentranceTube = 0;
-
 
         for(int i = 0; i < fEventAction->GetIDListOfGe77SiblingParticles().size(); i++)
         {

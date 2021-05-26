@@ -48,7 +48,7 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step *aStep) {
 
   if(fDepositionInfo == 1)
   {
-    if((fDetectorConstruction->GetGeometryName() == "hallA" && aStep->GetTrack()->GetLogicalVolumeAtVertex()->GetName() == "Lar_log") || aStep->GetTrack()->GetLogicalVolumeAtVertex()->GetName() == "ULar_log" ||  aStep->GetTrack()->GetLogicalVolumeAtVertex()->GetName() == "Ge_log" || aStep->GetTrack()->GetLogicalVolumeAtVertex()->GetName() == "Water_log")
+    if((/*fDetectorConstruction->GetGeometryName() == "hallA" &&*/ aStep->GetTrack()->GetLogicalVolumeAtVertex()->GetName() == "Lar_log") || aStep->GetTrack()->GetLogicalVolumeAtVertex()->GetName() == "ULar_log" ||  aStep->GetTrack()->GetLogicalVolumeAtVertex()->GetName() == "Ge_log" || aStep->GetTrack()->GetLogicalVolumeAtVertex()->GetName() == "Water_log")
     {
       if(aStep->GetTotalEnergyDeposit() > 0)
       {
@@ -63,9 +63,9 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step *aStep) {
           return;
         }
 
-        G4double tmp_x = aStep->GetPostStepPoint()->GetPosition().getX();
-        G4double tmp_y = aStep->GetPostStepPoint()->GetPosition().getY();
-        G4double tmp_z = aStep->GetPostStepPoint()->GetPosition().getZ();
+        G4double tmp_x = aStep->GetTrack()->GetPosition().getX();
+        G4double tmp_y = aStep->GetTrack()->GetPosition().getY();
+        G4double tmp_z = aStep->GetTrack()->GetPosition().getZ();
 
         G4int whichReentranceTube;
         if(abs(tmp_x) > abs(tmp_y) && tmp_x > 0)

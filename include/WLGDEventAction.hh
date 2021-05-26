@@ -117,17 +117,17 @@ public:
   void AddGe77Siblings_type(int type){ v_Ge77Siblings_type.push_back(type);}
   void AddGe77Siblings_whichVolume(int volume){ v_Ge77Siblings_whichVolume.push_back(volume);}
 
-  void AddnCAr_timing(double time){v_nCAr_timing.push_back(time);}
-  void AddnCAr_x(double x){v_nCAr_x.push_back(x);}
-  void AddnCAr_y(double y){v_nCAr_y.push_back(y);}
-  void AddnCAr_z(double z){v_nCAr_z.push_back(z);}
-  void AddnCAr_A(int A){v_nCAr_A.push_back(A);}
+  void AddnCAr_timing(G4double time){v_nCAr_timing.push_back(time);}
+  void AddnCAr_x(G4double x){v_nCAr_x.push_back(x);}
+  void AddnCAr_y(G4double y){v_nCAr_y.push_back(y);}
+  void AddnCAr_z(G4double z){v_nCAr_z.push_back(z);}
+  void AddnCAr_A(G4int A){v_nCAr_A.push_back(A);}
 
-  void AddnCGd_timing(double time){v_nCGd_timing.push_back(time);}
-  void AddnCGd_x(double x){v_nCGd_x.push_back(x);}
-  void AddnCGd_y(double y){v_nCGd_y.push_back(y);}
-  void AddnCGd_z(double z){v_nCGd_z.push_back(z);}
-  void AddnCGd_A(double A){v_nCGd_A.push_back(A);}
+  void AddnCGd_timing(G4double time){v_nCGd_timing.push_back(time);}
+  void AddnCGd_x(G4double x){v_nCGd_x.push_back(x);}
+  void AddnCGd_y(G4double y){v_nCGd_y.push_back(y);}
+  void AddnCGd_z(G4double z){v_nCGd_z.push_back(z);}
+  void AddnCGd_A(G4int A){v_nCGd_A.push_back(A);}
 
   void AddEkin(G4double kin){ekin.push_back(kin);}
   void AddNeutronxLoc(G4double posx){neutronxloc.push_back(posx);}

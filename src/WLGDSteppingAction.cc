@@ -75,7 +75,7 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step *aStep) {
         if(abs(tmp_x) < abs(tmp_y) && tmp_y < 0)
           whichReentranceTube = 3;
 
-        if(fDetectorConstruction->GetGeometryName() == "hallA")
+        if(fDetectorConstruction->GetGeometryName() == "hallA" || aStep->GetTrack()->GetLogicalVolumeAtVertex()->GetName() == "Lar_log" || aStep->GetTrack()->GetLogicalVolumeAtVertex()->GetName() == "Water_log")
           whichReentranceTube = 0;
 
         for(int i = 0; i < fEventAction->GetIDListOfGe77SiblingParticles().size(); i++)
@@ -88,8 +88,8 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step *aStep) {
             fEventAction->AddGe77Siblings_edep(aStep->GetTotalEnergyDeposit() / eV);
             fEventAction->AddGe77Siblings_id(aStep->GetTrack()->GetTrackID());
             fEventAction->AddGe77Siblings_type(aStep->GetTrack()->GetParticleDefinition()->GetPDGEncoding());
-            int whichVolume = -2;
-            if(aStep->GetPostStepPoint()->GetTouchable()->GetVolume()->GetLogicalVolume()->GetName() == "Lar_log")
+            int whichVolume = -3;
+            if(aStep->GetPostStepPoint()->GetTouchable()->GetVolume()->GetLogicalVolume()->GetName() == "Lar_log") whichVolume = -2
             if(aStep->GetPostStepPoint()->GetTouchable()->GetVolume(0)->GetLogicalVolume()->GetName() == "ULar_log") whichVolume = -1;
             if(aStep->GetPostStepPoint()->GetTouchable()->GetVolume(0)->GetLogicalVolume()->GetName() == "Ge_log") whichVolume = aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetCopyNo() + whichReentranceTube*96;
             fEventAction->AddGe77Siblings_whichVolume(whichVolume);

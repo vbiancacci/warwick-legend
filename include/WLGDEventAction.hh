@@ -302,7 +302,7 @@ private:
   std::vector<G4double>     trjxpos;
   std::vector<G4double>     trjypos;
   std::vector<G4double>     trjzpos;
-  std::map<G4String, G4int> lookup
+  std::map<G4String, G4int> lookup;
 
 };
 

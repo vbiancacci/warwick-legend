@@ -89,7 +89,7 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step *aStep) {
             fEventAction->AddGe77Siblings_id(aStep->GetTrack()->GetTrackID());
             fEventAction->AddGe77Siblings_type(aStep->GetTrack()->GetParticleDefinition()->GetPDGEncoding());
             int whichVolume = -3;
-            if(aStep->GetPostStepPoint()->GetTouchable()->GetVolume()->GetLogicalVolume()->GetName() == "Lar_log") whichVolume = -2
+            if(aStep->GetPostStepPoint()->GetTouchable()->GetVolume()->GetLogicalVolume()->GetName() == "Lar_log") whichVolume = -2;
             if(aStep->GetPostStepPoint()->GetTouchable()->GetVolume(0)->GetLogicalVolume()->GetName() == "ULar_log") whichVolume = -1;
             if(aStep->GetPostStepPoint()->GetTouchable()->GetVolume(0)->GetLogicalVolume()->GetName() == "Ge_log") whichVolume = aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetCopyNo() + whichReentranceTube*96;
             fEventAction->AddGe77Siblings_whichVolume(whichVolume);

@@ -54,10 +54,10 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step *aStep) {
       {
 
         if(aStep->GetTrack()->GetLogicalVolumeAtVertex()->GetName() == "Water_log"){
-          if(aStep->GetPostStepPoint()->GetGlobalTime() / us < 10.)
+          //if(aStep->GetPostStepPoint()->GetGlobalTime() / us < 10.)
             fEventAction->IncreaseEdepWater_prompt(aStep->GetTotalEnergyDeposit() / eV);
-          else if(aStep->GetPostStepPoint()->GetGlobalTime() / ms < 1.)
-            fEventAction->IncreaseEdepWater_delayed(aStep->GetTotalEnergyDeposit() / eV);
+          //else if(aStep->GetPostStepPoint()->GetGlobalTime() / ms < 1.)
+            // fEventAction->IncreaseEdepWater_delayed(aStep->GetTotalEnergyDeposit() / eV);
           return;
         }
 

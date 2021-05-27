@@ -80,22 +80,43 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step *aStep) {
 
         for(int i = 0; i < fEventAction->GetIDListOfGe77SiblingParticles().size(); i++)
         {
-          cout << fEventAction->GetIDListOfGe77SiblingParticles()[i] << " ";
-          if(aStep->GetTrack()->GetParentID() == fEventAction->GetIDListOfGe77SiblingParticles()[i]){
-            fEventAction->AddGe77Siblings_timing(aStep->GetPostStepPoint()->GetGlobalTime() / s);
-            fEventAction->AddGe77Siblings_x(aStep->GetPostStepPoint()->GetPosition().getX() / m);
-            fEventAction->AddGe77Siblings_y(aStep->GetPostStepPoint()->GetPosition().getY() / m);
-            fEventAction->AddGe77Siblings_z(aStep->GetPostStepPoint()->GetPosition().getZ() / m);
+          if(aStep->GetTrack()->GetParentID() == fEventAction->GetIDListOfGe77SiblingParticles()[i])
+          {
+            fEventAction->AddGe77Siblings_timing(
+              aStep->GetPostStepPoint()->GetGlobalTime() / s);
+            fEventAction->AddGe77Siblings_x(
+              aStep->GetPostStepPoint()->GetPosition().getX() / m);
+            fEventAction->AddGe77Siblings_y(
+              aStep->GetPostStepPoint()->GetPosition().getY() / m);
+            fEventAction->AddGe77Siblings_z(
+              aStep->GetPostStepPoint()->GetPosition().getZ() / m);
             fEventAction->AddGe77Siblings_edep(aStep->GetTotalEnergyDeposit() / eV);
             fEventAction->AddGe77Siblings_id(aStep->GetTrack()->GetTrackID());
-            fEventAction->AddGe77Siblings_type(aStep->GetTrack()->GetParticleDefinition()->GetPDGEncoding());
+            fEventAction->AddGe77Siblings_type(
+              aStep->GetTrack()->GetParticleDefinition()->GetPDGEncoding());
             int whichVolume = -3;
-            if(aStep->GetPostStepPoint()->GetTouchable()->GetVolume()->GetLogicalVolume()->GetName() == "Lar_log") whichVolume = -2;
-            if(aStep->GetPostStepPoint()->GetTouchable()->GetVolume(0)->GetLogicalVolume()->GetName() == "ULar_log") whichVolume = -1;
-            if(aStep->GetPostStepPoint()->GetTouchable()->GetVolume(0)->GetLogicalVolume()->GetName() == "Ge_log") whichVolume = aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetCopyNo() + whichReentranceTube*96;
+            if(aStep->GetPostStepPoint()
+                 ->GetTouchable()
+                 ->GetVolume()
+                 ->GetLogicalVolume()
+                 ->GetName() == "Lar_log")
+              whichVolume = -2;
+            if(aStep->GetPostStepPoint()
+                 ->GetTouchable()
+                 ->GetVolume(0)
+                 ->GetLogicalVolume()
+                 ->GetName() == "ULar_log")
+              whichVolume = -1;
+            if(aStep->GetPostStepPoint()
+                 ->GetTouchable()
+                 ->GetVolume(0)
+                 ->GetLogicalVolume()
+                 ->GetName() == "Ge_log")
+              whichVolume =
+                aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetCopyNo() +
+                whichReentranceTube * 96;
             fEventAction->AddGe77Siblings_whichVolume(whichVolume);
-            cout << aStep->GetTrack()->GetTrackID() << endl;
-          }cout << endl;
+          }
         }
 
         G4int whichVolume = -1;

@@ -80,6 +80,7 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step *aStep) {
 
         for(int i = 0; i < fEventAction->GetIDListOfGe77SiblingParticles().size(); i++)
         {
+          cout << fEventAction->GetIDListOfGe77SiblingParticles()[i] << " ";
           if(aStep->GetTrack()->GetTrackID() == fEventAction->GetIDListOfGe77SiblingParticles()[i]){
             fEventAction->AddGe77Siblings_timing(aStep->GetPostStepPoint()->GetGlobalTime() / s);
             fEventAction->AddGe77Siblings_x(aStep->GetPostStepPoint()->GetPosition().getX() / m);
@@ -93,7 +94,8 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step *aStep) {
             if(aStep->GetPostStepPoint()->GetTouchable()->GetVolume(0)->GetLogicalVolume()->GetName() == "ULar_log") whichVolume = -1;
             if(aStep->GetPostStepPoint()->GetTouchable()->GetVolume(0)->GetLogicalVolume()->GetName() == "Ge_log") whichVolume = aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetCopyNo() + whichReentranceTube*96;
             fEventAction->AddGe77Siblings_whichVolume(whichVolume);
-          }
+            cout << aStep->GetTrack()->GetTrackID() << endl;
+          }cout << endl;
         }
 
         G4int whichVolume = -1;

@@ -81,7 +81,7 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step *aStep) {
         for(int i = 0; i < fEventAction->GetIDListOfGe77SiblingParticles().size(); i++)
         {
           cout << fEventAction->GetIDListOfGe77SiblingParticles()[i] << " ";
-          if(aStep->GetTrack()->GetTrackID() == fEventAction->GetIDListOfGe77SiblingParticles()[i]){
+          if(aStep->GetTrack()->GetParentID() == fEventAction->GetIDListOfGe77SiblingParticles()[i]){
             fEventAction->AddGe77Siblings_timing(aStep->GetPostStepPoint()->GetGlobalTime() / s);
             fEventAction->AddGe77Siblings_x(aStep->GetPostStepPoint()->GetPosition().getX() / m);
             fEventAction->AddGe77Siblings_y(aStep->GetPostStepPoint()->GetPosition().getY() / m);

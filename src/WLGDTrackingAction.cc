@@ -133,6 +133,7 @@ void WLGDTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
           fEventAction->AddNeutronzMom(tmp_neutronZmom);
           for(int j = 0; j < NumberOfSecundaries;j++){
             if(j == i) continue;
+            G4cout << " ------------ " << aTrack->GetStep()->GetSecondaryInCurrentStep()->at(j)->GetTrackID() << G4endl;
             fEventAction->AddIDListOfGe77SiblingParticles(aTrack->GetStep()->GetSecondaryInCurrentStep()->at(j)->GetTrackID());
           }
         }

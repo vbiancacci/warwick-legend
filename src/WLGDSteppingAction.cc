@@ -69,7 +69,7 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
     {
       if(aStep->GetTotalEnergyDeposit() > 0)
       {
-        if(aStep->->GetPostStepPoint()
+        if(aStep->GetPostStepPoint()
              ->GetTouchable()
              ->GetVolume(0)
              ->GetLogicalVolume()
@@ -97,12 +97,12 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
           whichReentranceTube = 3;
 
         if(fDetectorConstruction->GetGeometryName() == "hallA" ||
-           aStep->->GetPostStepPoint()
+           aStep->GetPostStepPoint()
              ->GetTouchable()
              ->GetVolume(0)
              ->GetLogicalVolume()
              ->GetName() == "Lar_log" ||
-           aStep->->GetPostStepPoint()
+           aStep->GetPostStepPoint()
              ->GetTouchable()
              ->GetVolume(0)
              ->GetLogicalVolume()
@@ -212,7 +212,7 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
                      ->GetVolume(1)
                      ->GetLogicalVolume()
                      ->GetName()
-                << G4endl;
+                << G4eAndl;
           }
           else
           {

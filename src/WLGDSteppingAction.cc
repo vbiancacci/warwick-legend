@@ -212,7 +212,7 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
                      ->GetVolume(1)
                      ->GetLogicalVolume()
                      ->GetName()
-                << G4eAndl;
+                << G4endl;
           }
           else
           {

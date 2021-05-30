@@ -159,6 +159,13 @@ void WLGDEventAction::BeginOfEventAction(const G4Event*
   v_nCGd_z.clear();
   v_nCGd_A.clear();
 
+  v_nCOther_timing.clear();
+  v_nCOther_x.clear();
+  v_nCOther_y.clear();
+  v_nCOther_z.clear();
+  v_nCOther_A.clear();
+  v_nCOther_Z.clear();
+
   TotalEnergyDepositionInLAr_prompt.clear();
   TotalEnergyDepositionInLAr_prompt.push_back(0);
   TotalEnergyDepositionInLAr_prompt.push_back(0);

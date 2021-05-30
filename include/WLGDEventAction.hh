@@ -99,12 +99,12 @@ public:
   std::vector<G4double>& GetnCGd_z(){return v_nCGd_z;}
   std::vector<G4int>&    GetnCGd_A(){return v_nCGd_A;}
 
-  std::vector<G4double>& GetnCOther_timing(){return v_GetnCOther_timing;}
-  std::vector<G4double>& GetnCOther_x(){return v_GetnCOther_x;}
-  std::vector<G4double>& GetnCOther_y(){return v_GetnCOther_y;}
-  std::vector<G4double>& GetnCOther_z(){return v_GetnCOther_z;}
-  std::vector<G4int>&    GetnCOther_A(){return v_GetnCOther_A;}
-  std::vector<G4int>&    GetnCOther_Z(){return v_GetnCOther_Z;}
+  std::vector<G4double>& GetnCOther_timing(){return v_nCOther_timing;}
+  std::vector<G4double>& GetnCOther_x(){return v_nCOther_x;}
+  std::vector<G4double>& GetnCOther_y(){return v_nCOther_y;}
+  std::vector<G4double>& GetnCOther_z(){return v_nCOther_z;}
+  std::vector<G4int>&    GetnCOther_A(){return v_nCOther_A;}
+  std::vector<G4int>&    GetnCOther_Z(){return v_nCOther_Z;}
 
   std::vector<G4double>& GetGe77Siblings_timing(){return v_Ge77Siblings_timing;}
   std::vector<G4double>& GetGe77Siblings_x(){return v_Ge77Siblings_x;}

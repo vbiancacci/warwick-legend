@@ -99,6 +99,13 @@ public:
   std::vector<G4double>& GetnCGd_z(){return v_nCGd_z;}
   std::vector<G4int>&    GetnCGd_A(){return v_nCGd_A;}
 
+  std::vector<G4double>& GetnCOther_timing(){return v_GetnCOther_timing;}
+  std::vector<G4double>& GetnCOther_x(){return v_GetnCOther_x;}
+  std::vector<G4double>& GetnCOther_y(){return v_GetnCOther_y;}
+  std::vector<G4double>& GetnCOther_z(){return v_GetnCOther_z;}
+  std::vector<G4int>&    GetnCOther_A(){return v_GetnCOther_A;}
+  std::vector<G4int>&    GetnCOther_Z(){return v_GetnCOther_Z;}
+
   std::vector<G4double>& GetGe77Siblings_timing(){return v_Ge77Siblings_timing;}
   std::vector<G4double>& GetGe77Siblings_x(){return v_Ge77Siblings_x;}
   std::vector<G4double>& GetGe77Siblings_y(){return v_Ge77Siblings_y;}
@@ -128,6 +135,13 @@ public:
   void AddnCGd_y(G4double y){v_nCGd_y.push_back(y);}
   void AddnCGd_z(G4double z){v_nCGd_z.push_back(z);}
   void AddnCGd_A(G4int A){v_nCGd_A.push_back(A);}
+
+  void AddnCOther_timing(G4double time){v_nCOther_timing.push_back(time);}
+  void AddnCOther_x(G4double x){v_nCOther_x.push_back(x);}
+  void AddnCOther_y(G4double y){v_nCOther_y.push_back(y);}
+  void AddnCOther_z(G4double z){v_nCOther_z.push_back(z);}
+  void AddnCOther_A(G4int A){v_nCOther_A.push_back(A);}
+  void AddnCOther_Z(G4int A){v_nCOther_Z.push_back(A);}
 
   void AddEkin(G4double kin){ekin.push_back(kin);}
   void AddNeutronxLoc(G4double posx){neutronxloc.push_back(posx);}
@@ -245,6 +259,13 @@ private:
   std::vector<G4double> v_nCGd_y;
   std::vector<G4double> v_nCGd_z;
   std::vector<G4int>    v_nCGd_A;
+
+  std::vector<G4double> v_nCOther_timing;
+  std::vector<G4double> v_nCOther_x;
+  std::vector<G4double> v_nCOther_y;
+  std::vector<G4double> v_nCOther_z;
+  std::vector<G4int>    v_nCOther_A;
+  std::vector<G4int>    v_nCOther_Z;
 
   std::vector<G4int>	NumberOfNeutronsProducedInEvent;
   std::vector<G4double>	TotalEnergyDepositionInLAr_prompt;

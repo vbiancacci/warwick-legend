@@ -718,8 +718,7 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
     {
       new G4PVPlacement(
         nullptr,
-        G4ThreeVector(xpos, ypos,  
-                      - step + (nofLayers / 2 * layerthickness - i * layerthickness) * cm),
+        G4ThreeVector(xpos, ypos,  - step + (nofLayers / 2 * layerthickness - i * layerthickness) * cm),
         fLayerLogical, "Layer_phys", fUlarLogical, false, i + j * nofLayers, true);
     }
   }

@@ -133,7 +133,7 @@ void WLGDTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
           fEventAction->AddNeutronzMom(tmp_neutronZmom);
           fEventAction->AddIDListOfGe77SiblingParticles(aTrack->GetTrackID());
         }
-        if(aTrack->GetStep()
+        else if(aTrack->GetStep()
                ->GetSecondaryInCurrentStep()
                ->at(i)
                ->GetParticleDefinition()
@@ -145,7 +145,7 @@ void WLGDTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
           fEventAction->AddnCAr_z(aTrack->GetStep()->GetPostStepPoint()->GetPosition().getZ() / m);
           fEventAction->AddnCAr_A(aTrack->GetStep()->GetSecondaryInCurrentStep()->at(i)->GetParticleDefinition()->GetAtomicMass());
         }
-        if(aTrack->GetStep()
+        else if(aTrack->GetStep()
                ->GetSecondaryInCurrentStep()
                ->at(i)
                ->GetParticleDefinition()
@@ -156,6 +156,14 @@ void WLGDTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
           fEventAction->AddnCGd_y(aTrack->GetStep()->GetPostStepPoint()->GetPosition().getY() / m);
           fEventAction->AddnCGd_z(aTrack->GetStep()->GetPostStepPoint()->GetPosition().getZ() / m);
           fEventAction->AddnCGd_A(aTrack->GetStep()->GetSecondaryInCurrentStep()->at(i)->GetParticleDefinition()->GetAtomicMass());
+        }
+        else {
+          fEventAction->AddnCOther_timing(aTrack->GetStep()->GetPostStepPoint()->GetGlobalTime() / s);
+          fEventAction->AddnCOther_x(aTrack->GetStep()->GetPostStepPoint()->GetPosition().getX() / m);
+          fEventAction->AddnCOther_y(aTrack->GetStep()->GetPostStepPoint()->GetPosition().getY() / m);
+          fEventAction->AddnCOther_z(aTrack->GetStep()->GetPostStepPoint()->GetPosition().getZ() / m);
+          fEventAction->AddnCOther_A(aTrack->GetStep()->GetSecondaryInCurrentStep()->at(i)->GetParticleDefinition()->GetAtomicMass());
+          fEventAction->AddnCOther_A(aTrack->GetStep()->GetSecondaryInCurrentStep()->at(i)->GetParticleDefinition()->GetPDGCharge());
         }
       }
     }

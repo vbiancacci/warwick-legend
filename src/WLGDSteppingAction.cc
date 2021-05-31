@@ -46,7 +46,7 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
 
   if(fDepositionInfo == 1)
   {
-    if(aStep->GetTrack()->GetNextVolume()->GetName() == "OutOfWorld") return;
+    if(aStep->GetTrack()->GetNextVolume()->GetName() == "World_phys") return;
     G4cout << "1" << G4endl;
     if((aStep->GetPostStepPoint()
           ->GetTouchable()

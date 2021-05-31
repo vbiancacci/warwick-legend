@@ -276,7 +276,7 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
       }
     }
   }
-  return;
+  G4cout << "here it ends" << G4endl;
 }
 
 void WLGDSteppingAction::GetDepositionInfo(G4int answer) { fDepositionInfo = answer; }

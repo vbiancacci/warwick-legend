@@ -106,6 +106,12 @@ public:
   std::vector<G4int>&    GetnCOther_A(){return v_nCOther_A;}
   std::vector<G4int>&    GetnCOther_Z(){return v_nCOther_Z;}
 
+  std::vector<G4double>& GetGe77mGammaEmission_timing(){return v_Ge77mGammaEmission_timing;}
+  std::vector<G4double>& GetGe77mGammaEmission_x(){return v_Ge77mGammaEmission_x;}
+  std::vector<G4double>& GetGe77mGammaEmission_y(){return v_Ge77mGammaEmission_y;}
+  std::vector<G4double>& GetGe77mGammaEmission_z(){return v_Ge77mGammaEmission_z;}
+  std::vector<G4int>&    GetGe77mGammaEmission_A(){return v_Ge77mGammaEmission_A;}
+
   std::vector<G4double>& GetGe77Siblings_timing(){return v_Ge77Siblings_timing;}
   std::vector<G4double>& GetGe77Siblings_x(){return v_Ge77Siblings_x;}
   std::vector<G4double>& GetGe77Siblings_y(){return v_Ge77Siblings_y;}
@@ -142,6 +148,12 @@ public:
   void AddnCOther_z(G4double z){v_nCOther_z.push_back(z);}
   void AddnCOther_A(G4int A){v_nCOther_A.push_back(A);}
   void AddnCOther_Z(G4int A){v_nCOther_Z.push_back(A);}
+
+  void AddGe77mGammaEmission_timing(G4double time){v_Ge77mGammaEmission_timing.push_back(time);}
+  void AddGe77mGammaEmission_x(G4double x){v_Ge77mGammaEmission_x.push_back(x);}
+  void AddGe77mGammaEmission_y(G4double y){v_Ge77mGammaEmission_y.push_back(y);}
+  void AddGe77mGammaEmission_z(G4double z){v_Ge77mGammaEmission_z.push_back(z);}
+  void AddGe77mGammaEmission_A(G4int A){v_Ge77mGammaEmission_A.push_back(A);}
 
   void AddEkin(G4double kin){ekin.push_back(kin);}
   void AddNeutronxLoc(G4double posx){neutronxloc.push_back(posx);}
@@ -266,6 +278,12 @@ private:
   std::vector<G4double> v_nCOther_z;
   std::vector<G4int>    v_nCOther_A;
   std::vector<G4int>    v_nCOther_Z;
+
+  std::vector<G4double> v_Ge77mGammaEmission_timing;
+  std::vector<G4double> v_Ge77mGammaEmission_x;
+  std::vector<G4double> v_Ge77mGammaEmission_y;
+  std::vector<G4double> v_Ge77mGammaEmission_z;
+  std::vector<G4int>    v_Ge77mGammaEmission_A;
 
   std::vector<G4int>	NumberOfNeutronsProducedInEvent;
   std::vector<G4double>	TotalEnergyDepositionInLAr_prompt;

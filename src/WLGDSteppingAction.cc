@@ -71,6 +71,7 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
 
       if(aStep->GetTotalEnergyDeposit() > 0)
       {
+
         if(aStep->GetPostStepPoint()
              ->GetTouchable()
              ->GetVolume(0)
@@ -110,6 +111,7 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
              ->GetLogicalVolume()
              ->GetName() == "Water_log")
           whichReentranceTube = 0;
+
         for(int i = 0; i < fEventAction->GetIDListOfGe77SiblingParticles().size(); i++)
         {
           if(aStep->GetTrack()->GetParentID() ==

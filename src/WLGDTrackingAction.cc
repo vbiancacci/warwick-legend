@@ -83,6 +83,16 @@ void WLGDTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
   // Edit: 2021/03/30 by Moritz Neuberger
   // Adding tracking of neutrons being later captured by Ge-76
 
+  if(aTrack->GetParticleDefinition()
+       ->GetAtomicMass() == 77 &&
+     aTrack->GetParticleDefinition()
+       ->GetPDGCharge() == 32)
+  {
+    G4cout << "Ge77 ended via:" << aTrack->GetStep()->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName() << G4endl;
+    G4cout << "And has secundaris:" << G4endl;
+    for(int i = 0; i < aTrack->GetStep()->GetSecondaryInCurrentStep()->size(); i++)
+      G4cout << aTrack->GetStep()->GetSecondaryInCurrentStep()->at(i)->GetParticleDefinition()->GetParticleName() << " " << aTrack->GetStep()->GetSecondaryInCurrentStep()->at(i)->GetKineticEnergy() << G4endl;
+  }
   // RemoveIDListOfGe77SiblingParticles
   for(int i = 0; i < fEventAction->GetIDListOfGe77SiblingParticles().size(); i++)
   {

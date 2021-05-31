@@ -47,7 +47,7 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
   if(fDepositionInfo == 1)
   {
     G4cout << "1" << G4endl;
-    if((aStep->GetPostStepPoint()
+    /*if((aStep->GetPostStepPoint()
           ->GetTouchable()
           ->GetVolume(0)
           ->GetLogicalVolume()
@@ -66,7 +66,7 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
            ->GetTouchable()
            ->GetVolume(0)
            ->GetLogicalVolume()
-           ->GetName() == "Water_log")
+           ->GetName() == "Water_log")*/
     {
 
       G4cout << "1-2" << G4endl;

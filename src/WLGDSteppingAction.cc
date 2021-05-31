@@ -46,9 +46,7 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
 
   if(fDepositionInfo == 1)
   {
-    G4cout << aStep->GetTrack()->GetVolume()->GetName() << G4endl;
     if(aStep->GetTrack()->GetVolume()->GetName() == "World_phys") return;
-    G4cout << "1" << G4endl;
     if((aStep->GetPostStepPoint()
           ->GetTouchable()
           ->GetVolume(0)
@@ -71,10 +69,8 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
            ->GetName() == "Water_log")
     {
 
-      G4cout << "1-2" << G4endl;
       if(aStep->GetTotalEnergyDeposit() > 0)
       {
-        G4cout << "1-2-3" << G4endl;
         if(aStep->GetPostStepPoint()
              ->GetTouchable()
              ->GetVolume(0)
@@ -102,7 +98,6 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
         if(abs(tmp_x) < abs(tmp_y) && tmp_y < 0)
           whichReentranceTube = 3;
 
-        G4cout << "1-2-3-4" << G4endl;
         if(fDetectorConstruction->GetGeometryName() == "hallA" ||
            aStep->GetPostStepPoint()
              ->GetTouchable()
@@ -158,7 +153,6 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
           }
         }
 
-        G4cout << "1-2-3-4-5" << G4endl;
         G4int whichVolume = -1;
         if(aStep->GetPostStepPoint()
                ->GetTouchable()
@@ -260,7 +254,6 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
           }
         }
 
-        G4cout << "1-2-3-4-5-6" << G4endl;
         if(aStep->GetPostStepPoint()->GetGlobalTime() / s > 1)
           return;
         if(fIndividualDepositionInfo == 0) return;
@@ -274,11 +267,9 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
         fEventAction->AddIndividualEnergyDeposition_Position_y(tmp_y / m);
         fEventAction->AddIndividualEnergyDeposition_Position_z(tmp_z / m);
         fEventAction->AddIndividualEnergyDeposition_LArOrGe(whichVolume);
-        G4cout << "1-2-3-4-5-6-7" << G4endl;
       }
     }
   }
-  G4cout << "here it ends" << G4endl;
 }
 
 void WLGDSteppingAction::GetDepositionInfo(G4int answer) { fDepositionInfo = answer; }

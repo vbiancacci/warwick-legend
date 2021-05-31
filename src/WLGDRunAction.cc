@@ -114,7 +114,11 @@ WLGDRunAction::WLGDRunAction(WLGDEventAction* eventAction, G4String name)
   analysisManager->CreateNtupleDColumn("Ge77mGammaEmission_x",fEventAction->GetGe77mGammaEmission_x());
   analysisManager->CreateNtupleDColumn("Ge77mGammaEmission_y",fEventAction->GetGe77mGammaEmission_y());
   analysisManager->CreateNtupleDColumn("Ge77mGammaEmission_z",fEventAction->GetGe77mGammaEmission_z());
-  analysisManager->CreateNtupleIColumn("Ge77mGammaEmission_A",fEventAction->GetGe77mGammaEmission_A());
+  analysisManager->CreateNtupleDColumn("Ge77mGammaEmission_edep", fEventAction->GetGe77mGammaEmission_edep());
+  analysisManager->CreateNtupleIColumn("Ge77mGammaEmission_id", fEventAction->GetGe77mGammaEmission_id());
+  analysisManager->CreateNtupleIColumn("Ge77mGammaEmission_type", fEventAction->GetGe77mGammaEmission_type());
+  analysisManager->CreateNtupleIColumn("Ge77mGammaEmission_whichVolume", fEventAction->GetGe77mGammaEmission_whichVolume());
+  analysisManager->CreateNtupleIColumn("Ge77mGammaEmission_whichGe77", fEventAction->GetGe77mGammaEmission_whichGe77());
 
 //GetnCAr_timing
   analysisManager->CreateNtupleIColumn("Trjpdg", fEventAction->GetTrjPDG());

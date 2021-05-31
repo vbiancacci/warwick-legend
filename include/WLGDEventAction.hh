@@ -110,7 +110,11 @@ public:
   std::vector<G4double>& GetGe77mGammaEmission_x(){return v_Ge77mGammaEmission_x;}
   std::vector<G4double>& GetGe77mGammaEmission_y(){return v_Ge77mGammaEmission_y;}
   std::vector<G4double>& GetGe77mGammaEmission_z(){return v_Ge77mGammaEmission_z;}
-  std::vector<G4int>&    GetGe77mGammaEmission_A(){return v_Ge77mGammaEmission_A;}
+  std::vector<G4double>& GetGe77mGammaEmission_edep(){return v_Ge77mGammaEmission_edep;}
+  std::vector<G4int>& GetGe77mGammaEmission_id(){return v_Ge77mGammaEmission_id;}
+  std::vector<G4int>& GetGe77mGammaEmission_type(){return v_Ge77mGammaEmission_type;}
+  std::vector<G4int>& GetGe77mGammaEmission_whichVolume(){return v_Ge77mGammaEmission_whichVolume;}
+  std::vector<G4int>& GetGe77mGammaEmission_whichGe77(){return v_Ge77mGammaEmission_whichGe77;}
 
   std::vector<G4double>& GetGe77Siblings_timing(){return v_Ge77Siblings_timing;}
   std::vector<G4double>& GetGe77Siblings_x(){return v_Ge77Siblings_x;}
@@ -153,7 +157,11 @@ public:
   void AddGe77mGammaEmission_x(G4double x){v_Ge77mGammaEmission_x.push_back(x);}
   void AddGe77mGammaEmission_y(G4double y){v_Ge77mGammaEmission_y.push_back(y);}
   void AddGe77mGammaEmission_z(G4double z){v_Ge77mGammaEmission_z.push_back(z);}
-  void AddGe77mGammaEmission_A(G4int A){v_Ge77mGammaEmission_A.push_back(A);}
+  void AddGe77mGammaEmission_edep(double edep){ v_Ge77mGammaEmission_edep.push_back(edep);}
+  void AddGe77mGammaEmission_id(int id){ v_Ge77mGammaEmission_id.push_back(id);}
+  void AddGe77mGammaEmission_type(int type){ v_Ge77mGammaEmission_type.push_back(type);}
+  void AddGe77mGammaEmission_whichVolume(int volume){ v_Ge77mGammaEmission_whichVolume.push_back(volume);}
+  void AddGe77mGammaEmission_whichGe77(int volume){ v_Ge77mGammaEmission_whichGe77.push_back(volume);}
 
   void AddEkin(G4double kin){ekin.push_back(kin);}
   void AddNeutronxLoc(G4double posx){neutronxloc.push_back(posx);}
@@ -171,8 +179,10 @@ public:
   void AddIndividualEnergyDeposition_ReentranceTube(G4int n){IndividualEnergyDeposition_ReentranceTube.push_back(n);}
   void AddIndividualEnergyDeposition_LArOrGe(G4int n){IndividualEnergyDeposition_LArOrGe.push_back(n);}
 
+  void AddIDListOfGe77(G4int ID){IDListOfGe77.push_back(ID);}
   void AddIDListOfGe77SiblingParticles(G4int ID){IDListOfGe77SiblingParticles.push_back(ID);}
   void RemoveIDListOfGe77SiblingParticles(G4int ID){IDListOfGe77SiblingParticles.erase(std::remove(IDListOfGe77SiblingParticles.begin(),IDListOfGe77SiblingParticles.end(),ID),IDListOfGe77SiblingParticles.end());}
+  std::vector<G4int> GetIDListOfGe77(){return IDListOfGe77;}
   std::vector<G4int> GetIDListOfGe77SiblingParticles(){return IDListOfGe77SiblingParticles;}
   std::map<int, int>         neutronProducerMap;
 
@@ -283,7 +293,11 @@ private:
   std::vector<G4double> v_Ge77mGammaEmission_x;
   std::vector<G4double> v_Ge77mGammaEmission_y;
   std::vector<G4double> v_Ge77mGammaEmission_z;
-  std::vector<G4int>    v_Ge77mGammaEmission_A;
+  std::vector<G4double>  v_Ge77mGammaEmission_edep;
+  std::vector<G4int>  v_Ge77mGammaEmission_id;
+  std::vector<G4int>  v_Ge77mGammaEmission_type;
+  std::vector<G4int>  v_Ge77mGammaEmission_whichVolume;
+  std::vector<G4int>  v_Ge77mGammaEmission_whichGe77;
 
   std::vector<G4int>	NumberOfNeutronsProducedInEvent;
   std::vector<G4double>	TotalEnergyDepositionInLAr_prompt;
@@ -319,6 +333,7 @@ private:
   std::vector<G4double> v_EdepWater_delayed;
   std::vector<G4int>    v_MuonVeto_flag;
 
+  std::vector<G4int> IDListOfGe77;
   std::vector<G4int> IDListOfGe77SiblingParticles;
 
   std::vector<G4double> v_Ge77Siblings_timing;

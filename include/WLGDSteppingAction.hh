@@ -24,6 +24,7 @@ public:
 
   virtual void UserSteppingAction(const G4Step*);
   void GetDepositionInfo(G4int answer);
+  void GetIndividualDepositionInfo(G4int answer);
   void DefineCommands();
 
 private:
@@ -32,6 +33,7 @@ private:
   WLGDDetectorConstruction* fDetectorConstruction;
   G4GenericMessenger*        fStepMessenger;
   G4int fDepositionInfo = 0;
+  G4int fIndividualDepositionInfo = 0;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

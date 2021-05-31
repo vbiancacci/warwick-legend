@@ -254,7 +254,7 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
 
         if(aStep->GetPostStepPoint()->GetGlobalTime() / s > 1)
           return;
-        //if(fIndividualDepositionInfo == 0) return;
+        if(fIndividualDepositionInfo == 0) return;
 
         fEventAction->AddIndividualEnergyDeposition_Timing(
           aStep->GetPostStepPoint()->GetGlobalTime() / s);
@@ -271,7 +271,7 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
 }
 
 void WLGDSteppingAction::GetDepositionInfo(G4int answer) { fDepositionInfo = answer; }
-//void WLGDSteppingAction::GetIndividualDepositionInfo(G4int answer) { fIndividualDepositionInfo = answer; }
+void WLGDSteppingAction::GetIndividualDepositionInfo(G4int answer) { fIndividualDepositionInfo = answer; }
 
 void WLGDSteppingAction::DefineCommands()
 {
@@ -288,7 +288,7 @@ void WLGDSteppingAction::DefineCommands()
     .SetGuidance("1 = do")
     .SetCandidates("0 1")
     .SetDefaultValue("0");
-/*
+
   fStepMessenger
     ->DeclareMethod("getIndividualDepositionInfo", &WLGDSteppingAction::GetIndividualDepositionInfo)
     .SetGuidance(
@@ -296,5 +296,5 @@ void WLGDSteppingAction::DefineCommands()
     .SetGuidance("0 = don't")
     .SetGuidance("1 = do")
     .SetCandidates("0 1")
-    .SetDefaultValue("0");*/
+    .SetDefaultValue("0");
 }

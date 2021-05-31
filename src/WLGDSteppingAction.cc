@@ -69,7 +69,7 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
     {
       if(aStep->GetTotalEnergyDeposit() > 0)
       {
-        if(aStep->GetPostStepPoint()
+        /*if(aStep->GetPostStepPoint()
              ->GetTouchable()
              ->GetVolume(0)
              ->GetLogicalVolume()
@@ -80,7 +80,7 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
           // else if(aStep->GetPostStepPoint()->GetGlobalTime() / ms < 1.)
           // fEventAction->IncreaseEdepWater_delayed(aStep->GetTotalEnergyDeposit() / eV);
           return;
-        }
+        }*/
 
         G4double tmp_x = aStep->GetTrack()->GetPosition().getX();
         G4double tmp_y = aStep->GetTrack()->GetPosition().getY();

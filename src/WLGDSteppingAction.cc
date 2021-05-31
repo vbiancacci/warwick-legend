@@ -46,6 +46,7 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
 
   if(fDepositionInfo == 1)
   {
+    G4cout << "1" << G4endl;
     if((aStep->GetPostStepPoint()
           ->GetTouchable()
           ->GetVolume(0)
@@ -67,9 +68,12 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
            ->GetLogicalVolume()
            ->GetName() == "Water_log")
     {
+
+      G4cout << "1-2" << G4endl;
       if(aStep->GetTotalEnergyDeposit() > 0)
       {
-        /*if(aStep->GetPostStepPoint()
+        G4cout << "1-2-3" << G4endl;
+        if(aStep->GetPostStepPoint()
              ->GetTouchable()
              ->GetVolume(0)
              ->GetLogicalVolume()
@@ -80,7 +84,7 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
           // else if(aStep->GetPostStepPoint()->GetGlobalTime() / ms < 1.)
           // fEventAction->IncreaseEdepWater_delayed(aStep->GetTotalEnergyDeposit() / eV);
           return;
-        }*/
+        }
 
         G4double tmp_x = aStep->GetTrack()->GetPosition().getX();
         G4double tmp_y = aStep->GetTrack()->GetPosition().getY();
@@ -96,6 +100,7 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
         if(abs(tmp_x) < abs(tmp_y) && tmp_y < 0)
           whichReentranceTube = 3;
 
+        G4cout << "1-2-3-4" << G4endl;
         if(fDetectorConstruction->GetGeometryName() == "hallA" ||
            aStep->GetPostStepPoint()
              ->GetTouchable()
@@ -151,6 +156,7 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
           }
         }
 
+        G4cout << "1-2-3-4-5" << G4endl;
         G4int whichVolume = -1;
         if(aStep->GetPostStepPoint()
                ->GetTouchable()
@@ -252,6 +258,7 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
           }
         }
 
+        G4cout << "1-2-3-4-5-6" << G4endl;
         if(aStep->GetPostStepPoint()->GetGlobalTime() / s > 1)
           return;
         if(fIndividualDepositionInfo == 0) return;
@@ -265,6 +272,7 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
         fEventAction->AddIndividualEnergyDeposition_Position_y(tmp_y / m);
         fEventAction->AddIndividualEnergyDeposition_Position_z(tmp_z / m);
         fEventAction->AddIndividualEnergyDeposition_LArOrGe(whichVolume);
+        G4cout << "1-2-3-4-5-6-7" << G4endl;
       }
     }
   }

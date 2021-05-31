@@ -254,7 +254,7 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
 
         if(aStep->GetPostStepPoint()->GetGlobalTime() / s > 1)
           return;
-        if(fIndividualDepositionInfo == 0) return;
+        //if(fIndividualDepositionInfo == 0) return;
 
         fEventAction->AddIndividualEnergyDeposition_Timing(
           aStep->GetPostStepPoint()->GetGlobalTime() / s);

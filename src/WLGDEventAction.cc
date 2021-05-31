@@ -382,9 +382,9 @@ void WLGDEventAction::EndOfEventAction(const G4Event* event)
 
   // printing
   G4int eventID = event->GetEventID();
-  G4cout << ">>> Event: " << eventID << G4endl;
+/*  G4cout << ">>> Event: " << eventID << G4endl;
   G4cout << "    " << edep.size() << " hits stored in this event." << G4endl;
-  G4cout << "    " << trjpdg.size() << " trajectories stored in this event." << G4endl;
+  G4cout << "    " << trjpdg.size() << " trajectories stored in this event." << G4endl;/*
 }
 
 void WLGDEventAction::SaveAllEvents(G4int answer){fAllEvents = answer;}

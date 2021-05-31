@@ -57,6 +57,7 @@ void WLGDTrackingAction::PreUserTrackingAction(const G4Track* aTrack)
 
 void WLGDTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
 {
+  G4cout << "EndOfTrack "  <<  aTrack->GetParticleDefinition()->GetParticleName() << G4endl;
   if(fRunAction->getWriteOutNeutronProductionInfo() == 1)
   {
     G4TrackVector* secondaries = fpTrackingManager->GimmeSecondaries();

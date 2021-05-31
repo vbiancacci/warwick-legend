@@ -83,7 +83,7 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
           fEventAction->IncreaseEdepWater_prompt(aStep->GetTotalEnergyDeposit() / eV);
           // else if(aStep->GetPostStepPoint()->GetGlobalTime() / ms < 1.)
           // fEventAction->IncreaseEdepWater_delayed(aStep->GetTotalEnergyDeposit() / eV);
-          return;
+          //return;
         }
 
         G4double tmp_x = aStep->GetTrack()->GetPosition().getX();
@@ -259,9 +259,9 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
         }
 
         G4cout << "1-2-3-4-5-6" << G4endl;
-        if(aStep->GetPostStepPoint()->GetGlobalTime() / s > 1)
-          return;
-        if(fIndividualDepositionInfo == 0) return;
+        //if(aStep->GetPostStepPoint()->GetGlobalTime() / s > 1)
+        //  return;
+        //if(fIndividualDepositionInfo == 0) return;
 
         fEventAction->AddIndividualEnergyDeposition_Timing(
           aStep->GetPostStepPoint()->GetGlobalTime() / s);

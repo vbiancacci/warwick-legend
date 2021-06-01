@@ -19,6 +19,14 @@ void WLGDTrackingAction::PreUserTrackingAction(const G4Track* aTrack)
     fpTrackingManager->SetTrajectory(new WLGDTrajectory(aTrack));
   }
 
+
+  if(aTrack->GetParticleDefinition()
+             ->GetAtomicMass() == 77 &&
+     aTrack->GetParticleDefinition()
+             ->GetPDGCharge() == 32) {
+
+    fEventAction->AddIDListOfGe77(aTrack->GetTrackID());
+  }
   // Edit: 2021/03/30 by Moritz Neuberger
   // Adding tracking of neutrons being later captured by Ge-76 as well as general produced
   // in LAr
@@ -83,7 +91,7 @@ void WLGDTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
   // Edit: 2021/03/30 by Moritz Neuberger
   // Adding tracking of neutrons being later captured by Ge-76
 
-  // RemoveIDListOfGe77SiblingParticles
+  // RemoveAddIDListOfGe77OfGe77SiblingParticles
   for(int i = 0; i < fEventAction->GetIDListOfGe77SiblingParticles().size(); i++)
   {
     if(aTrack->GetTrackID() == fEventAction->GetIDListOfGe77SiblingParticles()[i])
@@ -134,7 +142,6 @@ void WLGDTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
           fEventAction->AddNeutronyMom(tmp_neutronYmom);
           fEventAction->AddNeutronzMom(tmp_neutronZmom);
           fEventAction->AddIDListOfGe77SiblingParticles(aTrack->GetTrackID());
-          fEventAction->AddIDListOfGe77(aTrack->GetStep()->GetSecondaryInCurrentStep()->at(i)->GetTrackID());
         }
         else
         {

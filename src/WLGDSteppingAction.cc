@@ -119,9 +119,9 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
         {
           if(aStep->GetTrack()->GetParentID() == fEventAction->GetIDListOfGe77()[i]){
             fEventAction->AddGe77mGammaEmission_timing(aStep->GetPostStepPoint()->GetGlobalTime() / s);
-            fEventAction->AddGe77mGammaEmission_x(aStep->GetPostStepPoint()->GetGlobalTime() / s);
-            fEventAction->AddGe77mGammaEmission_y(aStep->GetPostStepPoint()->GetGlobalTime() / s);
-            fEventAction->AddGe77mGammaEmission_z(aStep->GetPostStepPoint()->GetGlobalTime() / s);
+            fEventAction->AddGe77mGammaEmission_x(aStep->GetPostStepPoint()->GetGlobalTime() / m);
+            fEventAction->AddGe77mGammaEmission_y(aStep->GetPostStepPoint()->GetGlobalTime() / m);
+            fEventAction->AddGe77mGammaEmission_z(aStep->GetPostStepPoint()->GetGlobalTime() / m);
             fEventAction->AddGe77mGammaEmission_edep(aStep->GetTotalEnergyDeposit() / eV);
             fEventAction->AddGe77mGammaEmission_id(aStep->GetTrack()->GetTrackID());
             fEventAction->AddGe77mGammaEmission_type(aStep->GetTrack()->GetParticleDefinition()->GetPDGEncoding());

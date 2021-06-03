@@ -41,6 +41,7 @@ public:
   std::vector<G4double>& GetNeutronxMom() { return neutronxmom; }
   std::vector<G4double>& GetNeutronyMom() { return neutronymom; }
   std::vector<G4double>& GetNeutronzMom() { return neutronzmom; }
+  std::vector<G4double>& GetNeutronTime() { return neutrontime; }
   std::vector<G4int>& GetNumberOfNeutronsInEvent() { return NumberOfNeutronsProducedInEvent; }
 
   std::vector<G4double>& GetLArEnergyDeposition() { return TotalEnergyDepositionInLAr_prompt; }
@@ -170,6 +171,7 @@ public:
   void AddNeutronxMom(G4double posx){neutronxmom.push_back(posx);}
   void AddNeutronyMom(G4double posy){neutronymom.push_back(posy);}
   void AddNeutronzMom(G4double posz){neutronzmom.push_back(posz);}
+  void AddNeutronTime(G4double time){neutrontime.push_back(time);}
 
   void AddIndividualEnergyDeposition_Timing(G4double time){IndividualEnergyDeposition_Timing.push_back(time);}
   void AddIndividualEnergyDeposition_Energy(G4double energy){IndividualEnergyDeposition_Energy.push_back(energy);}
@@ -268,6 +270,7 @@ private:
   std::vector<G4double> neutronxmom;
   std::vector<G4double> neutronymom;
   std::vector<G4double> neutronzmom;
+  std::vector<G4double> neutrontime;
 
   // additional data for other particles
   std::vector<G4double> v_nCAr_timing;

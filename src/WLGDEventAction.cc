@@ -91,6 +91,7 @@ void WLGDEventAction::BeginOfEventAction(const G4Event*
   neutronxmom.clear();
   neutronymom.clear();
   neutronzmom.clear();
+  neutrontime.clear();
   // clear trajectory data
   trjpdg.clear();
   trjnpts.clear();

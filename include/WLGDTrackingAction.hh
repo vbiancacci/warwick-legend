@@ -18,6 +18,7 @@ public:
 private:
   double tmp_neutronXpos, tmp_neutronYpos, tmp_neutronZpos;
   double tmp_neutronXmom, tmp_neutronYmom, tmp_neutronZmom;
+  double tmp_neutronTime;
   WLGDEventAction* fEventAction;
   WLGDRunAction* fRunAction;
 };

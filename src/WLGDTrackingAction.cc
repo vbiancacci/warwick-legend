@@ -142,7 +142,7 @@ void WLGDTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
           fEventAction->AddNeutronxMom(tmp_neutronXmom);
           fEventAction->AddNeutronyMom(tmp_neutronYmom);
           fEventAction->AddNeutronzMom(tmp_neutronZmom);
-          fEventAction->AddNeutronTime(tmp_neutronTime);
+          //fEventAction->AddNeutronTime(tmp_neutronTime);
           fEventAction->AddIDListOfGe77SiblingParticles(aTrack->GetTrackID());
         }
         else
@@ -204,7 +204,7 @@ void WLGDTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
                                            ->at(i)
                                            ->GetParticleDefinition()
                                            ->GetAtomicMass());
-              fEventAction->AddnCOther_Z(aTrack->GetStep()
+              fEventAction->AddnCOther_ZC(aTrack->GetStep()
                                            ->GetSecondaryInCurrentStep()
                                            ->at(i)
                                            ->GetParticleDefinition()

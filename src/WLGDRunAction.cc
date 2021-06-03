@@ -109,7 +109,7 @@ WLGDRunAction::WLGDRunAction(WLGDEventAction* eventAction, G4String name)
   analysisManager->CreateNtupleDColumn("nCOther_y",fEventAction->GetnCOther_y());
   analysisManager->CreateNtupleDColumn("nCOther_z",fEventAction->GetnCOther_z());
   analysisManager->CreateNtupleIColumn("nCOther_A",fEventAction->GetnCOther_A());
-  analysisManager->CreateNtupleIColumn("nCOther_Z",fEventAction->GetnCOther_Z());
+  analysisManager->CreateNtupleIColumn("nCOther_Z",fEventAction->GetnCOther_ZC());
 
   analysisManager->CreateNtupleDColumn("Ge77mGammaEmission_timing",fEventAction->GetGe77mGammaEmission_timing());
   analysisManager->CreateNtupleDColumn("Ge77mGammaEmission_x",fEventAction->GetGe77mGammaEmission_x());

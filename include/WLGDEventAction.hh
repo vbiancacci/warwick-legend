@@ -105,7 +105,7 @@ public:
   std::vector<G4double>& GetnCOther_y(){return v_nCOther_y;}
   std::vector<G4double>& GetnCOther_z(){return v_nCOther_z;}
   std::vector<G4int>&    GetnCOther_A(){return v_nCOther_A;}
-  std::vector<G4int>&    GetnCOther_ZC(){return v_nCOther_Z;}
+  std::vector<G4int>&    GetnCOther_ZC(){return v_nCOther_ZC;}
 
   std::vector<G4double>& GetGe77mGammaEmission_timing(){return v_Ge77mGammaEmission_timing;}
   std::vector<G4double>& GetGe77mGammaEmission_x(){return v_Ge77mGammaEmission_x;}
@@ -152,7 +152,7 @@ public:
   void AddnCOther_y(G4double y){v_nCOther_y.push_back(y);}
   void AddnCOther_z(G4double z){v_nCOther_z.push_back(z);}
   void AddnCOther_A(G4int A){v_nCOther_A.push_back(A);}
-  void AddnCOther_ZC(G4int A){v_nCOther_Z.push_back(A);}
+  void AddnCOther_ZC(G4int A){v_nCOther_ZC.push_back(A);}
 
   void AddGe77mGammaEmission_timing(G4double time){v_Ge77mGammaEmission_timing.push_back(time);}
   void AddGe77mGammaEmission_x(G4double x){v_Ge77mGammaEmission_x.push_back(x);}
@@ -290,7 +290,7 @@ private:
   std::vector<G4double> v_nCOther_y;
   std::vector<G4double> v_nCOther_z;
   std::vector<G4int>    v_nCOther_A;
-  std::vector<G4int>    v_nCOther_Z;
+  std::vector<G4int>    v_nCOther_ZC;
 
   std::vector<G4double> v_Ge77mGammaEmission_timing;
   std::vector<G4double> v_Ge77mGammaEmission_x;

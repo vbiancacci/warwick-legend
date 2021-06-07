@@ -22,6 +22,7 @@
 #include "G4Threading.hh"
 #include "G4UImanager.hh"
 #include "G4RadioactiveDecayPhysics.hh"
+#include "QGSP_BERT_HP.hh"
 #include "Shielding.hh"
 
 // us
@@ -81,7 +82,8 @@ int main(int argc, char** argv)
   runManager->SetUserInitialization(detector);
 
   // -- set user physics list
-  auto* physicsList = new Shielding;
+  auto* physicsList = new  QGSP_BERT_HP;//new Shielding;
+
   // allow for thermal neutrons to find Ge
   auto* neutronCut  = new G4NeutronTrackingCut(1);
   neutronCut->SetTimeLimit(2.0 * CLHEP::ms);  // 2 milli sec limit

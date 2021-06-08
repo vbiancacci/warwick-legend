@@ -99,6 +99,15 @@ WLGDRunAction::WLGDRunAction(WLGDEventAction* eventAction, G4String name)
   analysisManager->CreateNtupleIColumn("Ge77Siblings_type", fEventAction->GetGe77Siblings_type());
   analysisManager->CreateNtupleIColumn("Ge77Siblings_whichVolume", fEventAction->GetGe77Siblings_whichVolume());
 
+  analysisManager->CreateNtupleDColumn("GdSiblings_timing", fEventAction->GetGdSiblings_timing());
+  analysisManager->CreateNtupleDColumn("GdSiblings_x", fEventAction->GetGdSiblings_x());
+  analysisManager->CreateNtupleDColumn("GdSiblings_y", fEventAction->GetGdSiblings_y());
+  analysisManager->CreateNtupleDColumn("GdSiblings_z", fEventAction->GetGdSiblings_z());
+  analysisManager->CreateNtupleDColumn("GdSiblings_edep", fEventAction->GetGdSiblings_edep());
+  analysisManager->CreateNtupleIColumn("GdSiblings_id", fEventAction->GetGdSiblings_id());
+  analysisManager->CreateNtupleIColumn("GdSiblings_type", fEventAction->GetGdSiblings_type());
+  analysisManager->CreateNtupleIColumn("GdSiblings_whichVolume", fEventAction->GetGdSiblings_whichVolume());
+
   analysisManager->CreateNtupleDColumn("nCAr_timing",fEventAction->GetnCAr_timing());
   analysisManager->CreateNtupleDColumn("nCAr_x",fEventAction->GetnCAr_x());
   analysisManager->CreateNtupleDColumn("nCAr_y",fEventAction->GetnCAr_y());

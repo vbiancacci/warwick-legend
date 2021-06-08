@@ -247,6 +247,17 @@ void WLGDEventAction::BeginOfEventAction(const G4Event*
   v_Ge77Siblings_type.clear();
   v_Ge77Siblings_whichVolume.clear();
 
+
+  v_GdSiblings_timing.clear();
+  v_GdSiblings_x.clear();
+  v_GdSiblings_y.clear();
+  v_GdSiblings_z.clear();
+  v_GdSiblings_edep.clear();
+  v_GdSiblings_id.clear();
+  v_GdSiblings_type.clear();
+  v_GdSiblings_whichVolume.clear();
+
+
   v_Ge77mGammaEmission_timing.clear();
   v_Ge77mGammaEmission_x.clear();
   v_Ge77mGammaEmission_y.clear();
@@ -256,6 +267,7 @@ void WLGDEventAction::BeginOfEventAction(const G4Event*
   v_Ge77mGammaEmission_type.clear();
   v_Ge77mGammaEmission_whichVolume.clear();
   v_Ge77mGammaEmission_whichGe77.clear();
+
 
   makeMap();
 }

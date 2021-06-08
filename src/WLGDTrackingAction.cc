@@ -82,7 +82,7 @@ void WLGDTrackingAction::PreUserTrackingAction(const G4Track* aTrack)
 void WLGDTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
 {
 
-  if(aTrack->GetTrackID()){
+  if(aTrack->GetTrackID() == 1){
     fEventAction->AddMuonxLoc(tmp_MuonXpos);
     fEventAction->AddMuonyLoc(tmp_MuonYpos);
     fEventAction->AddMuonzLoc(tmp_MuonZpos);
@@ -213,6 +213,7 @@ void WLGDTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
                                         ->at(i)
                                         ->GetParticleDefinition()
                                         ->GetAtomicMass());
+              fEventAction->AddIDListOfGdSiblingParticles(aTrack->GetTrackID());
             }
             else
             {

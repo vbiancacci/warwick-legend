@@ -193,6 +193,54 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
           }
         }
 
+        for(int i = 0; i < fEventAction->GetIDListOfGdSiblingParticles().size(); i++)
+        {
+          if(aStep->GetTrack()->GetParentID() ==
+             fEventAction->GetIDListOfGdSiblingParticles()[i])
+          {
+            fEventAction->AddGdSiblings_timing(
+                    aStep->GetPostStepPoint()->GetGlobalTime() / s);
+            fEventAction->AddGdSiblings_x(
+                    aStep->GetPostStepPoint()->GetPosition().getX() / m);
+            fEventAction->AddGdSiblings_y(
+                    aStep->GetPostStepPoint()->GetPosition().getY() / m);
+            fEventAction->AddGdSiblings_z(
+                    aStep->GetPostStepPoint()->GetPosition().getZ() / m);
+            fEventAction->AddGdSiblings_edep(aStep->GetTotalEnergyDeposit() / eV);
+            fEventAction->AddGdSiblings_id(aStep->GetTrack()->GetTrackID());
+            fEventAction->AddGdSiblings_type(
+                    aStep->GetTrack()->GetParticleDefinition()->GetPDGEncoding());
+            int whichVolume = -4;
+            if(aStep->GetPostStepPoint()
+                       ->GetTouchable()
+                       ->GetVolume()
+                       ->GetLogicalVolume()
+                       ->GetName() == "Water_log")
+              whichVolume = -3;
+            if(aStep->GetPostStepPoint()
+                       ->GetTouchable()
+                       ->GetVolume()
+                       ->GetLogicalVolume()
+                       ->GetName() == "Lar_log")
+              whichVolume = -2;
+            if(aStep->GetPostStepPoint()
+                       ->GetTouchable()
+                       ->GetVolume(0)
+                       ->GetLogicalVolume()
+                       ->GetName() == "ULar_log")
+              whichVolume = -1;
+            if(aStep->GetPostStepPoint()
+                       ->GetTouchable()
+                       ->GetVolume(0)
+                       ->GetLogicalVolume()
+                       ->GetName() == "Ge_log")
+              whichVolume =
+                      aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetCopyNo() +
+                      whichReentranceTube * 96;
+            fEventAction->AddGdSiblings_whichVolume(whichVolume);
+          }
+        }
+
         G4int whichVolume = -1;
         if(aStep->GetPostStepPoint()
                ->GetTouchable()

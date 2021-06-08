@@ -134,14 +134,32 @@ public:
   std::vector<G4int>& GetGe77Siblings_type(){return v_Ge77Siblings_type;}
   std::vector<G4int>& GetGe77Siblings_whichVolume(){return v_Ge77Siblings_whichVolume;}
 
-  void AddGe77Siblings_timing(double timing){ v_Ge77Siblings_timing.push_back(timing);}
-  void AddGe77Siblings_x(double x){ v_Ge77Siblings_x.push_back(x);}
-  void AddGe77Siblings_y(double y){ v_Ge77Siblings_y.push_back(y);}
-  void AddGe77Siblings_z(double z){ v_Ge77Siblings_z.push_back(z);}
-  void AddGe77Siblings_edep(double edep){ v_Ge77Siblings_edep.push_back(edep);}
-  void AddGe77Siblings_id(int id){ v_Ge77Siblings_id.push_back(id);}
-  void AddGe77Siblings_type(int type){ v_Ge77Siblings_type.push_back(type);}
-  void AddGe77Siblings_whichVolume(int volume){ v_Ge77Siblings_whichVolume.push_back(volume);}
+    std::vector<G4double>& GetGdSiblings_timing(){return v_GdSiblings_timing;}
+    std::vector<G4double>& GetGdSiblings_x(){return v_GdSiblings_x;}
+    std::vector<G4double>& GetGdSiblings_y(){return v_GdSiblings_y;}
+    std::vector<G4double>& GetGdSiblings_z(){return v_GdSiblings_z;}
+    std::vector<G4double>& GetGdSiblings_edep(){return v_GdSiblings_edep;}
+    std::vector<G4int>& GetGdSiblings_id(){return v_GdSiblings_id;}
+    std::vector<G4int>& GetGdSiblings_type(){return v_GdSiblings_type;}
+    std::vector<G4int>& GetGdSiblings_whichVolume(){return v_GdSiblings_whichVolume;}
+
+    void AddGdSiblings_timing(double timing){ v_GdSiblings_timing.push_back(timing);}
+    void AddGdSiblings_x(double x){ v_GdSiblings_x.push_back(x);}
+    void AddGdSiblings_y(double y){ v_GdSiblings_y.push_back(y);}
+    void AddGdSiblings_z(double z){ v_GdSiblings_z.push_back(z);}
+    void AddGdSiblings_edep(double edep){ v_GdSiblings_edep.push_back(edep);}
+    void AddGdSiblings_id(int id){ v_GdSiblings_id.push_back(id);}
+    void AddGdSiblings_type(int type){ v_GdSiblings_type.push_back(type);}
+    void AddGdSiblings_whichVolume(int volume){ v_GdSiblings_whichVolume.push_back(volume);}
+
+    void AddGe77Siblings_timing(double timing){ v_Ge77Siblings_timing.push_back(timing);}
+    void AddGe77Siblings_x(double x){ v_Ge77Siblings_x.push_back(x);}
+    void AddGe77Siblings_y(double y){ v_Ge77Siblings_y.push_back(y);}
+    void AddGe77Siblings_z(double z){ v_Ge77Siblings_z.push_back(z);}
+    void AddGe77Siblings_edep(double edep){ v_Ge77Siblings_edep.push_back(edep);}
+    void AddGe77Siblings_id(int id){ v_Ge77Siblings_id.push_back(id);}
+    void AddGe77Siblings_type(int type){ v_Ge77Siblings_type.push_back(type);}
+    void AddGe77Siblings_whichVolume(int volume){ v_Ge77Siblings_whichVolume.push_back(volume);}
 
   void AddnCAr_timing(G4double time){v_nCAr_timing.push_back(time);}
   void AddnCAr_x(G4double x){v_nCAr_x.push_back(x);}
@@ -197,10 +215,16 @@ public:
   void AddIndividualEnergyDeposition_LArOrGe(G4int n){IndividualEnergyDeposition_LArOrGe.push_back(n);}
 
   void AddIDListOfGe77(G4int ID){IDListOfGe77.push_back(ID);}
+  std::vector<G4int> GetIDListOfGe77(){return IDListOfGe77;}
+
   void AddIDListOfGe77SiblingParticles(G4int ID){IDListOfGe77SiblingParticles.push_back(ID);}
   void RemoveIDListOfGe77SiblingParticles(G4int ID){IDListOfGe77SiblingParticles.erase(std::remove(IDListOfGe77SiblingParticles.begin(),IDListOfGe77SiblingParticles.end(),ID),IDListOfGe77SiblingParticles.end());}
-  std::vector<G4int> GetIDListOfGe77(){return IDListOfGe77;}
   std::vector<G4int> GetIDListOfGe77SiblingParticles(){return IDListOfGe77SiblingParticles;}
+
+  void AddIDListOfGdSiblingParticles(G4int ID){IDListOfGdSiblingParticles.push_back(ID);}
+  void RemoveIDListOfGdSiblingParticles(G4int ID){IDListOfGdSiblingParticles.erase(std::remove(IDListOfGdSiblingParticles.begin(),IDListOfGdSiblingParticles.end(),ID),IDListOfGdSiblingParticles.end());}
+  std::vector<G4int> GetIDListOfGdSiblingParticles(){return IDListOfGdSiblingParticles;}
+
   std::map<int, int>         neutronProducerMap;
 
   void IncreaseByOne_NeutronInEvent(){NumberOfNeutronsProducedInEvent[0] += 1;}
@@ -360,6 +384,7 @@ private:
   std::vector<G4int>    v_MuonVeto_flag;
 
   std::vector<G4int> IDListOfGe77;
+  std::vector<G4int> IDListOfGdSiblingParticles;
   std::vector<G4int> IDListOfGe77SiblingParticles;
 
   std::vector<G4double> v_Ge77Siblings_timing;
@@ -370,6 +395,16 @@ private:
   std::vector<G4int>  v_Ge77Siblings_id;
   std::vector<G4int>  v_Ge77Siblings_type;
   std::vector<G4int>  v_Ge77Siblings_whichVolume;
+
+
+    std::vector<G4double> v_GdSiblings_timing;
+    std::vector<G4double>  v_GdSiblings_x;
+    std::vector<G4double> v_GdSiblings_y;
+    std::vector<G4double>  v_GdSiblings_z;
+    std::vector<G4double>  v_GdSiblings_edep;
+    std::vector<G4int>  v_GdSiblings_id;
+    std::vector<G4int>  v_GdSiblings_type;
+    std::vector<G4int>  v_GdSiblings_whichVolume;
 
 
   // trajectory data

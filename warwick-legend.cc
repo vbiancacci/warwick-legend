@@ -26,7 +26,7 @@
 #include "Shielding.hh"
 #include "QGSP_BIC.hh"
 #include "QGSP_BERT_HP.hh"
-
+#include "QGSP_BERT.hh"
 
 // us
 #include "CLI11.hpp"  // c++17 safe; https://github.com/CLIUtils/CLI11

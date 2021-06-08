@@ -13,6 +13,8 @@ WLGDTrackingAction::WLGDTrackingAction() = default;
 
 void WLGDTrackingAction::PreUserTrackingAction(const G4Track* aTrack)
 {
+
+
   // Create trajectory for track if requested
   if(fpTrackingManager->GetStoreTrajectory() > 0)
   {
@@ -30,6 +32,19 @@ void WLGDTrackingAction::PreUserTrackingAction(const G4Track* aTrack)
   // Edit: 2021/03/30 by Moritz Neuberger
   // Adding tracking of neutrons being later captured by Ge-76 as well as general produced
   // in LAr
+
+  if(aTrack->GetParticleDefinition()->GetParticleName() == "muon") {
+    auto tmp_vector = aTrack->GetVertexPosition();
+    tmp_MuonXpos = tmp_vector.getX() / m;
+    tmp_MuonYpos = tmp_vector.getY() / m;
+    tmp_MuonZpos = tmp_vector.getZ() / m;
+    tmp_vector   = aTrack->GetMomentumDirection();
+    tmp_MuonXmom = tmp_vector.getX();
+    tmp_MuonYmom = tmp_vector.getY();
+    tmp_MuonZmom = tmp_vector.getZ();
+  }
+
+
   if(aTrack->GetParticleDefinition()->GetParticleName() == "neutron")
   {
     auto tmp_vector = aTrack->GetVertexPosition();
@@ -66,6 +81,16 @@ void WLGDTrackingAction::PreUserTrackingAction(const G4Track* aTrack)
 
 void WLGDTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
 {
+
+  if(aTrack->GetTrackID()){
+    fEventAction->AddMuonxLoc(tmp_MuonXpos);
+    fEventAction->AddMuonyLoc(tmp_MuonYpos);
+    fEventAction->AddMuonzLoc(tmp_MuonZpos);
+    fEventAction->AddMuonxMom(tmp_MuonXmom);
+    fEventAction->AddMuonyMom(tmp_MuonYmom);
+    fEventAction->AddMuonzMom(tmp_MuonZmom);
+  }
+
   if(fRunAction->getWriteOutNeutronProductionInfo() == 1)
   {
     G4TrackVector* secondaries = fpTrackingManager->GimmeSecondaries();

@@ -37,6 +37,13 @@ WLGDRunAction::WLGDRunAction(WLGDEventAction* eventAction, G4String name)
   analysisManager->CreateNtupleDColumn("Hityloc", fEventAction->GetHityLoc());
   analysisManager->CreateNtupleDColumn("Hitzloc", fEventAction->GetHitzLoc());
 
+  analysisManager->CreateNtupleDColumn("Muonxloc", fEventAction->GetMuonxLoc());
+  analysisManager->CreateNtupleDColumn("Muonyloc", fEventAction->GetMuonyLoc());
+  analysisManager->CreateNtupleDColumn("Muonzloc", fEventAction->GetMuonzLoc());
+  analysisManager->CreateNtupleDColumn("Muonxmom", fEventAction->GetMuonxMom());
+  analysisManager->CreateNtupleDColumn("Muonymom", fEventAction->GetMuonyMom());
+  analysisManager->CreateNtupleDColumn("Muonzmom", fEventAction->GetMuonzMom());
+
   // Edit: 2021/04/07 by Moritz Neuberger
   // Adding additional outputs to further investigate situations in which Ge-77 is produced
   analysisManager->CreateNtupleDColumn("Ekin", fEventAction->GetHitEkin());

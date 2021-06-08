@@ -274,6 +274,12 @@ void WLGDEventAction::BeginOfEventAction(const G4Event*
 
 void WLGDEventAction::EndOfEventAction(const G4Event* event)
 {
+ 
+  G4int eventID = event->GetEventID();
+  if(((int)eventID)%100 == 0)
+  	G4cout << ">>> Event: " << eventID << G4endl;
+
+
   // Get crystal hits collections IDs
   if(fHID < 0)
     fHID   = G4SDManager::GetSDMpointer()->GetCollectionID("CrystalHitsCollection");
@@ -413,7 +419,7 @@ void WLGDEventAction::EndOfEventAction(const G4Event* event)
   analysisManager->AddNtupleRow();
 
   // printing
-  G4int eventID = event->GetEventID();
+//  G4int eventID = event->GetEventID();
 /*  G4cout << ">>> Event: " << eventID << G4endl;
   G4cout << "    " << edep.size() << " hits stored in this event." << G4endl;
   G4cout << "    " << trjpdg.size() << " trajectories stored in this event." << G4endl;*/

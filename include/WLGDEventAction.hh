@@ -35,6 +35,14 @@ public:
   std::vector<G4double>& GetHityLoc() { return yloc; }
   std::vector<G4double>& GetHitzLoc() { return zloc; }
 
+
+    std::vector<G4double>& GetMuonxLoc() { return Muonxloc; }
+    std::vector<G4double>& GetMuonyLoc() { return Muonyloc; }
+    std::vector<G4double>& GetMuonzLoc() { return Muonzloc; }
+    std::vector<G4double>& GetMuonxMom() { return Muonxmom; }
+    std::vector<G4double>& GetMuonyMom() { return Muonymom; }
+    std::vector<G4double>& GetMuonzMom() { return Muonzmom; }
+
   std::vector<G4double>& GetNeutronxLoc() { return neutronxloc; }
   std::vector<G4double>& GetNeutronyLoc() { return neutronyloc; }
   std::vector<G4double>& GetNeutronzLoc() { return neutronzloc; }
@@ -164,6 +172,13 @@ public:
   void AddGe77mGammaEmission_whichVolume(int volume){ v_Ge77mGammaEmission_whichVolume.push_back(volume);}
   void AddGe77mGammaEmission_whichGe77(int volume){ v_Ge77mGammaEmission_whichGe77.push_back(volume);}
 
+    void AddMuonxLoc(G4double posx){Muonxloc.push_back(posx);}
+    void AddMuonyLoc(G4double posy){Muonyloc.push_back(posy);}
+    void AddMuonzLoc(G4double posz){Muonzloc.push_back(posz);}
+    void AddMuonxMom(G4double posx){Muonxmom.push_back(posx);}
+    void AddMuonyMom(G4double posy){Muonymom.push_back(posy);}
+    void AddMuonzMom(G4double posz){Muonzmom.push_back(posz);}
+
   void AddEkin(G4double kin){ekin.push_back(kin);}
   void AddNeutronxLoc(G4double posx){neutronxloc.push_back(posx);}
   void AddNeutronyLoc(G4double posy){neutronyloc.push_back(posy);}
@@ -271,6 +286,14 @@ private:
   std::vector<G4double> neutronymom;
   std::vector<G4double> neutronzmom;
   std::vector<G4double> neutrontime;
+
+
+    std::vector<G4double> Muonxloc;
+    std::vector<G4double> Muonyloc;
+    std::vector<G4double> Muonzloc;
+    std::vector<G4double> Muonxmom;
+    std::vector<G4double> Muonymom;
+    std::vector<G4double> Muonzmom;
 
   // additional data for other particles
   std::vector<G4double> v_nCAr_timing;

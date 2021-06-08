@@ -33,7 +33,7 @@ void WLGDTrackingAction::PreUserTrackingAction(const G4Track* aTrack)
   // Adding tracking of neutrons being later captured by Ge-76 as well as general produced
   // in LAr
 
-  if(aTrack->GetParticleDefinition()->GetParticleName() == "muon") {
+  if(aTrack->GetParticleDefinition()->GetParticleName() == "mu-" || aTrack->GetParticleDefinition()->GetParticleName() == "mu+") {
     auto tmp_vector = aTrack->GetVertexPosition();
     tmp_MuonXpos = tmp_vector.getX() / m;
     tmp_MuonYpos = tmp_vector.getY() / m;

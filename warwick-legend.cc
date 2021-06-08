@@ -24,6 +24,9 @@
 #include "G4RadioactiveDecayPhysics.hh"
 #include "QGSP_BIC_HP.hh"
 #include "Shielding.hh"
+#include "QGSP_BIC.hh"
+#include "QGSP_BERT_HP.hh"
+
 
 // us
 #include "CLI11.hpp"  // c++17 safe; https://github.com/CLIUtils/CLI11
@@ -82,7 +85,7 @@ int main(int argc, char** argv)
   runManager->SetUserInitialization(detector);
 
   // -- set user physics list
-  auto* physicsList = new  QGSP_BIC_HP;//new Shielding;
+  auto* physicsList = new  QGSP_BERT_HP;//new Shielding;
 
   // allow for thermal neutrons to find Ge
   auto* neutronCut  = new G4NeutronTrackingCut(1);

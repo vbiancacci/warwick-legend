@@ -89,7 +89,6 @@ void WLGDTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
     fEventAction->AddMuonxMom(tmp_MuonXmom);
     fEventAction->AddMuonyMom(tmp_MuonYmom);
     fEventAction->AddMuonzMom(tmp_MuonZmom);
-    fEventAction->AddMuonTime(tmp_MuonTime);
   }
 
   if(fRunAction->getWriteOutNeutronProductionInfo() == 1)

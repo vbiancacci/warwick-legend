@@ -25,6 +25,7 @@ public:
   virtual void UserSteppingAction(const G4Step*);
   void GetDepositionInfo(G4int answer);
   void GetIndividualDepositionInfo(G4int answer);
+    void GetIndividualGdDepositionInfo(G4int answer);
   void DefineCommands();
 
 private:
@@ -34,6 +35,7 @@ private:
   G4GenericMessenger*        fStepMessenger;
   G4int fDepositionInfo = 0;
   G4int fIndividualDepositionInfo = 0;
+    G4int fIndividualGdDepositionInfo = 0;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

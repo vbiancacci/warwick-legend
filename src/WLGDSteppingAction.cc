@@ -192,55 +192,56 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
                         fEventAction->AddGe77Siblings_whichVolume(whichVolume);
                     }
                 }
-
-                for(int i = 0; i < fEventAction->GetIDListOfGdSiblingParticles().size(); i++)
-                {
-                    if(aStep->GetTrack()->GetParentID() ==
-                       fEventAction->GetIDListOfGdSiblingParticles()[i])
+                
+                if(fIndividualGdDepositionInfo){
+                    for(int i = 0; i < fEventAction->GetIDListOfGdSiblingParticles().size(); i++)
                     {
-                        fEventAction->AddGdSiblings_timing(
-                                aStep->GetPostStepPoint()->GetGlobalTime() / s);
-                        fEventAction->AddGdSiblings_x(
-                                aStep->GetPostStepPoint()->GetPosition().getX() / m);
-                        fEventAction->AddGdSiblings_y(
-                                aStep->GetPostStepPoint()->GetPosition().getY() / m);
-                        fEventAction->AddGdSiblings_z(
-                                aStep->GetPostStepPoint()->GetPosition().getZ() / m);
-                        fEventAction->AddGdSiblings_edep(aStep->GetTotalEnergyDeposit() / eV);
-                        fEventAction->AddGdSiblings_id(aStep->GetTrack()->GetTrackID());
-                        fEventAction->AddGdSiblings_type(
-                                aStep->GetTrack()->GetParticleDefinition()->GetPDGEncoding());
-                        int whichVolume = -4;
-                        if(aStep->GetPostStepPoint()
-                                   ->GetTouchable()
-                                   ->GetVolume()
-                                   ->GetLogicalVolume()
-                                   ->GetName() == "Water_log")
-                            whichVolume = -3;
-                        if(aStep->GetPostStepPoint()
-                                   ->GetTouchable()
-                                   ->GetVolume()
-                                   ->GetLogicalVolume()
-                                   ->GetName() == "Lar_log")
-                            whichVolume = -2;
-                        if(aStep->GetPostStepPoint()
-                                   ->GetTouchable()
-                                   ->GetVolume(0)
-                                   ->GetLogicalVolume()
-                                   ->GetName() == "ULar_log")
-                            whichVolume = -1;
-                        if(aStep->GetPostStepPoint()
-                                   ->GetTouchable()
-                                   ->GetVolume(0)
-                                   ->GetLogicalVolume()
-                                   ->GetName() == "Ge_log")
-                            whichVolume =
-                                    aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetCopyNo() +
-                                    whichReentranceTube * 96;
-                        fEventAction->AddGdSiblings_whichVolume(whichVolume);
+                        if(aStep->GetTrack()->GetParentID() ==
+                           fEventAction->GetIDListOfGdSiblingParticles()[i])
+                        {
+                            fEventAction->AddGdSiblings_timing(
+                                    aStep->GetPostStepPoint()->GetGlobalTime() / s);
+                            fEventAction->AddGdSiblings_x(
+                                    aStep->GetPostStepPoint()->GetPosition().getX() / m);
+                            fEventAction->AddGdSiblings_y(
+                                    aStep->GetPostStepPoint()->GetPosition().getY() / m);
+                            fEventAction->AddGdSiblings_z(
+                                    aStep->GetPostStepPoint()->GetPosition().getZ() / m);
+                            fEventAction->AddGdSiblings_edep(aStep->GetTotalEnergyDeposit() / eV);
+                            fEventAction->AddGdSiblings_id(aStep->GetTrack()->GetTrackID());
+                            fEventAction->AddGdSiblings_type(
+                                    aStep->GetTrack()->GetParticleDefinition()->GetPDGEncoding());
+                            int whichVolume = -4;
+                            if(aStep->GetPostStepPoint()
+                                       ->GetTouchable()
+                                       ->GetVolume()
+                                       ->GetLogicalVolume()
+                                       ->GetName() == "Water_log")
+                                whichVolume = -3;
+                            if(aStep->GetPostStepPoint()
+                                       ->GetTouchable()
+                                       ->GetVolume()
+                                       ->GetLogicalVolume()
+                                       ->GetName() == "Lar_log")
+                                whichVolume = -2;
+                            if(aStep->GetPostStepPoint()
+                                       ->GetTouchable()
+                                       ->GetVolume(0)
+                                       ->GetLogicalVolume()
+                                       ->GetName() == "ULar_log")
+                                whichVolume = -1;
+                            if(aStep->GetPostStepPoint()
+                                       ->GetTouchable()
+                                       ->GetVolume(0)
+                                       ->GetLogicalVolume()
+                                       ->GetName() == "Ge_log")
+                                whichVolume =
+                                        aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetCopyNo() +
+                                        whichReentranceTube * 96;
+                            fEventAction->AddGdSiblings_whichVolume(whichVolume);
+                        }
                     }
                 }
-
                 G4int whichVolume = -1;
                 if(aStep->GetPostStepPoint()
                            ->GetTouchable()
@@ -392,6 +393,7 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
 
 void WLGDSteppingAction::GetDepositionInfo(G4int answer) { fDepositionInfo = answer; }
 void WLGDSteppingAction::GetIndividualDepositionInfo(G4int answer) { fIndividualDepositionInfo = answer; }
+void WLGDSteppingAction::GetIndividualGdDepositionInfo(G4int answer) { fIndividualGdDepositionInfo = answer; }
 
 void WLGDSteppingAction::DefineCommands()
 {
@@ -411,6 +413,15 @@ void WLGDSteppingAction::DefineCommands()
 
     fStepMessenger
             ->DeclareMethod("getIndividualDepositionInfo", &WLGDSteppingAction::GetIndividualDepositionInfo)
+            .SetGuidance(
+                    "Set whether to obtain individual energy deposition information inside reentrance tubes")
+            .SetGuidance("0 = don't")
+            .SetGuidance("1 = do")
+            .SetCandidates("0 1")
+            .SetDefaultValue("0");
+
+    fStepMessenger
+            ->DeclareMethod("getIndividualGdDepositionInfo", &WLGDSteppingAction::GetIndividualGdDepositionInfo)
             .SetGuidance(
                     "Set whether to obtain individual energy deposition information inside reentrance tubes")
             .SetGuidance("0 = don't")

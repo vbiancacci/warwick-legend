@@ -32,6 +32,7 @@ public:
   void addParentParticleType(G4int PDG_code){vector_parentParticleType.push_back(PDG_code);}
   G4int getWriteOutNeutronProductionInfo(){return fWriteOutNeutronProductionInfo;}
   G4int getWriteOutGeneralNeutronInfo(){return fWriteOutGeneralNeutronInfo;}
+  G4int getWriteOutAdvancedMultiplicity(){return fWriteOutAdvancedMultiplicity;}
 private:
   void DefineCommands();
 private:
@@ -44,6 +45,7 @@ private:
   ofstream         outputStream_2;
   G4int            fWriteOutNeutronProductionInfo = 0;
   G4int            fWriteOutGeneralNeutronInfo = 0;
+  G4int            fWriteOutAdvancedMultiplicity = 0;
   std::vector<G4double> vector_x_dir;
   std::vector<G4double> vector_y_dir;
   std::vector<G4double> vector_z_dir;
@@ -54,6 +56,7 @@ private:
   std::vector<G4int> vector_parentParticleType;
   void SetWriteOutNeutronProductionInfo(G4int answer);
   void SetWriteOutGeneralNeutronInfo(G4int answer);
+  void SetWriteOutAdvancedMultiplicity(G4int answer);
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

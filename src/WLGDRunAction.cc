@@ -11,9 +11,9 @@
 using namespace std;
 
 WLGDRunAction::WLGDRunAction(WLGDEventAction* eventAction, G4String name)
-: G4UserRunAction()
-, fEventAction(eventAction)
-, fout(std::move(name))
+        : G4UserRunAction()
+        , fEventAction(eventAction)
+        , fout(std::move(name))
 {
 
   DefineCommands();
@@ -89,6 +89,22 @@ WLGDRunAction::WLGDRunAction(WLGDEventAction* eventAction, G4String name)
   analysisManager->CreateNtupleDColumn("CopyNDetector_prompt", fEventAction->GetNDetector_prompt());
   analysisManager->CreateNtupleDColumn("CopyNDetector_delayed", fEventAction->GetNDetector_delayed());
   analysisManager->CreateNtupleDColumn("CopyNDetector_delayed_long", fEventAction->GetNDetector_delayed_long());
+
+    if(fWriteOutAdvancedMultiplicity){
+    //  analysisManager->CreateNtupleIColumn("Multiplicity_prompt_woGd", fEventAction->GetMultiplicity_prompt_woGd());
+    //  analysisManager->CreateNtupleIColumn("Multiplicity_delayed_woGd", fEventAction->GetMultiplicity_delayed_woGd());
+      analysisManager->CreateNtupleDColumn("EdepPerDetector_prompt_woGd", fEventAction->GetEdepPerDetector_prompt_woGd());
+      analysisManager->CreateNtupleDColumn("EdepPerDetector_delayed_woGd", fEventAction->GetEdepPerDetector_delayed_woGd());
+      analysisManager->CreateNtupleDColumn("CopyNDetector_prompt_woGd", fEventAction->GetNDetector_prompt_woGd());
+      analysisManager->CreateNtupleDColumn("CopyNDetector_delayed_woGd", fEventAction->GetNDetector_delayed_woGd());
+
+    //  analysisManager->CreateNtupleIColumn("Multiplicity_prompt_onlyGd", fEventAction->GetMultiplicity_prompt_onlyGd());
+    //  analysisManager->CreateNtupleIColumn("Multiplicity_delayed_onlyGd", fEventAction->GetMultiplicity_delayed_onlyGd());
+      analysisManager->CreateNtupleDColumn("EdepPerDetector_prompt_onlyGd", fEventAction->GetEdepPerDetector_prompt_onlyGd());
+      analysisManager->CreateNtupleDColumn("EdepPerDetector_delayed_onlyGd", fEventAction->GetEdepPerDetector_delayed_onlyGd());
+      analysisManager->CreateNtupleDColumn("CopyNDetector_prompt_onlyGd", fEventAction->GetNDetector_prompt_onlyGd());
+      analysisManager->CreateNtupleDColumn("CopyNDetector_delayed_onlyGd", fEventAction->GetNDetector_delayed_onlyGd());
+    }
 
   analysisManager->CreateNtupleDColumn("Ge77Siblings_timing", fEventAction->GetGe77Siblings_timing());
   analysisManager->CreateNtupleDColumn("Ge77Siblings_x", fEventAction->GetGe77Siblings_x());
@@ -218,27 +234,37 @@ void WLGDRunAction::SetWriteOutNeutronProductionInfo(G4int answer){ fWriteOutNeu
 
 void WLGDRunAction::SetWriteOutGeneralNeutronInfo(G4int answer){ fWriteOutGeneralNeutronInfo = answer; }
 
+void WLGDRunAction::SetWriteOutAdvancedMultiplicity(G4int answer){ fWriteOutAdvancedMultiplicity = answer ;}
+
 void WLGDRunAction::DefineCommands()
 {
   // Define /WLGD/generator command directory using generic messenger class
   fMessenger =
-    new G4GenericMessenger(this, "/WLGD/runaction/", "Run Action control");
+          new G4GenericMessenger(this, "/WLGD/runaction/", "Run Action control");
 
   fMessenger
-    ->DeclareMethod("WriteOutNeutronProductionInfo", &WLGDRunAction::SetWriteOutNeutronProductionInfo)
-    .SetGuidance("Set whether to write out Neutron Production Info")
-    .SetGuidance("0 = without write out")
-    .SetGuidance("1 = with write out")
-    .SetCandidates("0 1")
-    .SetDefaultValue("0");
+          ->DeclareMethod("WriteOutNeutronProductionInfo", &WLGDRunAction::SetWriteOutNeutronProductionInfo)
+          .SetGuidance("Set whether to write out Neutron Production Info")
+          .SetGuidance("0 = without write out")
+          .SetGuidance("1 = with write out")
+          .SetCandidates("0 1")
+          .SetDefaultValue("0");
 
   fMessenger
-    ->DeclareMethod("WriteOutGeneralNeutronInfo", &WLGDRunAction::SetWriteOutGeneralNeutronInfo)
-    .SetGuidance("Set whether to write out General Neutron Info")
-    .SetGuidance("0 = without write out")
-    .SetGuidance("1 = with write out")
-    .SetCandidates("0 1")
-    .SetDefaultValue("0");
+          ->DeclareMethod("WriteOutGeneralNeutronInfo", &WLGDRunAction::SetWriteOutGeneralNeutronInfo)
+          .SetGuidance("Set whether to write out General Neutron Info")
+          .SetGuidance("0 = without write out")
+          .SetGuidance("1 = with write out")
+          .SetCandidates("0 1")
+          .SetDefaultValue("0");
+
+    fMessenger
+            ->DeclareMethod("WriteOutAdvancedMultiplicity", &WLGDRunAction::SetWriteOutAdvancedMultiplicity)
+            .SetGuidance("Set whether to write out General Neutron Info")
+            .SetGuidance("0 = without write out")
+            .SetGuidance("1 = with write out")
+            .SetCandidates("0 1")
+            .SetDefaultValue("0");
 
 }
 

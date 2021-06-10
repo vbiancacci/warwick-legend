@@ -90,7 +90,6 @@ WLGDRunAction::WLGDRunAction(WLGDEventAction* eventAction, G4String name)
   analysisManager->CreateNtupleDColumn("CopyNDetector_delayed", fEventAction->GetNDetector_delayed());
   analysisManager->CreateNtupleDColumn("CopyNDetector_delayed_long", fEventAction->GetNDetector_delayed_long());
 
-    if(fWriteOutAdvancedMultiplicity){
     //  analysisManager->CreateNtupleIColumn("Multiplicity_prompt_woGd", fEventAction->GetMultiplicity_prompt_woGd());
     //  analysisManager->CreateNtupleIColumn("Multiplicity_delayed_woGd", fEventAction->GetMultiplicity_delayed_woGd());
       analysisManager->CreateNtupleDColumn("EdepPerDetector_prompt_woGd", fEventAction->GetEdepPerDetector_prompt_woGd());
@@ -104,7 +103,6 @@ WLGDRunAction::WLGDRunAction(WLGDEventAction* eventAction, G4String name)
       analysisManager->CreateNtupleDColumn("EdepPerDetector_delayed_onlyGd", fEventAction->GetEdepPerDetector_delayed_onlyGd());
       analysisManager->CreateNtupleDColumn("CopyNDetector_prompt_onlyGd", fEventAction->GetNDetector_prompt_onlyGd());
       analysisManager->CreateNtupleDColumn("CopyNDetector_delayed_onlyGd", fEventAction->GetNDetector_delayed_onlyGd());
-    }
 
   analysisManager->CreateNtupleDColumn("Ge77Siblings_timing", fEventAction->GetGe77Siblings_timing());
   analysisManager->CreateNtupleDColumn("Ge77Siblings_x", fEventAction->GetGe77Siblings_x());

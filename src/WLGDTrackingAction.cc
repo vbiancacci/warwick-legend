@@ -84,14 +84,11 @@ void WLGDTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
 {
 
     if(fRunAction->getWriteOutAdvancedMultiplicity()){
-        for(int i = 0; i < fEventAction->GetIDListOfGdSiblingParticles().size(); i++){
-            if(std::find(fEventAction->GetIDListOfGdSiblingParticles().begin(), fEventAction->GetIDListOfGdSiblingParticles().end(), aTrack->GetParentID()) != fEventAction->GetIDListOfGdSiblingParticles().end())
-                for(int j = 0; j < aTrack->GetStep()->GetSecondaryInCurrentStep()->size(); j++)
-                {
-                    fEventAction->AddIDListOfGdSiblingParticles(aTrack->GetStep()
-                                                                    ->GetSecondaryInCurrentStep()
-                                                                    ->at(j)->GetTrackID());
-                }
+        if(fEventAction->GetIDListOfGdSiblingParticles().count(aTrack->GetParentID())){
+            for(int j = 0; j < aTrack->GetStep()->GetSecondaryInCurrentStep()->size(); j++)
+            {
+                fEventAction->AddIDListOfGdSiblingParticles(aTrack->GetTrackID());
+            }
         }
     }
 
@@ -226,10 +223,7 @@ void WLGDTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
                                                             ->at(i)
                                                             ->GetParticleDefinition()
                                                             ->GetAtomicMass());
-                            fEventAction->AddIDListOfGdSiblingParticles(aTrack->GetStep()
-                                                                                ->GetSecondaryInCurrentStep()
-                                                                                ->at(i)
-                                                                                ->GetTrackID());
+                            fEventAction->AddIDListOfGdSiblingParticles(aTrack->GetTrackID());
                         }
                         else
                         {

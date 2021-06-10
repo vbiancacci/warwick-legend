@@ -11,6 +11,7 @@
 #include "G4GenericMessenger.hh"
 #include "globals.hh"
 #include <map>
+#include <set>
 
 /// Event action class
 ///
@@ -235,9 +236,9 @@ public:
     void RemoveIDListOfGe77SiblingParticles(G4int ID){IDListOfGe77SiblingParticles.erase(std::remove(IDListOfGe77SiblingParticles.begin(),IDListOfGe77SiblingParticles.end(),ID),IDListOfGe77SiblingParticles.end());}
     std::vector<G4int> GetIDListOfGe77SiblingParticles(){return IDListOfGe77SiblingParticles;}
 
-    void AddIDListOfGdSiblingParticles(G4int ID){IDListOfGdSiblingParticles.push_back(ID);}
-    void RemoveIDListOfGdSiblingParticles(G4int ID){IDListOfGdSiblingParticles.erase(std::remove(IDListOfGdSiblingParticles.begin(),IDListOfGdSiblingParticles.end(),ID),IDListOfGdSiblingParticles.end());}
-    std::vector<G4int> GetIDListOfGdSiblingParticles(){return IDListOfGdSiblingParticles;}
+    void AddIDListOfGdSiblingParticles(G4int ID){IDListOfGdSiblingParticles.insert(ID);}
+    void RemoveIDListOfGdSiblingParticles(G4int ID){IDListOfGdSiblingParticles.erase(ID);}
+    std::set<G4int> GetIDListOfGdSiblingParticles(){return IDListOfGdSiblingParticles;}
 
     std::map<int, int>         neutronProducerMap;
 
@@ -422,7 +423,7 @@ private:
     std::vector<G4int>    v_MuonVeto_flag;
 
     std::vector<G4int> IDListOfGe77;
-    std::vector<G4int> IDListOfGdSiblingParticles;
+    std::set<G4int> IDListOfGdSiblingParticles;
     std::vector<G4int> IDListOfGe77SiblingParticles;
 
     std::vector<G4double> v_Ge77Siblings_timing;

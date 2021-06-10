@@ -92,7 +92,6 @@ void WLGDTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
                                                                     ->GetSecondaryInCurrentStep()
                                                                     ->at(j)->GetTrackID());
                 }
-            G4cout << fEventAction->GetIDListOfGdSiblingParticles().size() << G4endl;
         }
     }
 

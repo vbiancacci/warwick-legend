@@ -21,7 +21,6 @@ void WLGDTrackingAction::PreUserTrackingAction(const G4Track* aTrack)
     fpTrackingManager->SetTrajectory(new WLGDTrajectory(aTrack));
   }
 
-
   if(aTrack->GetParticleDefinition()
              ->GetAtomicMass() == 77 &&
      aTrack->GetParticleDefinition()
@@ -76,6 +75,11 @@ void WLGDTrackingAction::PreUserTrackingAction(const G4Track* aTrack)
           fEventAction->neutronProducerMap.find(aTrack->GetParentID())->second);
       }
     }
+  }
+
+  for(int i = 0; i < fEventAction->GetIDListOfGdSiblingParticles().size(); i++){
+      if(std::find(fEventAction->GetIDListOfGdSiblingParticles().begin(), fEventAction->GetIDListOfGdSiblingParticles().end(), aTrack->GetParentID()) != fEventAction->GetIDListOfGdSiblingParticles().end())
+          fEventAction->AddIDListOfGdSiblingParticles(aTrack->GetTrackID());
   }
 }
 

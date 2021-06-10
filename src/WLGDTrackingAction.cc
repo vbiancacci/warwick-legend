@@ -77,16 +77,24 @@ void WLGDTrackingAction::PreUserTrackingAction(const G4Track* aTrack)
         }
     }
 
-    if(fRunAction->getWriteOutAdvancedMultiplicity()){
-        for(int i = 0; i < fEventAction->GetIDListOfGdSiblingParticles().size(); i++){
-            if(std::find(fEventAction->GetIDListOfGdSiblingParticles().begin(), fEventAction->GetIDListOfGdSiblingParticles().end(), aTrack->GetParentID()) != fEventAction->GetIDListOfGdSiblingParticles().end())
-                fEventAction->AddIDListOfGdSiblingParticles(aTrack->GetTrackID());
-        }
-    }
+
 }
 
 void WLGDTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
 {
+
+    if(fRunAction->getWriteOutAdvancedMultiplicity()){
+        for(int i = 0; i < fEventAction->GetIDListOfGdSiblingParticles().size(); i++){
+            if(std::find(fEventAction->GetIDListOfGdSiblingParticles().begin(), fEventAction->GetIDListOfGdSiblingParticles().end(), aTrack->GetParentID()) != fEventAction->GetIDListOfGdSiblingParticles().end())
+                for(int j = 0; j < aTrack->GetStep()->GetSecondaryInCurrentStep()->size(); j++)
+                {
+                    fEventAction->AddIDListOfGdSiblingParticles(aTrack->GetStep()
+                                                                    ->GetSecondaryInCurrentStep()
+                                                                    ->at(j)->GetTrackID());
+                }
+            G4cout << fEventAction->GetIDListOfGdSiblingParticles().size() << G4endl;
+        }
+    }
 
     if(aTrack->GetTrackID() == 1){
         fEventAction->AddMuonxLoc(tmp_MuonXpos);
@@ -219,7 +227,10 @@ void WLGDTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
                                                             ->at(i)
                                                             ->GetParticleDefinition()
                                                             ->GetAtomicMass());
-                            fEventAction->AddIDListOfGdSiblingParticles(aTrack->GetTrackID());
+                            fEventAction->AddIDListOfGdSiblingParticles(aTrack->GetStep()
+                                                                                ->GetSecondaryInCurrentStep()
+                                                                                ->at(i)
+                                                                                ->GetTrackID());
                         }
                         else
                         {

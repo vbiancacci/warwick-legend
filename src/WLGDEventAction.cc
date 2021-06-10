@@ -285,6 +285,7 @@ void WLGDEventAction::BeginOfEventAction(const G4Event*
 
     IDListOfGe77.clear();
     IDListOfGe77SiblingParticles.clear();
+    IDListOfGdSiblingParticles.clear();
 
     v_Ge77Siblings_timing.clear();
     v_Ge77Siblings_x.clear();

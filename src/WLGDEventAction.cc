@@ -482,6 +482,9 @@ void WLGDEventAction::EndOfEventAction(const G4Event* event)
     }
     // fill the ntuple
     analysisManager->AddNtupleRow();
+    for(auto it : IDListOfGdSiblingParticles)
+    G4cout << it << ", ";
+    G4cout << G4endl;
 
     // printing
 //  G4int eventID = event->GetEventID();

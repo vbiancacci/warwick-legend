@@ -229,12 +229,12 @@ public:
     void AddIndividualEnergyDeposition_ReentranceTube(G4int n){IndividualEnergyDeposition_ReentranceTube.push_back(n);}
     void AddIndividualEnergyDeposition_LArOrGe(G4int n){IndividualEnergyDeposition_LArOrGe.push_back(n);}
 
-    void AddIDListOfGe77(G4int ID){IDListOfGe77.push_back(ID);}
-    std::vector<G4int> GetIDListOfGe77(){return IDListOfGe77;}
+    void AddIDListOfGe77(G4int ID){IDListOfGe77.insert(ID);}
+    std::set<G4int> GetIDListOfGe77(){return IDListOfGe77;}
 
-    void AddIDListOfGe77SiblingParticles(G4int ID){IDListOfGe77SiblingParticles.push_back(ID);}
-    void RemoveIDListOfGe77SiblingParticles(G4int ID){IDListOfGe77SiblingParticles.erase(std::remove(IDListOfGe77SiblingParticles.begin(),IDListOfGe77SiblingParticles.end(),ID),IDListOfGe77SiblingParticles.end());}
-    std::vector<G4int> GetIDListOfGe77SiblingParticles(){return IDListOfGe77SiblingParticles;}
+    void AddIDListOfGe77SiblingParticles(G4int ID){IDListOfGe77SiblingParticles.insert(ID);}
+    void RemoveIDListOfGe77SiblingParticles(G4int ID){IDListOfGe77SiblingParticles.erase(ID);}
+    std::set<G4int> GetIDListOfGe77SiblingParticles(){return IDListOfGe77SiblingParticles;}
 
     void AddIDListOfGdSiblingParticles(G4int ID){IDListOfGdSiblingParticles.insert(ID);}
     void RemoveIDListOfGdSiblingParticles(G4int ID){IDListOfGdSiblingParticles.erase(ID);}
@@ -422,9 +422,9 @@ private:
     std::vector<G4double> v_EdepWater_delayed;
     std::vector<G4int>    v_MuonVeto_flag;
 
-    std::vector<G4int> IDListOfGe77;
+    std::set<G4int> IDListOfGe77;
     std::set<G4int> IDListOfGdSiblingParticles;
-    std::vector<G4int> IDListOfGe77SiblingParticles;
+    std::set<G4int> IDListOfGe77SiblingParticles;
 
     std::vector<G4double> v_Ge77Siblings_timing;
     std::vector<G4double>  v_Ge77Siblings_x;

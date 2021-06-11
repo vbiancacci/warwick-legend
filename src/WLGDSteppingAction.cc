@@ -115,9 +115,7 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
                     whichReentranceTube = 0;
 
 
-                for(int i = 0; i < fEventAction->GetIDListOfGe77().size(); i++)
-                {
-                    if(aStep->GetTrack()->GetParentID() == fEventAction->GetIDListOfGe77()[i]){
+                    if(fEventAction->GetIDListOfGe77().count(aStep->GetTrack()->GetParentID())){
                         fEventAction->AddGe77mGammaEmission_timing(aStep->GetPostStepPoint()->GetGlobalTime() / s);
                         fEventAction->AddGe77mGammaEmission_x(aStep->GetPostStepPoint()->GetGlobalTime() / m);
                         fEventAction->AddGe77mGammaEmission_y(aStep->GetPostStepPoint()->GetGlobalTime() / m);
@@ -125,7 +123,7 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
                         fEventAction->AddGe77mGammaEmission_edep(aStep->GetTotalEnergyDeposit() / eV);
                         fEventAction->AddGe77mGammaEmission_id(aStep->GetTrack()->GetTrackID());
                         fEventAction->AddGe77mGammaEmission_type(aStep->GetTrack()->GetParticleDefinition()->GetPDGEncoding());
-                        fEventAction->AddGe77mGammaEmission_whichGe77(fEventAction->GetIDListOfGe77()[i]);
+                        fEventAction->AddGe77mGammaEmission_whichGe77(aStep->GetTrack()->GetParentID());
                         int whichVolume = -3;
                         if(aStep->GetPostStepPoint()
                                    ->GetTouchable()
@@ -149,12 +147,9 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
                                     whichReentranceTube * 96;
                         fEventAction->AddGe77mGammaEmission_whichVolume(whichVolume);
                     }
-                }
 
-                for(int i = 0; i < fEventAction->GetIDListOfGe77SiblingParticles().size(); i++)
-                {
-                    if(aStep->GetTrack()->GetParentID() ==
-                       fEventAction->GetIDListOfGe77SiblingParticles()[i])
+
+                    if(fEventAction->GetIDListOfGe77SiblingParticles().count(aStep->GetTrack()->GetParentID()))
                     {
                         fEventAction->AddGe77Siblings_timing(
                                 aStep->GetPostStepPoint()->GetGlobalTime() / s);
@@ -191,7 +186,7 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
                                     whichReentranceTube * 96;
                         fEventAction->AddGe77Siblings_whichVolume(whichVolume);
                     }
-                }
+
                 
                 if(fIndividualGdDepositionInfo){
                     if(fEventAction->GetIDListOfGdSiblingParticles().count(aStep->GetTrack()->GetParentID()))
@@ -291,7 +286,6 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
                                     aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetCopyNo() +
                                     whichReentranceTube * 96,
                                     aStep->GetTotalEnergyDeposit() / eV);
-
                             if(fRunAction->getWriteOutAdvancedMultiplicity()){
                                 if(fEventAction->GetIDListOfGdSiblingParticles().count(aStep->GetTrack()->GetParentID()))
                                     fEventAction->IncreaseEdepPerDetector_prompt_onlyGd(

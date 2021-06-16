@@ -272,6 +272,9 @@ void WLGDEventAction::BeginOfEventAction(const G4Event*
     IndividualEnergyDeposition_Position_y.clear();
     IndividualEnergyDeposition_Position_z.clear();
     IndividualEnergyDeposition_ReentranceTube.clear();
+    IndividualEnergyDeposition_ID.clear();
+    IndividualEnergyDeposition_Type.clear();
+    IndividualEnergyDeposition_DetectorNumber.clear();
 
     EdepPerDetector.clear();
     EdepPerDetector_delayed.clear();
@@ -482,9 +485,6 @@ void WLGDEventAction::EndOfEventAction(const G4Event* event)
     }
     // fill the ntuple
     analysisManager->AddNtupleRow();
-    for(auto it : IDListOfGdSiblingParticles)
-    G4cout << it << ", ";
-    G4cout << G4endl;
 
     // printing
 //  G4int eventID = event->GetEventID();

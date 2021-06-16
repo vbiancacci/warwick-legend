@@ -79,6 +79,9 @@ WLGDRunAction::WLGDRunAction(WLGDEventAction* eventAction, G4String name)
   analysisManager->CreateNtupleDColumn("IndividualEnergyDeposition_Position_z", fEventAction->GetIndividualEnergyDeposition_Position_z());
   analysisManager->CreateNtupleIColumn("IndividualEnergyDeposition_ReentranceTube", fEventAction->GetIndividualEnergyDeposition_ReentranceTube());
   analysisManager->CreateNtupleIColumn("IndividualEnergyDeposition_LArOrGe", fEventAction->GetIndividualEnergyDeposition_LArOrGe());
+  analysisManager->CreateNtupleIColumn("IndividualEnergyDeposition_ID", fEventAction->GetIndividualEnergyDeposition_ID());
+  analysisManager->CreateNtupleIColumn("IndividualEnergyDeposition_Type", fEventAction->GetIndividualEnergyDeposition_Type());
+  analysisManager->CreateNtupleIColumn("IndividualEnergyDeposition_DetectorNumber", fEventAction->GetIndividualEnergyDeposition_DetectorNumber());
 
   analysisManager->CreateNtupleIColumn("Multiplicity_prompt", fEventAction->GetMultiplicity_prompt());
   analysisManager->CreateNtupleIColumn("Multiplicity_delayed", fEventAction->GetMultiplicity_delayed());

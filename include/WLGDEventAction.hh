@@ -71,6 +71,10 @@ public:
     std::vector<G4double>& GetIndividualEnergyDeposition_Position_z(){return IndividualEnergyDeposition_Position_z;}
     std::vector<G4int>& GetIndividualEnergyDeposition_ReentranceTube(){return IndividualEnergyDeposition_ReentranceTube;}
     std::vector<G4int>& GetIndividualEnergyDeposition_LArOrGe(){return IndividualEnergyDeposition_LArOrGe;}
+    std::vector<G4int>& GetIndividualEnergyDeposition_ID(){return IndividualEnergyDeposition_ID;}
+    std::vector<G4int>& GetIndividualEnergyDeposition_Type(){return IndividualEnergyDeposition_Type;}
+    std::vector<G4int>& GetIndividualEnergyDeposition_DetectorNumber(){return IndividualEnergyDeposition_DetectorNumber;}
+
 
     std::vector<G4int>& GetMultiplicity_prompt(){return Multiplicity_prompt;}
     std::vector<G4int>& GetMultiplicity_delayed(){return Multiplicity_delayed;}
@@ -228,6 +232,9 @@ public:
     void AddIndividualEnergyDeposition_Position_z(G4double posz){IndividualEnergyDeposition_Position_z.push_back(posz);}
     void AddIndividualEnergyDeposition_ReentranceTube(G4int n){IndividualEnergyDeposition_ReentranceTube.push_back(n);}
     void AddIndividualEnergyDeposition_LArOrGe(G4int n){IndividualEnergyDeposition_LArOrGe.push_back(n);}
+    void AddIndividualEnergyDeposition_ID(G4int n){IndividualEnergyDeposition_ID.push_back(n);}
+    void AddIndividualEnergyDeposition_Type(G4int n){IndividualEnergyDeposition_Type.push_back(n);}
+    void AddIndividualEnergyDeposition_DetectorNumber(G4int n){IndividualEnergyDeposition_DetectorNumber.push_back(n);}
 
     void AddIDListOfGe77(G4int ID){IDListOfGe77.insert(ID);}
     std::set<G4int> GetIDListOfGe77(){return IDListOfGe77;}
@@ -386,7 +393,10 @@ private:
     std::vector<G4double> IndividualEnergyDeposition_Position_z;
     std::vector<G4int> IndividualEnergyDeposition_ReentranceTube;
     std::vector<G4int> IndividualEnergyDeposition_LArOrGe;
-
+    std::vector<G4int> IndividualEnergyDeposition_ID;
+    std::vector<G4int> IndividualEnergyDeposition_Type;
+    std::vector<G4int> IndividualEnergyDeposition_DetectorNumber;
+//DetectorNumber
     std::vector<G4int> Multiplicity_prompt;
     std::vector<G4int> Multiplicity_delayed;
     std::vector<G4int> Multiplicity_delayed_long;

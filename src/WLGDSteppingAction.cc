@@ -363,7 +363,13 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
 
                 if(aStep->GetPostStepPoint()->GetGlobalTime() / s > 1)
                     return;
-                if(fIndividualDepositionInfo == 0) return;
+                if(fIndividualDepositionInfo == 0 && fIndividualGeDepositionInfo == 0) return;
+
+                if(fIndividualGeDepositionInfo == 1 && aStep->GetPostStepPoint()
+                                                               ->GetTouchable()
+                                                               ->GetVolume(1)
+                                                               ->GetLogicalVolume()
+                                                               ->GetName() != "Layer_log") return;
 
                 fEventAction->AddIndividualEnergyDeposition_Timing(
                         aStep->GetPostStepPoint()->GetGlobalTime() / s);
@@ -374,6 +380,16 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
                 fEventAction->AddIndividualEnergyDeposition_Position_y(tmp_y / m);
                 fEventAction->AddIndividualEnergyDeposition_Position_z(tmp_z / m);
                 fEventAction->AddIndividualEnergyDeposition_LArOrGe(whichVolume);
+                fEventAction->AddIndividualEnergyDeposition_ID(aStep->GetTrack()->GetTrackID());
+                fEventAction->AddIndividualEnergyDeposition_Type(aStep->GetTrack()->GetParticleDefinition()->GetPDGEncoding());
+                int tmp = -1;
+                if(aStep->GetPostStepPoint()
+                           ->GetTouchable()
+                           ->GetVolume(1)
+                           ->GetLogicalVolume()
+                           ->GetName() == "Layer_log")
+                    tmp = aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetCopyNo() + whichReentranceTube * 96;
+                fEventAction->AddIndividualEnergyDeposition_DetectorNumber(tmp);
             }
         }
     }
@@ -381,6 +397,7 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
 
 void WLGDSteppingAction::GetDepositionInfo(G4int answer) { fDepositionInfo = answer; }
 void WLGDSteppingAction::GetIndividualDepositionInfo(G4int answer) { fIndividualDepositionInfo = answer; }
+void WLGDSteppingAction::GetIndividualGeDepositionInfo(G4int answer) { fIndividualGeDepositionInfo = answer; }
 void WLGDSteppingAction::GetIndividualGdDepositionInfo(G4int answer) { fIndividualGdDepositionInfo = answer; }
 
 void WLGDSteppingAction::DefineCommands()
@@ -409,11 +426,22 @@ void WLGDSteppingAction::DefineCommands()
             .SetDefaultValue("0");
 
     fStepMessenger
-            ->DeclareMethod("getIndividualGdDepositionInfo", &WLGDSteppingAction::GetIndividualGdDepositionInfo)
+            ->DeclareMethod("getIndividualGeDepositionInfo", &WLGDSteppingAction::GetIndividualGeDepositionInfo)
             .SetGuidance(
-                    "Set whether to obtain individual energy deposition information inside reentrance tubes")
+                    "Set whether to obtain individual energy deposition information inside Ge")
             .SetGuidance("0 = don't")
             .SetGuidance("1 = do")
             .SetCandidates("0 1")
             .SetDefaultValue("0");
+
+    fStepMessenger
+            ->DeclareMethod("getIndividualGdDepositionInfo", &WLGDSteppingAction::GetIndividualGdDepositionInfo)
+            .SetGuidance(
+                    "Set whether to obtain individual energy deposition information inside with Gd")
+            .SetGuidance("0 = don't")
+            .SetGuidance("1 = do")
+            .SetCandidates("0 1")
+            .SetDefaultValue("0");
+
+
 }

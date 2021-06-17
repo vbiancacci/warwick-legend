@@ -92,6 +92,13 @@ void WLGDTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
         }
     }
 
+    if(fEventAction->GetIDListOfGe77SiblingParticles().count(aTrack->GetParentID())){
+        for(int j = 0; j < aTrack->GetStep()->GetSecondaryInCurrentStep()->size(); j++)
+        {
+            fEventAction->AddIDListOfGe77SiblingParticles(aTrack->GetTrackID());
+        }
+    }
+
     if(aTrack->GetTrackID() == 1){
         fEventAction->AddMuonxLoc(tmp_MuonXpos);
         fEventAction->AddMuonyLoc(tmp_MuonYpos);

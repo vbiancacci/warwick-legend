@@ -132,19 +132,19 @@ void WLGDTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
     }
 
 
-
-    for(int i = 0; i < aTrack->GetStep()->GetSecondaryInCurrentStep()->size(); i++)
-        if(aTrack->GetStep()
-                   ->GetSecondaryInCurrentStep()
-                   ->at(i)
-                   ->GetParticleDefinition()
-                   ->GetPDGCharge() == 64)
-            fEventAction->AddIDListOfGdSiblingParticles(aTrack->GetTrackID());
-
     // Edit: 2021/03/30 by Moritz Neuberger
     // Adding tracking of neutrons being later captured by Ge-76
 
     // RemoveAddIDListOfGe77OfGe77SiblingParticles
+
+
+    if((aTrack->GetStep()->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName() ==
+        "neutronInelastic" || aTrack->GetStep()->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName() == "hBertiniCaptureAtRest") && aTrack->GetStep()->GetPostStepPoint()
+                                                                                                                                                      ->GetTouchable()
+                                                                                                                                                      ->GetVolume()
+                                                                                                                                                      ->GetLogicalVolume()
+                                                                                                                                                      ->GetName() == "Water_log")
+        fEventAction->AddIDListOfGdSiblingParticles(aTrack->GetTrackID());
 
     if(aTrack->GetParticleDefinition()->GetParticleName() == "neutron")
     {

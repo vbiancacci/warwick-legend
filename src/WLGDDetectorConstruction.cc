@@ -109,7 +109,7 @@ void WLGDDetectorConstruction::DefineMaterials()
 
   G4Element* elGd = new G4Element ("Gadolinium","Gd",64,157.25*g/mole);
   G4Element* elS = new G4Element  ("Sulfur","S",16.,32.066*g/mole);
-
+G4cout << elGd << G4endl;
 
   G4double density = 3.01*g/cm3; //https://www.sigmaaldrich.com/catalog/product/aldrich/203300?lang=de&region=DE room temp
   G4Material* gadoliniumSulfate = new G4Material("GadoliniumSulfate", density, 3);   //Gd2(SO4)3
@@ -120,8 +120,7 @@ void WLGDDetectorConstruction::DefineMaterials()
 
   G4Material* purewater           = G4Material::GetMaterial("G4_WATER");  //EDIT: changed water to purewater & use it to create "special" water
   water = new G4Material("GdLoadedWater", 1.000000*g/cm3,2);
-  water->AddMaterial(purewater, 1.-0.002);//0.2%
-//  water->AddMaterial(purewater, 1.-0.001);//0.1%
+  water->AddMaterial(purewater, 1.-0.002);
   water->AddMaterial(gadoliniumSulfate, 0.002);
 
   // enriched Germanium from isotopes

@@ -231,7 +231,8 @@ void WLGDPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
 
         G4ParticleTable* theParticleTable = G4ParticleTable::GetParticleTable();
 
-        fParticleGun->SetParticleDefinition(theParticleTable->GetIonTable()->GetIonName(32,77,1));
+        G4cout << theParticleTable->GetIonTable()->GetLifeTime(32,77,159.71,0) << G4endl;
+        fParticleGun->SetParticleDefinition(theParticleTable->GetIonTable()->GetIon(32,77,1));
 
 
         G4double theMass = theParticleTable->GetIonTable()->GetIonMass(32,77,0,1);

@@ -139,7 +139,7 @@ void WLGDTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
 
 
     if((aTrack->GetStep()->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName() ==
-        "neutronInelastic" || aTrack->GetStep()->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName() == "hBertiniCaptureAtRest") && aTrack->GetStep()->GetPostStepPoint()
+        "neutronInelastic" || aTrack->GetStep()->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName() == "nFission" || aTrack->GetStep()->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName() == "hBertiniCaptureAtRest" || aTrack->GetStep()->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName() == "pi-Inelastic" || aTrack->GetStep()->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName() == "Decay") && aTrack->GetStep()->GetPostStepPoint()
                                                                                                                                                       ->GetTouchable()
                                                                                                                                                       ->GetVolume()
                                                                                                                                                       ->GetLogicalVolume()

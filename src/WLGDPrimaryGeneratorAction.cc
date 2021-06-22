@@ -232,6 +232,8 @@ void WLGDPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
 
         G4int particleID = 1000320771;
 
+        G4cout <<theParticleTable->FindParticle(particleID)->GetPDGMass() << G4endl;
+
         fParticleGun->SetParticleDefinition(theParticleTable->FindParticle(particleID));
 
         G4double theMass = theParticleTable->FindParticle(particleID)->GetPDGMass();

@@ -27,6 +27,7 @@ public:
   void GetIndividualDepositionInfo(G4int answer);
     void GetIndividualGeDepositionInfo(G4int answer);
     void GetIndividualGdDepositionInfo(G4int answer);
+    void AllowForLongTimeEmissionReadout(G4int answer);
   void DefineCommands();
 
 private:
@@ -38,6 +39,7 @@ private:
   G4int fIndividualDepositionInfo = 0;
     G4int fIndividualGeDepositionInfo = 0;
     G4int fIndividualGdDepositionInfo = 0;
+    G4int fAllowForLongTimeEmissionReadout = 0;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

@@ -208,7 +208,6 @@ void WLGDPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
         G4int string_number = (detectorNumber%(nofLayers*nofStrings))/nofLayers;
         G4double radius = gerad * cm * rndm(generator);
         G4double ṕhi = CLHEP::twopi * rndm(generator);
-        G4double height = gehheight * cm * (1 - 2*rndm(generator));
 
         double offset_x, offset_y;
         if(whichReentranceTube == 0) {offset_x = 1*m; offset_y = 0*m;}
@@ -222,7 +221,7 @@ void WLGDPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
         G4double phi = 0 * rad;
         G4double x = radius*cos(ṕhi) + roiradius * cm * std::cos(string_number * angle) + offset_x;
         G4double y = radius*sin(ṕhi) + roiradius * cm * std::sin(string_number * angle) + offset_y;
-        G4double z = cushift*cm - step + (nofLayers / 2 * layerthickness - z_number * layerthickness)*cm; ;
+        G4double z = cushift*cm - step + (nofLayers / 2 * layerthickness - z_number * layerthickness)*cm + gehheight*cm*(1 - 2*rndm(generator));
 
         //   G4cout << "Primary coordinates: " << position/m << " m" << G4endl;
         //   G4cout << "Primary coordinates: " << x/cm << " " <<  y/cm << " " << z/cm << " " << G4endl;

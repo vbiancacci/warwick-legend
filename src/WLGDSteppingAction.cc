@@ -365,7 +365,7 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
                     }
                 }
 
-                if(aStep->GetPostStepPoint()->GetGlobalTime() / s > 1)
+                if(aStep->GetPostStepPoint()->GetGlobalTime() / s > 1 && fAllowForLongTimeEmissionReadout == 0)
                     return;
                 if(fIndividualDepositionInfo == 0 && fIndividualGeDepositionInfo == 0) return;
 
@@ -403,6 +403,7 @@ void WLGDSteppingAction::GetDepositionInfo(G4int answer) { fDepositionInfo = ans
 void WLGDSteppingAction::GetIndividualDepositionInfo(G4int answer) { fIndividualDepositionInfo = answer; }
 void WLGDSteppingAction::GetIndividualGeDepositionInfo(G4int answer) { fIndividualGeDepositionInfo = answer; }
 void WLGDSteppingAction::GetIndividualGdDepositionInfo(G4int answer) { fIndividualGdDepositionInfo = answer; }
+void WLGDSteppingAction::AllowForLongTimeEmissionReadout(G4int answer) { fAllowForLongTimeEmissionReadout = answer; }
 
 void WLGDSteppingAction::DefineCommands()
 {
@@ -448,4 +449,12 @@ void WLGDSteppingAction::DefineCommands()
             .SetDefaultValue("0");
 
 
+    fStepMessenger
+            ->DeclareMethod("AllowForLongTimeEmissionReadout", &WLGDSteppingAction::AllowForLongTimeEmissionReadout)
+            .SetGuidance(
+                    "Set whether to individual deposition information can be gathered from longer than 1sec after start of event.")
+            .SetGuidance("0 = don't")
+            .SetGuidance("1 = do")
+            .SetCandidates("0 1")
+            .SetDefaultValue("0");
 }

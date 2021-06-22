@@ -231,13 +231,11 @@ void WLGDPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
 
         G4ParticleTable* theParticleTable = G4ParticleTable::GetParticleTable();
 
-        G4int particleID = 1000320771;
+        G4cout << theParticleTable->GetIonTable(32,77,159.71)->GetLifeTime() << G4endl;
+        fParticleGun->SetParticleDefinition(theParticleTable->GetIonTable()->FindIon(32,77,159.7));
 
 
-        fParticleGun->SetParticleDefinition(theParticleTable->GetIonTable()->FindIon(32,77,1));
-
-
-        G4double theMass = theParticleTable->GetIonTable()->FindIon(32,77,1)->GetPDGMass();
+        G4double theMass = theParticleTable->GetIonTable()->FindIon(32,77,159.7)->GetPDGMass();
         G4double totMomentum = std::sqrt(energy*energy+2*theMass*energy);
         G4double pz = -1*std::cos(theta);
         G4double px = std::sin(theta)*cos(phi);

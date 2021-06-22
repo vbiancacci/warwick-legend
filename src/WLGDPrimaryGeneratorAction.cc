@@ -7,6 +7,7 @@
 #include "G4ParticleDefinition.hh"
 #include "G4ParticleGun.hh"
 #include "G4ParticleTable.hh"
+#include "G4IonTable.hh"
 #include "G4PhysicalConstants.hh"
 #include "G4SystemOfUnits.hh"
 
@@ -233,12 +234,12 @@ void WLGDPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
         G4int particleID = 1000320771;
 
         theParticleTable->GetIonTable()->DumpTable();
-        G4cout << theParticleTable->FindParticle("Ge77") << G4endl;
+        G4cout << theParticleTable->GetIonTable()->FindIon(32,77,1) << G4endl;
 
-        fParticleGun->SetParticleDefinition(theParticleTable->FindParticle("Ge77"));
+        fParticleGun->SetParticleDefinition(theParticleTable->GetIonTable()->FindIon(32,77,1));
 
 
-        G4double theMass = theParticleTable->FindParticle("Ge77")->GetPDGMass();
+        G4double theMass = theParticleTable->GetIonTable()->FindIon(32,77,1)->GetPDGMass();
         G4double totMomentum = std::sqrt(energy*energy+2*theMass*energy);
         G4double pz = -1*std::cos(theta);
         G4double px = std::sin(theta)*cos(phi);

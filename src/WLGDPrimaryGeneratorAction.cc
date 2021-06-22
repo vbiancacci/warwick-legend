@@ -230,7 +230,7 @@ void WLGDPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
 
         G4ParticleTable* theParticleTable = G4ParticleTable::GetParticleTable();
 
-        G4int particleID = 1000320771;
+        G4int particleID = 1000320770;
 
         G4cout << theParticleTable->FindParticle(particleID) << G4endl;
 

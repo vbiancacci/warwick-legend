@@ -233,8 +233,6 @@ void WLGDPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
 
         G4int particleID = 1000320771;
 
-        theParticleTable->GetIonTable()->DumpTable();
-        G4cout << theParticleTable->GetIonTable()->FindIon(32,77,1) << G4endl;
 
         fParticleGun->SetParticleDefinition(theParticleTable->GetIonTable()->FindIon(32,77,1));
 

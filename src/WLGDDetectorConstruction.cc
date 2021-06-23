@@ -117,11 +117,18 @@ G4cout << elGd << G4endl;
   gadoliniumSulfate->AddElement(elS, 3);
   gadoliniumSulfate->AddElement(O, 12);
 
+#define halfGd 1
 
   G4Material* purewater           = G4Material::GetMaterial("G4_WATER");  //EDIT: changed water to purewater & use it to create "special" water
   water = new G4Material("GdLoadedWater", 1.000000*g/cm3,2);
+#if halfGd==0
   water->AddMaterial(purewater, 1.-0.002);
   water->AddMaterial(gadoliniumSulfate, 0.002);
+#endif
+#if halfGd==1
+  water->AddMaterial(purewater, 1.-0.001);
+  water->AddMaterial(gadoliniumSulfate, 0.001);
+#endif
 
   // enriched Germanium from isotopes
   auto* Ge_74 = new G4Isotope("Ge74", 32, 74, 74.0 * g / mole);

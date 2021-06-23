@@ -74,7 +74,6 @@ public:
     std::vector<G4int>& GetIndividualEnergyDeposition_ID(){return IndividualEnergyDeposition_ID;}
     std::vector<G4int>& GetIndividualEnergyDeposition_Type(){return IndividualEnergyDeposition_Type;}
     std::vector<G4int>& GetIndividualEnergyDeposition_DetectorNumber(){return IndividualEnergyDeposition_DetectorNumber;}
-    std::vector<G4int>& GetIndividualEnergyDeposition_Process(){return IndividualEnergyDeposition_Process;}
 
 
     std::vector<G4int>& GetMultiplicity_prompt(){return Multiplicity_prompt;}
@@ -104,6 +103,7 @@ public:
     std::vector<G4double>& GetEdepWater_prompt(){return v_EdepWater_prompt;}
     std::vector<G4double>& GetEdepWater_delayed(){return v_EdepWater_delayed;}
     std::vector<G4int>&	 GetMuonVeto_flag(){return v_MuonVeto_flag;}
+    std::vector<G4int>&	 GetisIC(){return v_isIC;}
 
     // tajectory methods
     std::vector<G4int>&    GetTrjPDG() { return trjpdg; }
@@ -162,6 +162,8 @@ public:
     std::vector<G4int>& GetGdSiblings_id(){return v_GdSiblings_id;}
     std::vector<G4int>& GetGdSiblings_type(){return v_GdSiblings_type;}
     std::vector<G4int>& GetGdSiblings_whichVolume(){return v_GdSiblings_whichVolume;}
+
+    void SetisIC(int ans){v_isIC[0] = ans;}
 
     void AddGdSiblings_timing(double timing){ v_GdSiblings_timing.push_back(timing);}
     void AddGdSiblings_x(double x){ v_GdSiblings_x.push_back(x);}
@@ -236,7 +238,6 @@ public:
     void AddIndividualEnergyDeposition_ID(G4int n){IndividualEnergyDeposition_ID.push_back(n);}
     void AddIndividualEnergyDeposition_Type(G4int n){IndividualEnergyDeposition_Type.push_back(n);}
     void AddIndividualEnergyDeposition_DetectorNumber(G4int n){IndividualEnergyDeposition_DetectorNumber.push_back(n);}
-    void AddIndividualEnergyDeposition_Process(G4int n){IndividualEnergyDeposition_Process.push_back(n);}
 
     void AddIDListOfGe77(G4int ID){IDListOfGe77.insert(ID);}
     std::set<G4int> GetIDListOfGe77(){return IDListOfGe77;}
@@ -398,7 +399,6 @@ private:
     std::vector<G4int> IndividualEnergyDeposition_ID;
     std::vector<G4int> IndividualEnergyDeposition_Type;
     std::vector<G4int> IndividualEnergyDeposition_DetectorNumber;
-    std::vector<G4int> IndividualEnergyDeposition_Process;
 //DetectorNumber
     std::vector<G4int> Multiplicity_prompt;
     std::vector<G4int> Multiplicity_delayed;
@@ -434,6 +434,7 @@ private:
     std::vector<G4double> v_EdepWater_prompt;
     std::vector<G4double> v_EdepWater_delayed;
     std::vector<G4int>    v_MuonVeto_flag;
+    std::vector<G4int>    v_isIC;
 
     std::set<G4int> IDListOfGe77;
     std::set<G4int> IDListOfGdSiblingParticles;

@@ -53,6 +53,7 @@ WLGDRunAction::WLGDRunAction(WLGDEventAction* eventAction, G4String name)
   analysisManager->CreateNtupleDColumn("EdepWater_prompt",fEventAction->GetEdepWater_prompt());
   analysisManager->CreateNtupleDColumn("EdepWater_delayed",fEventAction->GetEdepWater_delayed());
   analysisManager->CreateNtupleIColumn("MunoVeto",fEventAction->GetMuonVeto_flag());
+  analysisManager->CreateNtupleIColumn("isIC",fEventAction->GetisIC());
 
   analysisManager->CreateNtupleDColumn("Neutronxloc", fEventAction->GetNeutronxLoc());
   analysisManager->CreateNtupleDColumn("Neutronyloc", fEventAction->GetNeutronyLoc());

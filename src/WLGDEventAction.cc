@@ -198,6 +198,9 @@ void WLGDEventAction::BeginOfEventAction(const G4Event*
     v_MuonVeto_flag.clear();
     v_MuonVeto_flag.push_back(0);
 
+    v_isIC.clear();
+    v_isIC.push_back(0);
+
     v_nCAr_timing.clear();
     v_nCAr_x.clear();
     v_nCAr_y.clear();
@@ -415,6 +418,7 @@ void WLGDEventAction::EndOfEventAction(const G4Event* event)
             v_NDetector_delayed_onlyGd.push_back(x.first);
             v_EdepPerDetector_delayed_onlyGd.push_back(x.second);
         }
+
     if(v_EdepWater_prompt[0] > 120e6)
         v_MuonVeto_flag[0] = 1;
 

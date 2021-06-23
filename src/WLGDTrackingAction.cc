@@ -139,6 +139,25 @@ void WLGDTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
         }
     }
 
+    // For Ge77m IC readout
+
+    if(aTrack->GetParticleDefinition()->GetPDGEncoding() == 1000320771){
+        int NumberOfSecundaries = aTrack->GetStep()->GetSecondaryInCurrentStep()->size();
+        for(int i = 0; i < NumberOfSecundaries; i++){
+            if(aTrack->GetStep()
+                    ->GetSecondaryInCurrentStep()
+                    ->at(i)
+                    ->GetParticleDefinition()
+                    ->GetParticleName() == "gamma"
+                    && abs(aTrack->GetStep()
+                            ->GetSecondaryInCurrentStep()
+                            ->at(i)
+                            ->GetTotalEnergy() / eV - 160e3) < 1e3)
+                fEventAction->SetisIC(1);
+        }
+    }
+
+
 
     // Edit: 2021/03/30 by Moritz Neuberger
     // Adding tracking of neutrons being later captured by Ge-76

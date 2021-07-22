@@ -601,7 +601,7 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
                (tankrad + tankwalltop) * cm, tankhheight * cm, 0.0, CLHEP::twopi);
   auto* fTankLogical = new G4LogicalVolume(tankSolid, steelMat, "Tank_log");
   auto* fTankPhysical =
-    new G4PVPlacement(nullptr, G4ThreeVector(0., 0., /*-stone -offset_2*/ -(hallhheight - tankhheight)  * cm), fTankLogical,
+    new G4PVPlacement(nullptr, G4ThreeVector(0., 0., /*-stone -offset_2*/ -(hallhheight - tankhheight) * cm), fTankLogical,
                       "Tank_phys", fHallLogical, false, 0, true);
 
   //

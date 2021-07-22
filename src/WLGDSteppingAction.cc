@@ -71,10 +71,7 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
 
             if(aStep->GetTotalEnergyDeposit() > 0)
             {
-
-
-
-
+                
                 G4double tmp_x = aStep->GetTrack()->GetPosition().getX();
                 G4double tmp_y = aStep->GetTrack()->GetPosition().getY();
                 G4double tmp_z = aStep->GetTrack()->GetPosition().getZ();
@@ -376,7 +373,7 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
                                                                ->GetName() != "Layer_log") return;
 
                 fEventAction->AddIndividualEnergyDeposition_Timing(
-                        aStep->GetPostStepPoint()->GetGlobalTime() / s);
+                        aStep->GetPostStepPoint()->GetGlobalTime() / (1000*ns) );
                 fEventAction->AddIndividualEnergyDeposition_Energy(
                         aStep->GetTotalEnergyDeposit() / eV);
                 fEventAction->AddIndividualEnergyDeposition_ReentranceTube(whichReentranceTube);

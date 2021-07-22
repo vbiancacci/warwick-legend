@@ -104,6 +104,7 @@ public:
     std::vector<G4double>& GetEdepWater_delayed(){return v_EdepWater_delayed;}
     std::vector<G4int>&	 GetMuonVeto_flag(){return v_MuonVeto_flag;}
     std::vector<G4int>&	 GetisIC(){return v_isIC;}
+    std::vector<G4int>&	 GetisMetastable(){return v_isMetastable;}
 
     // tajectory methods
     std::vector<G4int>&    GetTrjPDG() { return trjpdg; }
@@ -164,6 +165,8 @@ public:
     std::vector<G4int>& GetGdSiblings_whichVolume(){return v_GdSiblings_whichVolume;}
 
     void SetisIC(int ans){v_isIC[0] = ans;}
+    void SetisMetastable(int ans){v_isMetastable[0] = ans;}
+
 
     void AddGdSiblings_timing(double timing){ v_GdSiblings_timing.push_back(timing);}
     void AddGdSiblings_x(double x){ v_GdSiblings_x.push_back(x);}
@@ -435,6 +438,7 @@ private:
     std::vector<G4double> v_EdepWater_delayed;
     std::vector<G4int>    v_MuonVeto_flag;
     std::vector<G4int>    v_isIC;
+    std::vector<G4int>    v_isMetastable;
 
     std::set<G4int> IDListOfGe77;
     std::set<G4int> IDListOfGdSiblingParticles;

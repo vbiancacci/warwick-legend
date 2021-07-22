@@ -28,6 +28,7 @@ void WLGDTrackingAction::PreUserTrackingAction(const G4Track* aTrack)
 
         fEventAction->AddIDListOfGe77(aTrack->GetTrackID());
     }
+
     // Edit: 2021/03/30 by Moritz Neuberger
     // Adding tracking of neutrons being later captured by Ge-76 as well as general produced
     // in LAr
@@ -85,25 +86,16 @@ void WLGDTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
 
     if(fRunAction->getWriteOutAdvancedMultiplicity()){
         if(fEventAction->GetIDListOfGdSiblingParticles().count(aTrack->GetParentID())){
-            for(int j = 0; j < aTrack->GetStep()->GetSecondaryInCurrentStep()->size(); j++)
-            {
                 fEventAction->AddIDListOfGdSiblingParticles(aTrack->GetTrackID());
-            }
         }
     }
 
-    if(fEventAction->GetIDListOfGe77SiblingParticles().count(aTrack->GetParentID())){ //GetIDListOfGe77
-        for(int j = 0; j < aTrack->GetStep()->GetSecondaryInCurrentStep()->size(); j++)
-        {
+    if(fEventAction->GetIDListOfGe77SiblingParticles().count(aTrack->GetParentID())){
             fEventAction->AddIDListOfGe77SiblingParticles(aTrack->GetTrackID());
-        }
     }
 
     if(fEventAction->GetIDListOfGe77().count(aTrack->GetParentID())){
-        for(int j = 0; j < aTrack->GetStep()->GetSecondaryInCurrentStep()->size(); j++)
-        {
             fEventAction->AddIDListOfGe77(aTrack->GetTrackID());
-        }
     }
 
 
@@ -142,6 +134,7 @@ void WLGDTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
     // For Ge77m IC readout
 
     if(aTrack->GetParticleDefinition()->GetPDGEncoding() == 1000320771){
+        fEventAction->SetisMetastable(1);
         int NumberOfSecundaries = aTrack->GetStep()->GetSecondaryInCurrentStep()->size();
         for(int i = 0; i < NumberOfSecundaries; i++){
             if(aTrack->GetStep()
@@ -163,15 +156,22 @@ void WLGDTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
     // Adding tracking of neutrons being later captured by Ge-76
 
     // RemoveAddIDListOfGe77OfGe77SiblingParticles
-
-
-    if((aTrack->GetStep()->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName() ==
-        "neutronInelastic" || aTrack->GetStep()->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName() == "nFission" || aTrack->GetStep()->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName() == "hBertiniCaptureAtRest" || aTrack->GetStep()->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName() == "pi-Inelastic" || aTrack->GetStep()->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName() == "Decay") && aTrack->GetStep()->GetPostStepPoint()
-                                                                                                                                                      ->GetTouchable()
-                                                                                                                                                      ->GetVolume()
-                                                                                                                                                      ->GetLogicalVolume()
-                                                                                                                                                      ->GetName() == "Water_log")
+/*
+    if((aTrack->GetStep()->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName() == "neutronInelastic"
+        || aTrack->GetStep()->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName() == "nFission"
+        || aTrack->GetStep()->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName() == "hBertiniCaptureAtRest"
+        || aTrack->GetStep()->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName() == "pi-Inelastic"
+        || aTrack->GetStep()->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName() == "Decay")
+        && aTrack->GetStep()->GetPostStepPoint()
+                            ->GetTouchable()
+                            ->GetVolume()
+                            ->GetLogicalVolume()
+                            ->GetName() == "Water_log"
+            aTrack->GetVolume()->GetName() == "Water_phys"){
         fEventAction->AddIDListOfGdSiblingParticles(aTrack->GetTrackID());
+    }
+*/
+
 
     if(aTrack->GetParticleDefinition()->GetParticleName() == "neutron")
     {

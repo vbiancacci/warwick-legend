@@ -117,7 +117,7 @@ G4cout << elGd << G4endl;
   gadoliniumSulfate->AddElement(elS, 3);
   gadoliniumSulfate->AddElement(O, 12);
 
-#define halfGd 1
+#define halfGd 0
 
   G4Material* purewater           = G4Material::GetMaterial("G4_WATER");  //EDIT: changed water to purewater & use it to create "special" water
   water = new G4Material("GdLoadedWater", 1.000000*g/cm3,2);
@@ -601,7 +601,7 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
                (tankrad + tankwalltop) * cm, tankhheight * cm, 0.0, CLHEP::twopi);
   auto* fTankLogical = new G4LogicalVolume(tankSolid, steelMat, "Tank_log");
   auto* fTankPhysical =
-    new G4PVPlacement(nullptr, G4ThreeVector(0., 0., /*-stone*/ -offset_2 * cm), fTankLogical,
+    new G4PVPlacement(nullptr, G4ThreeVector(0., 0., /*-stone -offset_2*/ -(hallhheight - tankhheight)  * cm), fTankLogical,
                       "Tank_phys", fHallLogical, false, 0, true);
 
   //

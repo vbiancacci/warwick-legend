@@ -182,7 +182,7 @@ void WLGDPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
         fParticleGun->GeneratePrimaryVertex(event);
 
     }
-    if(fGenerator == "Ge77m")
+    if(fGenerator == "Ge77m" || fGenerator == "Ge77andGe77m")
     {
 
 
@@ -229,11 +229,24 @@ void WLGDPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
         //   G4cout << "Theta: " << theta/deg << " deg; Phi: " << phi/deg << " deg" << G4endl;
 
         G4ParticleTable* theParticleTable = G4ParticleTable::GetParticleTable();
-
-        fParticleGun->SetParticleDefinition(theParticleTable->GetIonTable()->GetIon(32,77,159.71*keV));
-
-
         G4double theMass = theParticleTable->GetIonTable()->GetIonMass(32,77,0,1);
+        if(fGenerator == "Ge77andGe77m"){
+            std::uniform_int_distribution<int> distribution_2(0,1);
+            G4int whichGe77State = distribution_2(generator);
+            if(whichGe77State == 0){
+            fParticleGun->SetParticleDefinition(theParticleTable->GetIonTable()->GetIon(32,77,0*keV));
+            theMass = theParticleTable->GetIonTable()->GetIonMass(32,77,0,0);
+            }
+            else{
+                fParticleGun->SetParticleDefinition(theParticleTable->GetIonTable()->GetIon(32,77,159.71*keV));
+                theMass = theParticleTable->GetIonTable()->GetIonMass(32,77,0,1);
+            }
+        }
+
+        if(fGenerator == "Ge77m"){
+            fParticleGun->SetParticleDefinition(theParticleTable->GetIonTable()->GetIon(32,77,159.71*keV));
+            theMass = theParticleTable->GetIonTable()->GetIonMass(32,77,0,1);
+        }
         G4double totMomentum = std::sqrt(energy*energy+2*theMass*energy);
         G4double pz = -1*std::cos(theta);
         G4double px = std::sin(theta)*cos(phi);
@@ -256,7 +269,7 @@ void WLGDPrimaryGeneratorAction::SetGenerator(const G4String& name)
 //  G4cout << "__________________________________________xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx__________________________________________" << G4endl << name << G4endl << "__________________________________________xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx__________________________________________" << G4endl;
 
 
-    std::set<G4String> knownGenerators = { "MeiAndHume", "Musun" , "Ge77m"};
+    std::set<G4String> knownGenerators = { "MeiAndHume", "Musun" , "Ge77m", "Ge77andGe77m"};
     if(knownGenerators.count(name) == 0)
     {
         G4Exception("WLGDPrimaryGeneratorAction::SetGenerator", "WLGD0101", JustWarning,
@@ -297,6 +310,7 @@ void WLGDPrimaryGeneratorAction::DefineCommands()
             .SetGuidance("MeiAndHume = WW standard case")
             .SetGuidance("Musun = Used in previous MaGe simulation")
             .SetGuidance("Ge77m = generate Ge77m inside the HPGe detectors")
-            .SetCandidates("MeiAndHume Musun Ge77m" );
+            .SetGuidance("Ge77andGe77m = generate 50% Ge77, 50% Ge77m inside the HPGe detectors")
+            .SetCandidates("MeiAndHume Musun Ge77m Ge77andGe77m" );
 }
 

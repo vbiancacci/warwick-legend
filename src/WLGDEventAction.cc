@@ -201,6 +201,9 @@ void WLGDEventAction::BeginOfEventAction(const G4Event*
     v_isIC.clear();
     v_isIC.push_back(0);
 
+    v_isMetastable.clear();
+    v_isMetastable.push_back(0);
+
     v_nCAr_timing.clear();
     v_nCAr_x.clear();
     v_nCAr_y.clear();

@@ -100,6 +100,20 @@ void WLGDEventAction::BeginOfEventAction(const G4Event*
     neutronymom.clear();
     neutronzmom.clear();
     neutrontime.clear();
+
+    tmp_mostOuterRadius = 0;
+    out_mostOuterRadius.clear();
+
+    /*
+    tmp_neutron_track_x.clear();
+    tmp_neutron_track_y.clear();
+    tmp_neutron_track_z.clear();
+
+    out_neutron_track_x.clear();
+    out_neutron_track_y.clear();
+    out_neutron_track_z.clear();
+    */
+
     // clear trajectory data
     trjpdg.clear();
     trjnpts.clear();

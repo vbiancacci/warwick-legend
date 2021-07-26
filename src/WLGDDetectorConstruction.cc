@@ -667,8 +667,11 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
   //
   // copper tubes, hollow cylinder shell
   //
-  auto* boratedPETSolid = new G4Tubs("BoratedPET", curad * cm, (BoratedPETouterrad + curad) * cm,
+
+
+  auto* boratedPETSolid_Tube = new G4Tubs("BoratedPET", curad * cm, (BoratedPETouterrad + curad) * cm,
                                      cuhheight * cm, 0.0, CLHEP::twopi);
+  auto* boratedPETSolid_Box = new G4Box("BoratedPET", 0.25*m, 2.5*cm, fCryostatHeight*cm-0.5*m);
 
   //
     // copper tubes, hollow cylinder shell
@@ -682,7 +685,8 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
                                0.0, CLHEP::twopi);
 
   // tower; logical volumes
-  auto* fBoratedPETLogical = new G4LogicalVolume(boratedPETSolid, BoratedPETMat, "BoratedPET_Logical");
+  auto* fBoratedPETLogical_Tube = new G4LogicalVolume(boratedPETSolid_Tube, BoratedPETMat, "BoratedPET_Logical");
+  auto* fBoratedPETLogical_Box = new G4LogicalVolume(boratedPETSolid_Box, BoratedPETMat, "BoratedPET_Logical");
   auto* fCopperLogical = new G4LogicalVolume(copperSolid, copperMat, "Copper_log");
   auto* fUlarLogical   = new G4LogicalVolume(ularSolid, larMat, "ULar_log");
  
@@ -733,7 +737,7 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
 
   // placements
   if(fWithBoratedPET == 1) new G4PVPlacement(nullptr, G4ThreeVector(ringrad * cm, 0., cushift * cm),
-                    fBoratedPETLogical, "BoratedPET_phys", fLarLogical, false, 0, true);
+                    fBoratedPETLogical_Tube, "BoratedPET_phys", fLarLogical, false, 0, true);
 
   if(fWithOutCupperTubes == 0) new G4PVPlacement(nullptr, G4ThreeVector(ringrad * cm, 0., cushift * cm),
                     fCopperLogical, "Copper_phys", fLarLogical, false, 0, true);
@@ -744,7 +748,7 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
 
   // tower 2
   if(fWithBoratedPET == 1) new G4PVPlacement(nullptr, G4ThreeVector(0., ringrad * cm, cushift * cm),
-                                             fBoratedPETLogical, "BoratedPET_phys2", fLarLogical, false, 1, true);
+                                             fBoratedPETLogical_Tube, "BoratedPET_phys2", fLarLogical, false, 1, true);
 
   if(fWithOutCupperTubes == 0) new G4PVPlacement(nullptr, G4ThreeVector(0., ringrad * cm, cushift * cm),
                     fCopperLogical, "Copper_phys2", fLarLogical, false, 1, true);
@@ -754,7 +758,7 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
 
   // tower 3
   if(fWithBoratedPET == 1) new G4PVPlacement(nullptr, G4ThreeVector(-ringrad * cm, 0., cushift * cm),
-                                             fBoratedPETLogical, "BoratedPET_phys3", fLarLogical, false, 2, true);
+                                             fBoratedPETLogical_Tube, "BoratedPET_phys3", fLarLogical, false, 2, true);
 
   if(fWithOutCupperTubes == 0) new G4PVPlacement(nullptr, G4ThreeVector(-ringrad * cm, 0., cushift * cm),
                     fCopperLogical, "Copper_phys3", fLarLogical, false, 2, true);
@@ -764,7 +768,7 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
 
   // tower 4
   if(fWithBoratedPET == 1) new G4PVPlacement(nullptr, G4ThreeVector(0., -ringrad * cm, cushift * cm),
-                                             fBoratedPETLogical, "BoratedPET_phys4", fLarLogical, false, 3, true);
+                                             fBoratedPETLogical_Tube, "BoratedPET_phys4", fLarLogical, false, 3, true);
 
   if(fWithOutCupperTubes == 0) new G4PVPlacement(nullptr, G4ThreeVector(0., -ringrad * cm, cushift * cm),
                     fCopperLogical, "Copper_phys4", fLarLogical, false, 3, true);
@@ -772,13 +776,54 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
   new G4PVPlacement(nullptr, G4ThreeVector(0., -ringrad * cm, cushift * cm), fUlarLogical,
                     "ULar_phys4", fLarLogical, false, 3, true);
 
+  if(fWithBoratedPET == 2){
+    int NPanels = 28;
+    double radiusOfPanels = 2*m;
+    double anglePanel = 360/28. * deg;
+    G4double zpos = 0*cm;
+    G4RotationMatrix* rotMat;
+    for(G4int j = 0; j < NPanels; j++) {
+      xpos = radiusOfPanels * std::cos(j * anglePanel);
+      ypos = radiusOfPanels * std::sin(j * anglePanel);
+      rotMat = new G4RotationMatrix;
+      rotMat->rotateZ(-(j+1) * anglePanel + 90*deg);
+      new G4PVPlacement(rotMat, G4ThreeVector(xpos, ypos, zpos),
+                        fBoratedPETLogical_Box, "BoratedPET_phys", fLarLogical, false, j, true);
+
+    }
+  }
+
+
+
   //
   // Visualization attributes
   //
   fWorldLogical->SetVisAttributes(G4VisAttributes::GetInvisible());
 
+  G4Color testColor(0.,109/225.,119/225.);
+  auto* testVisAtt = new G4VisAttributes(testColor);
+  testVisAtt->SetVisibility(true);
+
+  G4Color testColor2(131/255.,197/225.,190/225.);
+  auto* testVisAtt2 = new G4VisAttributes(testColor2);
+  testVisAtt2->SetVisibility(true);
+  
+  G4Color testColor3(226/255.,149/225.,120/225.);
+  auto* testVisAtt3 = new G4VisAttributes(testColor3);
+  testVisAtt3->SetVisibility(true);
+
+  G4Color testColor4(255/255.,221/225.,210/225.);
+  auto* testVisAtt4 = new G4VisAttributes(testColor4);
+  testVisAtt4->SetVisibility(true);
+
+
   auto* redVisAtt = new G4VisAttributes(G4Colour::Red());
   redVisAtt->SetVisibility(true);
+  auto* whiteVisAtt = new G4VisAttributes(G4Colour::White());
+  whiteVisAtt->SetVisibility(true);
+  auto* orangeVisAtt = new G4VisAttributes(G4Colour::Brown());
+  orangeVisAtt->SetVisibility(true);
+
   auto* greyVisAtt = new G4VisAttributes(G4Colour::Grey());
   greyVisAtt->SetVisibility(true);
   auto* greenVisAtt = new G4VisAttributes(G4Colour::Green());
@@ -786,20 +831,22 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
   auto* blueVisAtt = new G4VisAttributes(G4Colour::Blue());
   blueVisAtt->SetVisibility(true);
 
-  fCavernLogical->SetVisAttributes(redVisAtt);
-  fHallLogical->SetVisAttributes(greyVisAtt);
-  fTankLogical->SetVisAttributes(greenVisAtt);
-  fWaterLogical->SetVisAttributes(greyVisAtt);
-  fLarLogical->SetVisAttributes(greyVisAtt);
-  fCoutLogical->SetVisAttributes(blueVisAtt);
+  fCavernLogical->SetVisAttributes(greyVisAtt);
+  fHallLogical->SetVisAttributes(whiteVisAtt);
+  fTankLogical->SetVisAttributes(greyVisAtt);
+  fWaterLogical->SetVisAttributes(testVisAtt);
+  fLarLogical->SetVisAttributes(testVisAtt2);
+  fCoutLogical->SetVisAttributes(greyVisAtt);
   fCvacLogical->SetVisAttributes(greyVisAtt);
-  fCinnLogical->SetVisAttributes(blueVisAtt);
-  fLidLogical->SetVisAttributes(blueVisAtt);
-  fBotLogical->SetVisAttributes(blueVisAtt);
-  fCopperLogical->SetVisAttributes(greenVisAtt);
-  fUlarLogical->SetVisAttributes(greyVisAtt);
-  fGeLogical->SetVisAttributes(redVisAtt);
-
+  fCinnLogical->SetVisAttributes(greyVisAtt);
+  fLidLogical->SetVisAttributes(greyVisAtt);
+  fBotLogical->SetVisAttributes(greyVisAtt);
+  fCopperLogical->SetVisAttributes(testVisAtt4);
+  fUlarLogical->SetVisAttributes(testVisAtt2);
+  fGapLogical->SetVisAttributes(testVisAtt2);
+  fGeLogical->SetVisAttributes(testVisAtt3);
+  fBoratedPETLogical_Tube->SetVisAttributes(testVisAtt4);
+  fBoratedPETLogical_Box->SetVisAttributes(testVisAtt4);
   return fWorldPhysical;
 }
 
@@ -1140,10 +1187,11 @@ void WLGDDetectorConstruction::DefineCommands()
 
   fDetectorMessenger
     ->DeclareMethod("With_Borated_PET", &WLGDDetectorConstruction::SetBoratedPET)
-    .SetGuidance("Set whether to include Borated PET tubes or not")
+    .SetGuidance("Set whether to include Borated PET or not")
     .SetGuidance("0 = without Borated PET")
-    .SetGuidance("1 = with Borated PET")
-    .SetCandidates("0 1")
+    .SetGuidance("1 = with Borated PET around Re-Entrance tubes")
+    .SetGuidance("2 = with Borated PET in turbine mode")
+    .SetCandidates("0 1 2")
     .SetDefaultValue("0");
 
   fDetectorMessenger

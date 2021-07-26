@@ -52,6 +52,11 @@ public:
     std::vector<G4double>& GetNeutronzMom() { return neutronzmom; }
     std::vector<G4double>& GetNeutronTime() { return neutrontime; }
     std::vector<G4int>& GetNumberOfNeutronsInEvent() { return NumberOfNeutronsProducedInEvent; }
+    std::vector<G4double>& GetNeutronsMostOuterRadius(){ return out_mostOuterRadius;}
+
+    std::vector<G4double>& GetNeutronxTrack() { return out_neutron_track_x; }
+    std::vector<G4double>& GetNeutronyTrack() { return out_neutron_track_y; }
+    std::vector<G4double>& GetNeutronzTrack() { return out_neutron_track_z; }
 
     std::vector<G4double>& GetLArEnergyDeposition() { return TotalEnergyDepositionInLAr_prompt; }
     std::vector<G4double>& GetGeEnergyDeposition() { return TotalEnergyDepositionInGe_prompt; }
@@ -278,6 +283,20 @@ public:
 
     void SaveAllEvents(G4int answer);
     void DefineCommands();
+
+    void SaveNeutronTrack(){out_neutron_track_x = tmp_neutron_track_x; out_neutron_track_y = tmp_neutron_track_y; out_neutron_track_z = tmp_neutron_track_z;}
+
+    void ClearNeutronTrack(){tmp_neutron_track_x.clear(); tmp_neutron_track_y.clear(); tmp_neutron_track_z.clear();}
+
+    void PushNeutronTrack_x(G4double x){tmp_neutron_track_x.push_back(x);}
+    void PushNeutronTrack_y(G4double y){tmp_neutron_track_y.push_back(y);}
+    void PushNeutronTrack_z(G4double z){tmp_neutron_track_z.push_back(z);}
+
+    void SetMostOuterRadius(double r){tmp_mostOuterRadius = r;}
+    void UpdateMostOuterRadius(double r){if(tmp_mostOuterRadius < r) tmp_mostOuterRadius = r;}
+    void WriteMostOuterRadius(){out_mostOuterRadius.push_back(tmp_mostOuterRadius);}
+
+
 private:
     // methods
     WLGDCrystalHitsCollection*   GetHitsCollection(G4int hcID,
@@ -344,6 +363,13 @@ private:
     std::vector<G4double> neutronymom;
     std::vector<G4double> neutronzmom;
     std::vector<G4double> neutrontime;
+
+    std::vector<G4double> out_neutron_track_x;
+    std::vector<G4double> out_neutron_track_y;
+    std::vector<G4double> out_neutron_track_z;
+    std::vector<G4double> tmp_neutron_track_x;
+    std::vector<G4double> tmp_neutron_track_y;
+    std::vector<G4double> tmp_neutron_track_z;
 
 
     std::vector<G4double> Muonxloc;
@@ -475,6 +501,9 @@ private:
     std::vector<G4double>     trjypos;
     std::vector<G4double>     trjzpos;
     std::map<G4String, G4int> lookup;
+
+    G4double tmp_mostOuterRadius;
+    std::vector<G4double> out_mostOuterRadius;
 
 };
 

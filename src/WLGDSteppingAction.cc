@@ -29,6 +29,9 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
     // Adding tracking of amount of neutrons crossing the detectors
     if(aStep->GetTrack()->GetParticleDefinition()->GetParticleName() == "neutron")
     {
+        G4double tmp_x = aStep->GetTrack()->GetPosition().getX()/m;
+        G4double tmp_y = aStep->GetTrack()->GetPosition().getY()/m;
+        fEventAction->UpdateMostOuterRadius(sqrt(tmp_x*tmp_x + tmp_y*tmp_y));
         if(aStep->GetTrack()->GetNextVolume())
         {
             auto physVol1 = aStep->GetTrack()->GetVolume();

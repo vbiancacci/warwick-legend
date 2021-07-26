@@ -47,6 +47,7 @@ void WLGDTrackingAction::PreUserTrackingAction(const G4Track* aTrack)
 
     if(aTrack->GetParticleDefinition()->GetParticleName() == "neutron")
     {
+
         auto tmp_vector = aTrack->GetVertexPosition();
         tmp_neutronXpos = tmp_vector.getX() / m;
         tmp_neutronYpos = tmp_vector.getY() / m;
@@ -55,6 +56,9 @@ void WLGDTrackingAction::PreUserTrackingAction(const G4Track* aTrack)
         tmp_neutronXmom = tmp_vector.getX();
         tmp_neutronYmom = tmp_vector.getY();
         tmp_neutronZmom = tmp_vector.getZ();
+
+        fEventAction->SetMostOuterRadius(sqrt(tmp_neutronXpos*tmp_neutronXpos + tmp_neutronYpos*tmp_neutronYpos));
+
         //tmp_neutronTime = aTrack->GetStep()->GetPostStepPoint()->GetGlobalTime() / s;
         if(fRunAction->getWriteOutGeneralNeutronInfo() == 1)
             fEventAction->IncreaseByOne_NeutronInEvent();
@@ -217,6 +221,7 @@ void WLGDTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
                     fEventAction->AddNeutronyMom(tmp_neutronYmom);
                     fEventAction->AddNeutronzMom(tmp_neutronZmom);
                     fEventAction->AddNeutronTime(tmp_neutronTime);
+                    fEventAction->WriteMostOuterRadius();
                     fEventAction->AddIDListOfGe77SiblingParticles(aTrack->GetTrackID());
                 }
                 else

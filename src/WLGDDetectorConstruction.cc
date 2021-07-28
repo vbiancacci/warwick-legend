@@ -776,6 +776,10 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
   new G4PVPlacement(nullptr, G4ThreeVector(0., -ringrad * cm, cushift * cm), fUlarLogical,
                     "ULar_phys4", fLarLogical, false, 3, true);
 
+
+  #define whichGeometry 1
+
+  #if whichGeometry==0
   if(fWithBoratedPET == 2){
     int NPanels = 28;
     double radiusOfPanels = 2*m;
@@ -792,7 +796,26 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
 
     }
   }
+  #endif
+  #if whichGeometry==1
+    if(fWithBoratedPET == 2){
+    int NPanels = 56;
+    double radiusOfPanels = 2*m;
+    double anglePanel = 360./NPanels * deg;
+    G4double zpos = 0*cm;
+    G4RotationMatrix* rotMat;
+    double constantAngle = 45*deg;
+    for(G4int j = 0; j < NPanels; j++) {
+      xpos = radiusOfPanels * std::cos(j * anglePanel);
+      ypos = radiusOfPanels * std::sin(j * anglePanel);
+      rotMat = new G4RotationMatrix;
+      rotMat->rotateZ(-(j+1) * anglePanel + 90*deg + constantAngle);
+      new G4PVPlacement(rotMat, G4ThreeVector(xpos, ypos, zpos),
+                        fBoratedPETLogical_Box, "BoratedPET_phys", fLarLogical, false, j, true);
 
+    }
+  }
+#endif
 
 
   //

@@ -799,8 +799,8 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
   #endif
   #if whichGeometry==1
     if(fWithBoratedPET == 2){
-    int NPanels = 56;
-    double radiusOfPanels = 2*m;
+    double radiusOfPanels = fBoratedTurbineRadius*cm;
+    int NPanels = ceil(2*3.14159265*radiusOfPanels/cm / 0.33);//56;
     double anglePanel = 360./NPanels * deg;
     G4double zpos = 0*cm;
     G4RotationMatrix* rotMat;
@@ -1137,6 +1137,8 @@ void WLGDDetectorConstruction::SetBoratedPET(G4int answer){fWithBoratedPET = ans
 
 void WLGDDetectorConstruction::SetGdWater(G4int answer){fWithGdWater = answer;  WLGDDetectorConstruction::DefineMaterials(); G4RunManager::GetRunManager()->ReinitializeGeometry();}
 
+void WLGDDetectorConstruction::SetBoratedTurbineRadius(G4double radius){fBoratedTurbineRadius = radius;}
+
 void WLGDDetectorConstruction::DefineCommands()
 {
   // Define geometry command directory using generic messenger class
@@ -1216,6 +1218,13 @@ void WLGDDetectorConstruction::DefineCommands()
     .SetGuidance("2 = with Borated PET in turbine mode")
     .SetCandidates("0 1 2")
     .SetDefaultValue("0");
+
+  fDetectorMessenger
+    ->DeclareMethod("Borated_Turbine_Radius", &WLGDDetectorConstruction::SetBoratedTurbineRadius)
+    .SetGuidance("Set the radius on which the borated PE pannels are aligned on [cm]")
+    .SetDefaultValue("200.0")
+    .SetStates(G4State_PreInit)
+    .SetToBeBroadcasted(false);
 
   fDetectorMessenger
     ->DeclareMethod("With_Gd_Water", &WLGDDetectorConstruction::SetGdWater)

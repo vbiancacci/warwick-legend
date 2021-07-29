@@ -31,7 +31,7 @@ public:
   void     SetWithoutCupperTubes(G4int answer);
   void     SetBoratedPET(G4int answer);
   void     SetGdWater(G4int answer);
-
+  void	   SetBoratedTurbineRadius(G4double radius);
 
 private:
   void DefineCommands();
@@ -53,6 +53,7 @@ private:
   G4double                            fHe3Conc            = 0.0;
   G4double			      fCryostatOuterRadius = 350.0;
   G4double 			      fCryostatHeight = 350.0;
+  G4double                            fBoratedTurbineRadius = 200.0;
   G4int                               fWithOutCupperTubes = 0;
   G4int                               fWithBoratedPET = 0;
   G4int				      fWithGdWater = 0;

@@ -24,6 +24,9 @@ void WLGDActionInitialization::BuildForMaster() const
 void WLGDActionInitialization::Build() const
 {
   // forward detector
+  // Edit: Moritz Neuberger
+  // added connection between the event action and run/tracking/stepping action classes
+  // added connection between run action and tracking/stepping action class
   SetUserAction(new WLGDPrimaryGeneratorAction(fDet));
   auto event = new WLGDEventAction();
   SetUserAction(event);

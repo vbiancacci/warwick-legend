@@ -657,8 +657,8 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume * {
                                             cuhheight * cm, 0.0, CLHEP::twopi);
 
     // Box variables
-    G4double b_width = 2.5 * cm;
-    G4double b_length = fBoratedTurbineLength/2.*cm;//0.25 * m;
+    G4double b_width = fBoratedTurbineWidth/2. * cm;//2.5 * cm;
+    G4double b_length = fBoratedTurbineLength/2. * cm;//0.25 * m;
     G4double b_height = fCryostatHeight * cm - 0.5 * m;
 
     auto *boratedPETSolid_Box = new G4Box("BoratedPET", b_length, b_width, b_height);
@@ -1165,6 +1165,9 @@ void WLGDDetectorConstruction::SetBoratedTurbineRadius(G4double radius) { fBorat
 // option to set the length of the turbine structure
 void WLGDDetectorConstruction::SetBoratedTurbineLength(G4double length) { fBoratedTurbineLength = length; }
 
+// option to set the width of the turbine structure
+void WLGDDetectorConstruction::SetBoratedTurbineWidth(G4double width) { fBoratedTurbineWidth = width; }
+
 // option to set the angle of the turbine structure
 void WLGDDetectorConstruction::SetBoratedTurbineAngle(G4double deg) { fBoratedTurbineAngle = deg; }
 
@@ -1279,6 +1282,14 @@ void WLGDDetectorConstruction::DefineCommands() {
     fDetectorMessenger
             ->DeclareMethod("Borated_Turbine_Angle", &WLGDDetectorConstruction::SetBoratedTurbineAngle)
             .SetGuidance("Set the angle on which the borated PE pannels are aligned on [deg]")
+            .SetDefaultValue("45.0")
+            .SetStates(G4State_PreInit)
+            .SetToBeBroadcasted(false);
+
+// option to set the radius of the turbine structure
+    fDetectorMessenger
+            ->DeclareMethod("Borated_Turbine_Width", &WLGDDetectorConstruction::SetBoratedTurbineWidth)
+            .SetGuidance("Set the width of the borated PE pannels [cm]")
             .SetDefaultValue("45.0")
             .SetStates(G4State_PreInit)
             .SetToBeBroadcasted(false);

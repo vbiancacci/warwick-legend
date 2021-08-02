@@ -792,13 +792,19 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume * {
     }
 #endif
 #if whichGeometry == 1
+
     if (fWithBoratedPET == 2) {
 
+        G4double densityOfBPE = 0.95;
         double radiusOfPanels = fBoratedTurbineRadius * cm;
         double constantAngle = fBoratedTurbineAngle * deg;//45 * deg;
 
         int NPanels = ceil(2 * 3.14159265 * radiusOfPanels / cm / (0.95 * 2 * b_length/cm * cos(constantAngle)));
         double anglePanel = 360. / NPanels * deg;
+
+        G4double totalVolume = NPanels * b_length/cm * b_width/cm * b_height/cm;
+
+        G4cout << "Total Mass of B-PE: " << totalVolume * densityOfBPE << G4endl;
 
         G4double zpos = 0 * cm;
         G4RotationMatrix *rotMat;
@@ -1051,6 +1057,7 @@ auto WLGDDetectorConstruction::SetupHallA() -> G4VPhysicalVolume * {
     G4double xpos;
     G4double ypos;
     G4double angle = CLHEP::twopi / 6.0;
+
     for (G4int j = 0; j < 6; j++) {
         xpos = roiradius * cm * std::cos(j * angle);
         ypos = roiradius * cm * std::sin(j * angle);

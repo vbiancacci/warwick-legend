@@ -831,7 +831,7 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume * {
 
         G4cout << "Total Mass of B-PE: " << boratedPETSolid_Tube->GetCubicVolume() * densityOfBPE << G4endl;
 
-        new G4PVPlacement(nullptr, G4ThreeVector(0,0,fBoratedTurbinezPosition),
+        new G4PVPlacement(nullptr, G4ThreeVector(0,0,fBoratedTurbinezPosition*cm),
                           fBoratedPETLogical_Tube, "BoratedPET_phys", fLarLogical, false, 0, true);
     }
 

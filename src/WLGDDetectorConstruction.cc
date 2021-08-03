@@ -1277,7 +1277,8 @@ void WLGDDetectorConstruction::DefineCommands() {
             .SetGuidance("0 = without Borated PET")
             .SetGuidance("1 = with Borated PET around Re-Entrance tubes")
             .SetGuidance("2 = with Borated PET in turbine mode")
-            .SetCandidates("0 1 2")
+            .SetGuidance("3 = with Borated PET in large tub")
+            .SetCandidates("0 1 2 3")
             .SetDefaultValue("0");
 
 // option to set the radius of the turbine structure

@@ -820,7 +820,20 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume * {
         }
     }
 #endif
+    if (fWithBoratedPET == 3) {
 
+        G4double densityOfBPE = 0.95;
+        double radiusOfPanels = fBoratedTurbineRadius * cm;
+
+        boratedPETSolid_Tube = new G4Tubs("BoratedPET", fBoratedTurbineRadius * cm, (fBoratedTurbineRadius * cm + b_width*2),
+                                          b_height, 0.0, CLHEP::twopi);
+        fBoratedPETLogical_Tube = new G4LogicalVolume(boratedPETSolid_Tube, BoratedPETMat, "BoratedPET_Logical");
+
+        G4cout << "Total Mass of B-PE: " << boratedPETSolid_Tube->GetCubicVolume() * densityOfBPE << G4endl;
+
+        new G4PVPlacement(nullptr, G4ThreeVector(0,0,0),
+                          fBoratedPETLogical_Tube, "BoratedPET_phys", fLarLogical, false, 0, true);
+    }
 
     //
     // Visualization attributes

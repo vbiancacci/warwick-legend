@@ -826,7 +826,7 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume * {
         double radiusOfPanels = fBoratedTurbineRadius * cm;
 
         boratedPETSolid_Tube = new G4Tubs("BoratedPET", fBoratedTurbineRadius * cm, (fBoratedTurbineRadius * cm + b_width*2),
-                                          b_height, 0.0, CLHEP::twopi);
+                                          b_height/2, 0.0, CLHEP::twopi);
         fBoratedPETLogical_Tube = new G4LogicalVolume(boratedPETSolid_Tube, BoratedPETMat, "BoratedPET_Logical");
 
         G4cout << "Total Mass of B-PE: " << boratedPETSolid_Tube->GetCubicVolume() * densityOfBPE << G4endl;

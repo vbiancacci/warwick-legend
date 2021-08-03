@@ -659,7 +659,7 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume * {
     // Box variables
     G4double b_width = fBoratedTurbineWidth/2. * cm;//2.5 * cm;
     G4double b_length = fBoratedTurbineLength/2. * cm;//0.25 * m;
-    G4double b_height = fCryostatHeight * cm - 0.5 * m;
+    G4double b_height = fBoratedTurbineHeight*cm;//fCryostatHeight * cm - 0.5 * m;
 
     auto *boratedPETSolid_Box = new G4Box("BoratedPET", b_length, b_width, b_height);
 
@@ -831,7 +831,7 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume * {
 
         G4cout << "Total Mass of B-PE: " << boratedPETSolid_Tube->GetCubicVolume() * densityOfBPE << G4endl;
 
-        new G4PVPlacement(nullptr, G4ThreeVector(0,0,0),
+        new G4PVPlacement(nullptr, G4ThreeVector(0,0,fBoratedTurbinezPosition),
                           fBoratedPETLogical_Tube, "BoratedPET_phys", fLarLogical, false, 0, true);
     }
 
@@ -1191,6 +1191,12 @@ void WLGDDetectorConstruction::SetBoratedTurbineWidth(G4double width) { fBorated
 // option to set the angle of the turbine structure
 void WLGDDetectorConstruction::SetBoratedTurbineAngle(G4double deg) { fBoratedTurbineAngle = deg; }
 
+// option to set the height of the turbine structure
+void WLGDDetectorConstruction::SetBoratedTurbineHeight(G4double height) { fBoratedTurbineHeight = height; }
+
+// option to set the zPosition of the turbine structure
+void WLGDDetectorConstruction::SetBoratedTurbinezPosition(G4double zPosition) { fBoratedTurbinezPosition = zPosition; }
+
 // option to change the water to gadolinium weighted water in the water tank
 void WLGDDetectorConstruction::SetGdWater(G4int answer) {
     fWithGdWater = answer;
@@ -1312,6 +1318,21 @@ void WLGDDetectorConstruction::DefineCommands() {
             ->DeclareMethod("Borated_Turbine_Width", &WLGDDetectorConstruction::SetBoratedTurbineWidth)
             .SetGuidance("Set the width of the borated PE pannels [cm]")
             .SetDefaultValue("45.0")
+            .SetStates(G4State_PreInit)
+            .SetToBeBroadcasted(false);
+
+    // option to set the radius of the turbine structure
+    fDetectorMessenger
+            ->DeclareMethod("Borated_Turbine_Height", &WLGDDetectorConstruction::SetBoratedTurbineHeight)
+            .SetGuidance("Set the height of the borated PE pannels [cm]")
+            .SetDefaultValue("600")
+            .SetStates(G4State_PreInit)
+            .SetToBeBroadcasted(false);
+    // option to set the radius of the turbine structure
+    fDetectorMessenger
+            ->DeclareMethod("Borated_Turbine_zPosition", &WLGDDetectorConstruction::SetBoratedTurbinezPosition)
+            .SetGuidance("Set the zPosition of the borated PE pannels [cm]")
+            .SetDefaultValue("0")
             .SetStates(G4State_PreInit)
             .SetToBeBroadcasted(false);
 

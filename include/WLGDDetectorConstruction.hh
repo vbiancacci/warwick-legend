@@ -35,6 +35,8 @@ public:
   void     SetBoratedTurbineLength(G4double length);
   void     SetBoratedTurbineAngle(G4double deg);
   void     SetBoratedTurbineWidth(G4double width);
+    void     SetBoratedTurbineHeight(G4double height);
+    void     SetBoratedTurbinezPosition(G4double zPosition);
 
 private:
   void DefineCommands();
@@ -60,6 +62,8 @@ private:
     G4double                            fBoratedTurbineLength = 50.0;
     G4double                            fBoratedTurbineAngle = 45.0;
     G4double                            fBoratedTurbineWidth = 5.0;
+    G4double                            fBoratedTurbineHeight = 600.;
+    G4double                            fBoratedTurbinezPosition = 0.;
   G4int                               fWithOutCupperTubes = 0;
   G4int                               fWithBoratedPET = 0;
   G4int				      fWithGdWater = 0;

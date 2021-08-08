@@ -9,6 +9,9 @@
 #include "G4GenericMessenger.hh"
 #include "G4VUserPrimaryGeneratorAction.hh"
 #include "globals.hh"
+//#include "TH1F.h"
+//#include "TH1.h"
+//#include "TFile.h"
 
 using namespace std;
 class G4ParticleGun;
@@ -113,6 +116,8 @@ private:
   std::ifstream      fInputFile;
   G4String           fFileName;
   G4double           fZShift;
+
+  piecewise_linear_distribution<double>*      neutronEnergySpectrumInBPE;
 };
 
 #endif

@@ -15,6 +15,9 @@
 #include <set>
 #include <fstream>
 #include <random>
+/*#include "TH1F.h"
+#include "TH1.h"
+#include "TFile.h"*/
 
 
 //G4String WLGDPrimaryGeneratorAction::fFileName;
@@ -141,7 +144,7 @@ void WLGDPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
         if (fInputFile.eof())
         {
             fInputFile.close();
-            G4cerr << "File over: not enough events!" << G4endl;
+            G4cerr << "File over: not enough events! Debugoutput" << G4endl;
             G4Exception("WLGDPrimaryGeneratorAction::GeneratePrimaryVertex()", "err001", FatalException, "Exit Warwick");
             return;
         }
@@ -262,14 +265,151 @@ void WLGDPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
         fParticleGun->GeneratePrimaryVertex(event);
 
     }
+    if(fGenerator == "BoratedPENeutrons")
+    {
+
+        if(neutronEnergySpectrumInBPE == 0){
+            string filelistName = "../data/resultingSpectrum.txt";
+            ifstream filestream;
+            filestream.open(filelistName.c_str());
+            vector<double> x_val;
+            vector<double> y_val;
+            double tmp_x, tmp_y;
+            while(filestream >> tmp_x >> tmp_y){
+                x_val.push_back(tmp_x);
+                y_val.push_back(tmp_y);
+            }
+            neutronEnergySpectrumInBPE = new std::piecewise_linear_distribution<double>(x_val.begin(),x_val.end(),y_val.begin());
+        }
+
+        G4int type = fDetector->GetBoratedType();
+        if(type == 0)
+            throw std::runtime_error(std::string("Do not use BoratedPENeutrons generator without using BPE! ):"));
+
+        std::uniform_int_distribution<int> distribution(0,4);
+        std::uniform_real_distribution<> rndm(0.0, 1.0);
+
+        G4double ran_x, ran_y, ran_z;
+
+        if(type == 1){
+            G4double curad = 40.0;
+            G4double BoratedPETouterrad = 5.0;
+            G4double cuhheight = 400.0/2.;
+
+            G4int whichReentranceTube = distribution(generator);
+            G4double offset_x, offset_y;
+            if(whichReentranceTube == 0) {offset_x = 1*m; offset_y = 0*m;}
+            if(whichReentranceTube == 1) {offset_x = 0*m; offset_y = 1*m;}
+            if(whichReentranceTube == 2) {offset_x = -1*m; offset_y = 0*m;}
+            if(whichReentranceTube == 3) {offset_x = 0*m; offset_y = -1*m;}
+
+            G4double ran_rad = curad * cm + BoratedPETouterrad * cm * rndm(generator);
+            G4double ran_phi = 360 * deg * rndm(generator);
+
+            ran_x = ran_rad * sin(ran_phi) + offset_x;
+            ran_y = ran_rad * cos(ran_phi) + offset_y;
+            ran_z = cuhheight * cm * ( 1 - 2 * rndm(generator));
+        }
+
+        if(type == 2){
+            G4int    BPE_N   =   fDetector->GetBoratedTurbinezNPanels();
+            double anglePanel = 360. / BPE_N * deg;
+            std::uniform_int_distribution<int> distribution_2(0,BPE_N);
+            G4int whichPanel = distribution_2(generator);
+
+            G4double BPE_rad = fDetector->GetBoratedTurbineRadius();
+            G4double offset_x = BPE_rad * cm * std::cos(whichPanel * anglePanel);
+            G4double offset_y = BPE_rad * cm * std::sin(whichPanel * anglePanel);
+
+            G4double BPE_wid =   fDetector->GetBoratedTurbineWidth();
+            G4double BPE_len =   fDetector->GetBoratedTurbineLength();
+            G4double BPE_hei =   fDetector->GetBoratedTurbineHeight();
+            G4double BPE_ang =   fDetector->GetBoratedTurbineAngle();
+            G4double BPE_zPos =  fDetector->GetBoratedTurbinezPosition()*cm - 100*cm;
+
+            G4double tmp_x = BPE_wid/2. * cm * (1 - 2*rndm(generator));
+            G4double tmp_y = BPE_len/2. * cm * (1 - 2*rndm(generator));
+
+            G4double tmp_ang = whichPanel * anglePanel + BPE_ang * deg;
+
+            ran_x = (tmp_x * cos(tmp_ang) + tmp_y * sin(tmp_ang)) + offset_x;
+            ran_y = (tmp_y * cos(tmp_ang) - tmp_x * sin(tmp_ang)) + offset_y;
+            ran_z = BPE_hei/2. * cm * (1 - 2*rndm(generator)) + BPE_zPos;
+
+        }
+
+        if(type == 3){
+
+	    G4double BPE_rad =	 fDetector->GetBoratedTurbineRadius();
+            G4double BPE_wid =     fDetector->GetBoratedTurbineWidth();
+            G4double BPE_hei =     fDetector->GetBoratedTurbineHeight()/2.;
+            G4double BPE_zPos =     fDetector->GetBoratedTurbinezPosition()*cm - 100*cm;
+
+	    G4double volume_cyl = 3.1415926535*BPE_hei*2*(pow(BPE_rad+BPE_wid,2) - pow(BPE_rad,2));
+	    G4double volume_top = 3.1415926535*BPE_wid*pow(BPE_rad+BPE_wid,2);
+
+	    G4double prob_cyl = volume_cyl/(volume_cyl + 2*volume_top);
+	    G4double prob_top = (1 - prob_cyl)/2.;
+
+	    std::discrete_distribution<> distribution_2({prob_cyl,prob_top,prob_top});
+
+	    G4int where = distribution_2(generator);
+
+	    if(where == 0){
+		    G4double ran_rad = BPE_rad * cm + BPE_wid * cm * rndm(generator);
+		    G4double ran_phi = 360 * deg * rndm(generator);
+		    ran_x = ran_rad * sin(ran_phi);
+		    ran_y = ran_rad * cos(ran_phi);
+		    ran_z = BPE_hei * ( 1 - 2 * rndm(generator));
+		}
+	    if(where > 0){
+                    G4double ran_rad = BPE_rad * cm * rndm(generator);
+                    G4double ran_phi = 360 * deg * rndm(generator);
+                    ran_x = ran_rad * sin(ran_phi);
+                    ran_y = ran_rad * cos(ran_phi);
+                    ran_z = BPE_wid * ( 1 - 2 * rndm(generator));
+		    if(where == 1) ran_z += BPE_hei;
+		    if(where == 2) ran_z -= BPE_hei;
+	    }
+	}
+
+
+
+        G4double particle_time = 0 * s;
+        G4double energy = (*neutronEnergySpectrumInBPE)(generator) * keV;
+	G4cout << energy << G4endl;
+	G4double theta = rndm(generator) * 180. * deg;
+        G4double phi = rndm(generator) * 360. * deg;
+        G4double x = ran_x;
+        G4double y = ran_y;
+        G4double z = ran_z;
+
+        G4ParticleTable* theParticleTable = G4ParticleTable::GetParticleTable();
+        fParticleGun->SetParticleDefinition(theParticleTable->FindParticle("neutron"));
+        G4double theMass =  theParticleTable->FindParticle("neutron")->GetPDGMass();
+
+        G4double totMomentum = std::sqrt(energy*energy+2*theMass*energy);
+        G4double pz = -1*std::cos(theta);
+        G4double px = std::sin(theta)*cos(phi);
+        G4double py = std::sin(theta)*sin(phi);
+        G4ThreeVector momentumDir(px, py, pz);
+
+        fParticleGun->SetParticleMomentumDirection(momentumDir);
+
+        fParticleGun->SetParticleEnergy(energy);
+
+        fParticleGun->SetParticlePosition(G4ThreeVector(x, y, z));
+
+        fParticleGun->GeneratePrimaryVertex(event);
+
+    }
 }
 
 void WLGDPrimaryGeneratorAction::SetGenerator(const G4String& name)
 {
-//  G4cout << "__________________________________________xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx__________________________________________" << G4endl << name << G4endl << "__________________________________________xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx__________________________________________" << G4endl;
 
 
-    std::set<G4String> knownGenerators = { "MeiAndHume", "Musun" , "Ge77m", "Ge77andGe77m"};
+    std::set<G4String> knownGenerators = { "MeiAndHume", "Musun" , "Ge77m", "Ge77andGe77m", "BoratedPENeutrons"};
     if(knownGenerators.count(name) == 0)
     {
         G4Exception("WLGDPrimaryGeneratorAction::SetGenerator", "WLGD0101", JustWarning,
@@ -311,6 +451,7 @@ void WLGDPrimaryGeneratorAction::DefineCommands()
             .SetGuidance("Musun = Used in previous MaGe simulation")
             .SetGuidance("Ge77m = generate Ge77m inside the HPGe detectors")
             .SetGuidance("Ge77andGe77m = generate 50% Ge77, 50% Ge77m inside the HPGe detectors")
-            .SetCandidates("MeiAndHume Musun Ge77m Ge77andGe77m" );
+            .SetGuidance("BoratedPENeutrons = generate neutrons inside the borated PE")
+            .SetCandidates("MeiAndHume Musun Ge77m Ge77andGe77m BoratedPENeutrons" );
 }
 

@@ -798,11 +798,17 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume * {
         G4double densityOfBPE = 0.95;
         double radiusOfPanels = fBoratedTurbineRadius * cm;
         double constantAngle = fBoratedTurbineAngle * deg;//45 * deg;
+        int NPanels;
 
-        int NPanels = ceil(2 * 3.14159265 * radiusOfPanels / cm / (0.95 * 2 * b_length/cm * cos(constantAngle)));
+        if(fBoratedTurbineNPanels == 0)
+            NPanels = ceil(2 * 3.14159265 * radiusOfPanels / cm / (0.95 * 2 * b_length/cm * cos(constantAngle)));
+        else
+            NPanels = fBoratedTurbineNPanels;
+
+        fNPanels = NPanels;
         double anglePanel = 360. / NPanels * deg;
 
-        G4double totalVolume = NPanels * b_length/cm * b_width/cm * b_height/cm;
+        G4double totalVolume = NPanels * 2*b_length/cm * 2*b_width/cm * b_height/cm;
 
         G4cout << "Total Mass of B-PE: " << totalVolume * densityOfBPE << G4endl;
 
@@ -832,6 +838,15 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume * {
         G4cout << "Total Mass of B-PE: " << boratedPETSolid_Tube->GetCubicVolume() * densityOfBPE << G4endl;
 
         new G4PVPlacement(nullptr, G4ThreeVector(0,0,fBoratedTurbinezPosition*cm),
+                          fBoratedPETLogical_Tube, "BoratedPET_phys", fLarLogical, false, 0, true);
+
+        boratedPETSolid_Tube = new G4Tubs("BoratedPET", 0, (fBoratedTurbineRadius * cm + b_width*2),
+                                          b_width, 0.0, CLHEP::twopi);
+        fBoratedPETLogical_Tube = new G4LogicalVolume(boratedPETSolid_Tube, BoratedPETMat, "BoratedPET_Logical");
+
+        new G4PVPlacement(nullptr, G4ThreeVector(0,0,fBoratedTurbinezPosition*cm - b_height/2 - b_width),
+                          fBoratedPETLogical_Tube, "BoratedPET_phys", fLarLogical, false, 0, true);
+        new G4PVPlacement(nullptr, G4ThreeVector(0,0,fBoratedTurbinezPosition*cm + b_height/2 + b_width),
                           fBoratedPETLogical_Tube, "BoratedPET_phys", fLarLogical, false, 0, true);
     }
 
@@ -1197,6 +1212,9 @@ void WLGDDetectorConstruction::SetBoratedTurbineHeight(G4double height) { fBorat
 // option to set the zPosition of the turbine structure
 void WLGDDetectorConstruction::SetBoratedTurbinezPosition(G4double zPosition) { fBoratedTurbinezPosition = zPosition; }
 
+// option to set the zPosition of the turbine structure
+void WLGDDetectorConstruction::SetBoratedTurbineNPanels(G4double nPanels) { fBoratedTurbineNPanels = nPanels; }
+
 // option to change the water to gadolinium weighted water in the water tank
 void WLGDDetectorConstruction::SetGdWater(G4int answer) {
     fWithGdWater = answer;
@@ -1328,10 +1346,19 @@ void WLGDDetectorConstruction::DefineCommands() {
             .SetDefaultValue("600")
             .SetStates(G4State_PreInit)
             .SetToBeBroadcasted(false);
+
     // option to set the radius of the turbine structure
     fDetectorMessenger
             ->DeclareMethod("Borated_Turbine_zPosition", &WLGDDetectorConstruction::SetBoratedTurbinezPosition)
             .SetGuidance("Set the zPosition of the borated PE pannels [cm]")
+            .SetDefaultValue("0")
+            .SetStates(G4State_PreInit)
+            .SetToBeBroadcasted(false);
+
+    // option to set the number of panels of the turbine structure
+    fDetectorMessenger
+            ->DeclareMethod("Borated_Turbine_NPanels", &WLGDDetectorConstruction::SetBoratedTurbineNPanels)
+            .SetGuidance("Set the number of panels of the borated PE pannels [cm]")
             .SetDefaultValue("0")
             .SetStates(G4State_PreInit)
             .SetToBeBroadcasted(false);

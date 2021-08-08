@@ -12,6 +12,9 @@ include(CTest)
 # Dependencies
 find_package(Geant4 10.6 REQUIRED gdml ui_all vis_all)
 
+find_package(ROOT 6.06 CONFIG REQUIRED )
+
+
 # Build
 add_executable(warwick-legend
   warwick-legend.cc
@@ -29,7 +32,7 @@ add_executable(warwick-legend
   src/WLGDTrackingAction.cc
   src/WLGDTrajectory.cc)
 target_include_directories(warwick-legend PRIVATE ${PROJECT_SOURCE_DIR}/include)
-target_link_libraries(warwick-legend PRIVATE ${Geant4_LIBRARIES})
+target_link_libraries(warwick-legend PRIVATE ${Geant4_LIBRARIES} ${ROOT_LIBRARIES})
 
 # Copy macro needed to run in interactive mode to build directory.
 # By default, the macro is assumed to be in the working directory

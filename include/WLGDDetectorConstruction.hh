@@ -23,6 +23,16 @@ public:
   G4double GetWorldSizeZ() { return fvertexZ; }  // inline
   G4double GetWorldExtent() { return fmaxrad; }  // --"--
   G4String GetGeometryName() { return fGeometryName; }
+
+    G4int        GetBoratedType(){return fWithBoratedPET;}
+    G4double	 GetBoratedTurbineRadius(){return fBoratedTurbineRadius;}
+    G4double     GetBoratedTurbineLength(){return fBoratedTurbineLength;}
+    G4double     GetBoratedTurbineAngle(){return fBoratedTurbineAngle;}
+    G4double     GetBoratedTurbineWidth(){return fBoratedTurbineWidth;}
+    G4double     GetBoratedTurbineHeight(){return fBoratedTurbineHeight;}
+    G4double     GetBoratedTurbinezPosition(){return fBoratedTurbinezPosition;}
+    G4int        GetBoratedTurbinezNPanels(){return fNPanels;}
+
   G4int    isSetWithGdWater() {return fWithGdWater; }
   void     SetGeometry(const G4String& name);
   void     ExportGeometry(const G4String& file);
@@ -35,8 +45,9 @@ public:
   void     SetBoratedTurbineLength(G4double length);
   void     SetBoratedTurbineAngle(G4double deg);
   void     SetBoratedTurbineWidth(G4double width);
-    void     SetBoratedTurbineHeight(G4double height);
-    void     SetBoratedTurbinezPosition(G4double zPosition);
+  void     SetBoratedTurbineHeight(G4double height);
+  void     SetBoratedTurbinezPosition(G4double zPosition);
+  void     SetBoratedTurbineNPanels(G4double nPanels);
 
 private:
   void DefineCommands();
@@ -64,6 +75,8 @@ private:
     G4double                            fBoratedTurbineWidth = 5.0;
     G4double                            fBoratedTurbineHeight = 600.;
     G4double                            fBoratedTurbinezPosition = 0.;
+    G4int                               fNPanels;
+    G4int                               fBoratedTurbineNPanels = 0;
   G4int                               fWithOutCupperTubes = 0;
   G4int                               fWithBoratedPET = 0;
   G4int				      fWithGdWater = 0;

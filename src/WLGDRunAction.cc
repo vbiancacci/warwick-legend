@@ -244,6 +244,8 @@ void WLGDRunAction::SetWriteOutGeneralNeutronInfo(G4int answer){ fWriteOutGenera
 
 void WLGDRunAction::SetWriteOutAdvancedMultiplicity(G4int answer){ fWriteOutAdvancedMultiplicity = answer ;}
 
+void WLGDRunAction::SetWriteOutAllNeutronInfoRoot(G4int answer){ fWriteOutAllNeutronInfoRoot = answer ;}
+
 void WLGDRunAction::DefineCommands()
 {
   // Define /WLGD/generator command directory using generic messenger class
@@ -265,6 +267,15 @@ void WLGDRunAction::DefineCommands()
           .SetGuidance("1 = with write out")
           .SetCandidates("0 1")
           .SetDefaultValue("0");
+
+
+    fMessenger
+            ->DeclareMethod("WriteOutAllNeutronInfoRoot", &WLGDRunAction::SetWriteOutAllNeutronInfoRoot)
+            .SetGuidance("Set whether to write out all Neutron Info into root")
+            .SetGuidance("0 = without write out")
+            .SetGuidance("1 = with write out")
+            .SetCandidates("0 1")
+            .SetDefaultValue("0");
 
     fMessenger
             ->DeclareMethod("WriteOutAdvancedMultiplicity", &WLGDRunAction::SetWriteOutAdvancedMultiplicity)

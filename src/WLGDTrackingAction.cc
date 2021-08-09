@@ -57,6 +57,17 @@ void WLGDTrackingAction::PreUserTrackingAction(const G4Track* aTrack)
         tmp_neutronYmom = tmp_vector.getY();
         tmp_neutronZmom = tmp_vector.getZ();
 
+        if(fRunAction->getWriteOutAllNeutronInfoRoot() == 1)
+        {
+            fEventAction->AddNeutronxLoc(tmp_neutronXpos);
+            fEventAction->AddNeutronyLoc(tmp_neutronYpos);
+            fEventAction->AddNeutronzLoc(tmp_neutronZpos);
+            fEventAction->AddNeutronxMom(tmp_neutronXmom);
+            fEventAction->AddNeutronyMom(tmp_neutronYmom);
+            fEventAction->AddNeutronzMom(tmp_neutronZmom);
+            fEventAction->AddNeutronTime(tmp_neutronTime);
+        }
+
         fEventAction->SetMostOuterRadius(sqrt(tmp_neutronXpos*tmp_neutronXpos + tmp_neutronYpos*tmp_neutronYpos));
 
         //tmp_neutronTime = aTrack->GetStep()->GetPostStepPoint()->GetGlobalTime() / s;

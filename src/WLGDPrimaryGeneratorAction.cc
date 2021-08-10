@@ -194,8 +194,8 @@ void WLGDPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
         G4double cushift	     = 150.;
         G4double roiradius     = 30.0;   // string radius curad - Ge radius - gap
         G4double gerad          = 4.0;                      // Ge radius
-        G4int    nofLayers      = 8;   // 8 Ge + 7 gaps = 1010 mm string height
-        G4int    nofStrings     = 12;  // 12 strings  of 8 Ge each
+        G4int    nofLayers      = 7;//8;   // 8 Ge + 7 gaps = 1010 mm string height
+        G4int    nofStrings     = 14;  // 12 strings  of 8 Ge each
         G4double gehheight      = 5.0;                      // full height 10 cm
         G4double gegap          = 3.0;                      // gap between Ge 3cm
         G4double step = (gehheight + gegap / 2) * cm;

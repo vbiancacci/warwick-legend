@@ -523,6 +523,10 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume * {
     // size parameter, unit [cm]
     G4double offset = 200.0;  // shift cavern floor to keep detector centre at origin
     G4double offset_2 = 100.0; // shift s.t. cavern, hall and tank are in line for different stone sizes
+    G4double offset_3 = 100;//69.5; // shift to get to the baseline lowered position
+    if(fDetectorPosition == "original")
+        offset_3 = 0;
+
     // cavern
     G4double stone = 500.0;  // Hall wall thickness 5 m
     G4double hallrad = 600.0;  // Hall cylinder diam 12 m
@@ -552,8 +556,10 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume * {
     G4double gehheight = 5.0;                      // full height 10 cm
     G4double gegap = 3.0;                      // gap between Ge 3cm
     G4double layerthickness = gegap + 2 * gehheight;    // 13 cm total
-    G4int nofLayers = 8;   // 8 Ge + 7 gaps = 1010 mm string height
-    G4int nofStrings = 12;  // 12 strings  of 8 Ge each
+//    G4int nofLayers = 8;   // 8 Ge + 7 gaps = 1010 mm string height
+//    G4int nofStrings = 12;  // 12 strings  of 8 Ge each
+    G4int nofLayers = 7;   // 8 Ge + 7 gaps = 1010 mm string height
+    G4int nofStrings = 14;  // 12 strings  of 8 Ge each
 
     fvertexZ = (hallhheight + offset) * cm;
     fmaxrad = hallrad * cm;
@@ -729,7 +735,7 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume * {
         for (G4int i = 0; i < nofLayers; i++) {
             new G4PVPlacement(
                     nullptr,
-                    G4ThreeVector(xpos, ypos, -step + (nofLayers / 2 * layerthickness - i * layerthickness) * cm),
+                    G4ThreeVector(xpos, ypos, -step + (nofLayers / 2 * layerthickness - i * layerthickness) * cm - offset_3*cm),
                     fLayerLogical, "Layer_phys", fUlarLogical, false, i + j * nofLayers, true);
         }
     }
@@ -1141,6 +1147,18 @@ auto WLGDDetectorConstruction::SetupHallA() -> G4VPhysicalVolume * {
     fGeLogical->SetVisAttributes(redVisAtt);
     return fWorldPhysical;
 }
+void WLGDDetectorConstruction::SetPositionOfDetectors(G4String name) {
+    std::set <G4String> knownGeometries = {"baseline", "original"};
+    if (knownGeometries.count(name) == 0) {
+        G4Exception("WLGDDetectorConstruction::SetGeometry", "WLGD0001", JustWarning,
+                    ("Invalid geometry setup name '" + name + "'").c_str());
+        return;
+    }
+
+    fDetectorPosition = name;
+    // Reinit wiping out stores
+    G4RunManager::GetRunManager()->ReinitializeGeometry();
+}
 
 void WLGDDetectorConstruction::SetGeometry(const G4String &name) {
     std::set <G4String> knownGeometries = {"baseline", "alternative", "hallA"};
@@ -1247,6 +1265,15 @@ void WLGDDetectorConstruction::DefineCommands() {
     // Define geometry command directory using generic messenger class
     fDetectorMessenger = new G4GenericMessenger(this, "/WLGD/detector/",
                                                 "Commands for controlling detector setup");
+
+    // switch command
+    fDetectorMessenger->DeclareMethod("setPositionOfDetectors", &WLGDDetectorConstruction::SetPositionOfDetectors)
+            .SetGuidance("Set geometry model of cavern and detector")
+            .SetGuidance("original = original Warwick-Legend Position")
+            .SetGuidance("baseline = lowered position")
+            .SetCandidates("original baseline")
+            .SetStates(G4State_PreInit)
+            .SetToBeBroadcasted(false);
 
     // switch command
     fDetectorMessenger->DeclareMethod("setGeometry", &WLGDDetectorConstruction::SetGeometry)

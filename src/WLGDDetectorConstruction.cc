@@ -94,11 +94,21 @@ void WLGDDetectorConstruction::DefineMaterials() {
     G4double B_NumberRatio = 1 / (1 + (1 - B_MassRatio) / B_MassRatio * 10. / 11.);
     SpecialB->AddIsotope(B10, B_NumberRatio);
     SpecialB->AddIsotope(B11, 1 - B_NumberRatio);
+
     auto *BoratedPET = new G4Material("BoratedPET", 0.95 * g / cm3, 4);  // high density foam
     BoratedPET->AddElement(H, 0.116);
     BoratedPET->AddElement(C, 0.612);
     BoratedPET->AddElement(SpecialB, 0.05);
     BoratedPET->AddElement(O, 0.222);
+
+    auto *PMMA = new G4Material("PMMA", 1.18 * g / cm3, 3);
+    PMMA->AddElement(H, 0.08);
+    PMMA->AddElement(C, 0.60);
+    PMMA->AddElement(O, 0.32);
+
+    auto *PolyEthylene = new G4Material("PolyEthylene", 0.95 * g / cm3, 2);
+    PolyEthylene->AddElement(H, 0.142);
+    PolyEthylene->AddElement(C, 0.857);
 
     G4Element *elGd = new G4Element("Gadolinium", "Gd", 64, 157.25 * g / mole);
     G4Element *elS = new G4Element("Sulfur", "S", 16., 32.066 * g / mole);
@@ -495,6 +505,10 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume * {
     auto *stdRock = G4Material::GetMaterial("StdRock");
     auto *roiMat = G4Material::GetMaterial("enrGe");
     auto *BoratedPETMat = G4Material::GetMaterial("BoratedPET");
+    if(fSetMaterial == "PolyEthylene")
+        BoratedPETMat = G4Material::GetMaterial("PolyEthylene");
+    if(fSetMaterial == "PMMA")
+        BoratedPETMat = G4Material::GetMaterial("PMMA");
     auto *larMat/*_alt*/        = G4Material::GetMaterial("CombinedArXeHe3");
     //if(fXeConc != 0 || fHe3Conc != 0) BoratedPET
     larMat = CombinedArXeHe3;
@@ -1194,6 +1208,13 @@ void WLGDDetectorConstruction::SetBoratedPET(G4int answer) {
     G4RunManager::GetRunManager()->ReinitializeGeometry();
 }
 
+// option to include borated PE in the setup (1: tubes around the re-entrance tubes, 2: trubine structure)
+void WLGDDetectorConstruction::SetMaterial(G4String answer) {
+    fSetMaterial = answer;
+    WLGDDetectorConstruction::DefineMaterials();
+    G4RunManager::GetRunManager()->ReinitializeGeometry();
+}
+
 // option to set the radius of the turbine structure
 void WLGDDetectorConstruction::SetBoratedTurbineRadius(G4double radius) { fBoratedTurbineRadius = radius; }
 
@@ -1304,6 +1325,17 @@ void WLGDDetectorConstruction::DefineCommands() {
             .SetGuidance("3 = with Borated PET in large tub")
             .SetCandidates("0 1 2 3")
             .SetDefaultValue("0");
+
+// option to include borated PE in the setup (1: tubes around the re-entrance tubes, 2: trubine structure)
+    fDetectorMessenger
+            ->DeclareMethod("Which_Material", &WLGDDetectorConstruction::SetMaterial)
+            .SetGuidance("Set which material should be used instead of Boarated PE")
+            .SetGuidance("BoratedPE = normal case")
+            .SetGuidance("PolyEthylene = without Boron")
+            .SetGuidance("PMMA = instead using PMMA")
+            .SetCandidates("BoratedPE PolyEthylene PMMA")
+            .SetDefaultValue("BoratedPE");
+
 
 // option to set the radius of the turbine structure
     fDetectorMessenger

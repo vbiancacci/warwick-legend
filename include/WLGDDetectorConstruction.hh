@@ -79,6 +79,7 @@ private:
     G4int                               fBoratedTurbineNPanels = 0;
   G4int                               fWithOutCupperTubes = 0;
   G4int                               fWithBoratedPET = 0;
+  G4String                              fSetMaterial = "";
   G4int				      fWithGdWater = 0;
   G4Material*                         CombinedArXeHe3;
   G4Material*			      water;	
@@ -86,6 +87,7 @@ private:
   void                                SetHe3Conc(G4double nf);
   void 				      SetOuterCryostatRadius(G4double rad);
   void 				      SetCryostatHeight(G4double height);
+  void                    SetMaterial(G4String answer);
 };
 
 #endif

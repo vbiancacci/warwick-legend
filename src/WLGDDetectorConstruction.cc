@@ -47,7 +47,7 @@ auto WLGDDetectorConstruction::Construct() -> G4VPhysicalVolume * {
     G4LogicalVolumeStore::GetInstance()->Clean();
     G4SolidStore::GetInstance()->Clean();
 
-    if (fGeometryName == "baseline") {
+    if (fGeometryName == "baseline" || fGeometryName == "baseline_smaller") {
         return SetupBaseline();
     } else if (fGeometryName == "hallA") {
         return SetupHallA();
@@ -238,7 +238,7 @@ void WLGDDetectorConstruction::ConstructSDandField() {
         }
 
         // Baseline also has a water volume and cryostat
-        if (fGeometryName == "baseline" || fGeometryName == "hallA") {
+        if (fGeometryName == "baseline" || fGeometryName == "hallA" || fGeometryName == "baseline_smaller") {
             G4LogicalVolume *logicWater = volumeStore->GetVolume("Water_log");
             biasmuXS->AttachTo(logicWater);
             G4LogicalVolume *logicCout = volumeStore->GetVolume("Cout_log");
@@ -526,6 +526,8 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume * {
     G4double offset_3 = 100;//69.5; // shift to get to the baseline lowered position
     if(fDetectorPosition == "original")
         offset_3 = 0;
+    if(fGeometryName == "baseline_smaller")
+        offset_3 = 37.5;
 
     // cavern
     G4double stone = 500.0;  // Hall wall thickness 5 m
@@ -541,6 +543,10 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume * {
     G4double vacgap = 1.0;    // vacuum gap between walls
     G4double cryrad = fCryostatOuterRadius; //350.0;  // cryostat diam 7 m
     G4double cryhheight = fCryostatHeight; //350.0;  // cryostat height 7 m
+    if(fGeometryName == "baseline_smaller"){
+        cryrad = 200.0;  // cryostat diam 4 m
+        cryhheight = 225.0;  // cryostat height 4.5 m
+    }
     // Borated PET tubes around copper tubes
     G4double BoratedPETouterrad = 5.0;    // tube thickness 5 cm
     // copper tubes with Germanium ROI
@@ -548,6 +554,10 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume * {
     G4double curad = 40.0;   // copper tube diam 80 cm
     G4double cuhheight = (400 - (350 - fCryostatHeight)) / 2.;//200.0;  // copper tube height 4 m inside cryostat
     G4double cushift = fCryostatHeight - cuhheight;//150.0;  // shift cu tube inside cryostat to top
+    if(fGeometryName == "baseline_smaller"){
+        cuhheight = 137.5;  // cupper height 2.25 m
+        cushift = 87.5;  // shift
+    }
     G4double ringrad = 100.0;  // cu tube placement ring radius
     // Ge cylinder 2.67 kg at 5.32 g/cm3
     G4double roiradius = 30.0;   // string radius curad - Ge radius - gap
@@ -679,7 +689,7 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume * {
     // Box variables
     G4double b_width = fBoratedTurbineWidth/2. * cm;//2.5 * cm;
     G4double b_length = fBoratedTurbineLength/2. * cm;//0.25 * m;
-    G4double b_height = fBoratedTurbineHeight*cm;//fCryostatHeight * cm - 0.5 * m;
+    G4double b_height = fBoratedTurbineHeight/2. *cm;//fCryostatHeight * cm - 0.5 * m;
 
     auto *boratedPETSolid_Box = new G4Box("BoratedPET", b_length, b_width, b_height);
 
@@ -741,6 +751,7 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume * {
     }
 
 
+    if(fGeometryName == "baseline"){
     // placements
     if (fWithBoratedPET == 1)
         new G4PVPlacement(nullptr, G4ThreeVector(ringrad * cm, 0., cushift * cm),
@@ -789,6 +800,23 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume * {
 
     new G4PVPlacement(nullptr, G4ThreeVector(0., -ringrad * cm, cushift * cm), fUlarLogical,
                       "ULar_phys4", fLarLogical, false, 3, true);
+    }
+
+
+    if(fGeometryName == "baseline_smaller"){
+        // placements
+        if (fWithBoratedPET == 1)
+            new G4PVPlacement(nullptr, G4ThreeVector(0., 0., cushift * cm),
+                              fBoratedPETLogical_Tube, "BoratedPET_phys", fLarLogical, false, 0, true);
+
+        if (fWithOutCupperTubes == 0)
+            new G4PVPlacement(nullptr, G4ThreeVector(0., 0., cushift * cm),
+                              fCopperLogical, "Copper_phys", fLarLogical, false, 0, true);
+
+        new G4PVPlacement(nullptr, G4ThreeVector(0., 0., cushift * cm), fUlarLogical,
+                          "ULar_phys", fLarLogical, false, 0, true);
+
+    }
 
 
 #define whichGeometry 1
@@ -821,7 +849,7 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume * {
         int NPanels;
 
         if(fBoratedTurbineNPanels == 0)
-            NPanels = ceil(2 * 3.14159265 * radiusOfPanels / cm / (0.95 * 2 * b_length/cm * cos(constantAngle)));
+            NPanels = ceil(2 * 3.14159265 * radiusOfPanels / cm / (0.95 * b_length/cm * cos(constantAngle)));
         else
             NPanels = fBoratedTurbineNPanels;
 
@@ -1161,7 +1189,7 @@ void WLGDDetectorConstruction::SetPositionOfDetectors(G4String name) {
 }
 
 void WLGDDetectorConstruction::SetGeometry(const G4String &name) {
-    std::set <G4String> knownGeometries = {"baseline", "alternative", "hallA"};
+    std::set <G4String> knownGeometries = {"baseline", "baseline_smaller", "alternative", "hallA"};
     if (knownGeometries.count(name) == 0) {
         G4Exception("WLGDDetectorConstruction::SetGeometry", "WLGD0001", JustWarning,
                     ("Invalid geometry setup name '" + name + "'").c_str());
@@ -1279,9 +1307,10 @@ void WLGDDetectorConstruction::DefineCommands() {
     fDetectorMessenger->DeclareMethod("setGeometry", &WLGDDetectorConstruction::SetGeometry)
             .SetGuidance("Set geometry model of cavern and detector")
             .SetGuidance("baseline = NEEDS DESCRIPTION")
+            .SetGuidance("baseline_smaller = Gerda cryostat with only one module")
             .SetGuidance("alternative = NEEDS DESCRIPTION")
             .SetGuidance("hallA = Gerda mock-up for validation.")
-            .SetCandidates("baseline alternative hallA")
+            .SetCandidates("baseline baseline_smaller alternative hallA")
             .SetStates(G4State_PreInit)
             .SetToBeBroadcasted(false);
 

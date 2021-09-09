@@ -38,6 +38,7 @@ public:
     void     ExportGeometry(const G4String& file);
     void     SetNeutronBiasFactor(G4double nf);
     void     SetMuonBiasFactor(G4double mf);
+    void     SetNeutronYieldBias(G4double mf);
     void     SetWithoutCupperTubes(G4int answer);
     void     SetBoratedPET(G4int answer);
     void     SetGdWater(G4int answer);
@@ -71,6 +72,7 @@ private:
     G4String                            fDetectorPosition      = "baseline";
     G4double                            fNeutronBias       = 1.0;
     G4double                            fMuonBias          = 1.0;
+    G4double                            fNeutronYieldBias  = 1.0;
     G4Cache<WLGDCrystalSD*> fSD                = nullptr;
     G4double                            fXeConc            = 0.0;
     G4double                            fHe3Conc            = 0.0;

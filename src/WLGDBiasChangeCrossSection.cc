@@ -53,7 +53,7 @@ void WLGDBiasChangeCrossSection::StartRun()
     {
       for(const auto* wrapperProcess : sharedData->GetPhysicsBiasingProcessInterfaces())
       {
-          G4cout << "XSchange-" << wrapperProcess->GetWrappedProcess()->GetProcessName() << G4endl;
+          //G4cout << "XSchange-" << wrapperProcess->GetWrappedProcess()->GetProcessName() << G4endl;
         G4String operationName =
           "XSchange-" + wrapperProcess->GetWrappedProcess()->GetProcessName();
         fChangeCrossSectionOperations[wrapperProcess] =
@@ -126,7 +126,7 @@ G4VBiasingOperation* WLGDBiasChangeCrossSection::ProposeOccurenceBiasingOperatio
     XStransformation = 1.0;  // should never be needed
   }
 
-  G4cout << "XStransformation: " << XStransformation << " | " << fpname << " - " << callingProcess->GetWrappedProcess()->GetProcessName() << " - " << XStransformation * analogXS << G4endl;
+  //G4cout << "XStransformation: " << XStransformation << " | " << fpname << " - " << callingProcess->GetWrappedProcess()->GetProcessName() << " - " << XStransformation * analogXS << G4endl;
   // -- fetch the operation associated to this callingProcess:
   G4BOptnChangeCrossSection* operation = fChangeCrossSectionOperations[callingProcess];
   // -- get the operation that was proposed to the process in the previous step:

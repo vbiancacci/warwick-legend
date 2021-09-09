@@ -208,6 +208,7 @@ void WLGDDetectorConstruction::ConstructSDandField() {
         auto *biasnXS = new WLGDBiasMultiParticleChangeCrossSection();
         biasnXS->SetNeutronFactor(fNeutronBias);
         biasnXS->SetMuonFactor(fMuonBias);
+        biasnXS->SetNeutronYieldFactor(fNeutronYieldBias);
         G4cout << " >>> Detector: set neutron bias to " << fNeutronBias << G4endl;
         biasnXS->AddParticle("neutron");
         G4LogicalVolume *logicGe = volumeStore->GetVolume("Ge_log");
@@ -226,6 +227,7 @@ void WLGDDetectorConstruction::ConstructSDandField() {
         auto *biasmuXS = new WLGDBiasMultiParticleChangeCrossSection();
         biasmuXS->SetNeutronFactor(fNeutronBias);
         biasmuXS->SetMuonFactor(fMuonBias);
+        biasmuXS->SetNeutronYieldFactor(fNeutronYieldBias);
         G4cout << " >>> Detector: set muon bias to " << fMuonBias << G4endl;
         biasmuXS->AddParticle("mu-");
 
@@ -1224,6 +1226,8 @@ void WLGDDetectorConstruction::SetNeutronBiasFactor(G4double nf) { fNeutronBias 
 
 void WLGDDetectorConstruction::SetMuonBiasFactor(G4double mf) { fMuonBias = mf; }
 
+void WLGDDetectorConstruction::SetNeutronYieldBias(G4double nf) { fNeutronYieldBias = nf; }
+
 // Additional settings for adjusting the detector geometry
 
 // changing the concentration of Xe in the LAr
@@ -1488,6 +1492,12 @@ void WLGDDetectorConstruction::DefineCommands() {
     fBiasMessenger
             ->DeclareMethod("setMuonBias", &WLGDDetectorConstruction::SetMuonBiasFactor)
             .SetGuidance("Set Bias factor for muon nuclear process.")
+            .SetDefaultValue("1.0")
+            .SetStates(G4State_PreInit)
+            .SetToBeBroadcasted(false);
+    fBiasMessenger
+            ->DeclareMethod("setNeutronYieldBias", &WLGDDetectorConstruction::SetNeutronYieldBias)
+            .SetGuidance("Set Bias factor for neutron yield process.")
             .SetDefaultValue("1.0")
             .SetStates(G4State_PreInit)
             .SetToBeBroadcasted(false);

@@ -36,8 +36,9 @@ void WLGDBiasMultiParticleChangeCrossSection::AddParticle(const G4String& partic
   WLGDBiasChangeCrossSection* optr = new WLGDBiasChangeCrossSection(particleName);
   optr->SetNeutronFactor(fNeutronBias);
   optr->SetMuonFactor(fMuonBias);
+  optr->SetNeutronYieldFactor(fNeutronYieldBias);
   G4cout << " >>> MultiBias: set neutron and muon factors to " << fNeutronBias << ", "
-         << fMuonBias << G4endl;
+         << fMuonBias << ", " << fNeutronYieldBias << G4endl;
   fParticlesToBias.push_back(particle);
   fBOptrForParticle[particle] = optr;
 }

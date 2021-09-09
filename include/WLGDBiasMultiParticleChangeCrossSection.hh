@@ -23,6 +23,7 @@ public:
   void AddParticle(const G4String& particleName);
   void SetNeutronFactor(G4double nf) { fNeutronBias = nf; }
   void SetMuonFactor(G4double mf) { fMuonBias = mf; }
+  void SetNeutronYieldFactor(G4double mf) { fNeutronYieldBias = mf; }
 
 private:
   // -----------------------------
@@ -73,6 +74,8 @@ private:
   WLGDBiasChangeCrossSection*                                        fCurrentOperator;
   G4double                                                           fNeutronBias = 1.0;
   G4double                                                           fMuonBias    = 1.0;
+  G4double                                                           fNeutronYieldBias = 1.0;
+
 };
 
 #endif

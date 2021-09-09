@@ -53,6 +53,7 @@ void WLGDBiasChangeCrossSection::StartRun()
     {
       for(const auto* wrapperProcess : sharedData->GetPhysicsBiasingProcessInterfaces())
       {
+          G4cout << "XSchange-" << wrapperProcess->GetWrappedProcess()->GetProcessName() << G4endl;
         G4String operationName =
           "XSchange-" + wrapperProcess->GetWrappedProcess()->GetProcessName();
         fChangeCrossSectionOperations[wrapperProcess] =
@@ -103,13 +104,29 @@ G4VBiasingOperation* WLGDBiasChangeCrossSection::ProposeOccurenceBiasingOperatio
   }
   else if(fpname.contains("neutron"))
   {
-    XStransformation =
-      fNeutronBias * 1.68;  // specific for this, boost n,gamma by 68% for 77Ge from 76Ge
+      if(callingProcess->GetWrappedProcess()->GetProcessName() == "nCapture"){
+          if(track->GetStep()->GetPostStepPoint()
+                  ->GetTouchable()
+                  ->GetVolume(0)
+                  ->GetLogicalVolume()
+                  ->GetName() == "Ge_log")
+              XStransformation = fNeutronBias * 1.68;  // specific for this, boost n,gamma by 68% for 77Ge from 76Ge
+          else
+              XStransformation = fNeutronBias;  // specific for this, boost n,gamma by 68% for 77Ge from 76Ge
+      }
+      if(callingProcess->GetWrappedProcess()->GetProcessName() == "neutronInelastic"){
+          XStransformation = fNeutronYieldBias;
+      }
   }
+  else if(fpname.contains("gamma")){XStransformation = fNeutronYieldBias;}
+  else if(fpname.contains("pi+")){XStransformation = fNeutronYieldBias;}
+  else if(fpname.contains("pi-")){XStransformation = fNeutronYieldBias;}
   else
   {
     XStransformation = 1.0;  // should never be needed
   }
+
+  G4cout << "XStransformation: " << XStransformation << " | " << fpname << " - " << callingProcess->GetWrappedProcess()->GetProcessName() << " - " << XStransformation * analogXS << G4endl;
   // -- fetch the operation associated to this callingProcess:
   G4BOptnChangeCrossSection* operation = fChangeCrossSectionOperations[callingProcess];
   // -- get the operation that was proposed to the process in the previous step:

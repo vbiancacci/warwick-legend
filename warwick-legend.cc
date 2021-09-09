@@ -98,12 +98,29 @@ int main(int argc, char** argv)
   G4String              pname = "nCapture";  // neutron capture process name
   std::vector<G4String> pvec;                // required vector,
   pvec.push_back(pname);                     // here with single data member
+    pname = "neutronInelastic";
+    pvec.push_back(pname);
   biasingPhysics->Bias("neutron", pvec);     // bias particle and process
 
   pvec.clear();
   pname = "muonNuclear";
   pvec.push_back(pname);
   biasingPhysics->Bias("mu-", pvec);  // bias particle and process
+
+    pvec.clear();
+    pname = "pi+Inelastic";
+    pvec.push_back(pname);
+    biasingPhysics->Bias("pi+", pvec);  // bias particle and process
+
+    pvec.clear();
+    pname = "pi-Inelastic";
+    pvec.push_back(pname);
+    biasingPhysics->Bias("pi-", pvec);  // bias particle and process
+
+    pvec.clear();
+    pname = "photonNuclear";
+    pvec.push_back(pname);
+    biasingPhysics->Bias("gamma", pvec);  // bias particle and process
 
   physicsList->RegisterPhysics(biasingPhysics);
 

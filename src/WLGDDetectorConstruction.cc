@@ -212,6 +212,15 @@ void WLGDDetectorConstruction::ConstructSDandField() {
         biasnXS->AddParticle("neutron");
         G4LogicalVolume *logicGe = volumeStore->GetVolume("Ge_log");
         biasnXS->AttachTo(logicGe);
+        /*G4LogicalVolume *logicLar = volumeStore->GetVolume("Lar_log");
+        biasnXS->AttachTo(logicLar);
+        G4LogicalVolume *logicTank = volumeStore->GetVolume("Tank_log");
+        biasnXS->AttachTo(logicTank);
+        G4LogicalVolume *logicCavern = volumeStore->GetVolume("Cavern_log");
+        biasnXS->AttachTo(logicCavern);
+        G4LogicalVolume *logicHall = volumeStore->GetVolume("Hall_log");
+        biasnXS->AttachTo(logicHall);*/
+
 
         // -- Attach muon XS biasing to all required volumes consistently
         auto *biasmuXS = new WLGDBiasMultiParticleChangeCrossSection();

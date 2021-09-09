@@ -103,8 +103,11 @@ G4VBiasingOperation* WLGDBiasChangeCrossSection::ProposeOccurenceBiasingOperatio
   }
   else if(fpname.contains("neutron"))
   {
+      //if(callingProcess->GetWrappedProcess()->GetProcessName() == "biasWrapper(nCapture)"){
     XStransformation =
       fNeutronBias * 1.68;  // specific for this, boost n,gamma by 68% for 77Ge from 76Ge
+      G4cout << "im Here --- " << callingProcess->GetWrappedProcess()->GetProcessName() << G4endl;
+     // }
   }
   else
   {

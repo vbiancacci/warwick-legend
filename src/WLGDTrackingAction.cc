@@ -75,13 +75,14 @@ void WLGDTrackingAction::PreUserTrackingAction(const G4Track* aTrack)
             fEventAction->IncreaseByOne_NeutronInEvent();
 
         if(fRunAction->getWriteOutNeutronProductionInfo() == 1)
-        {
-            if(aTrack->GetLogicalVolumeAtVertex()->GetName() == "Lar_log" ||
+        {// Tank_log Cout_log Cvac_log Cinn_log Lid_log BoratedPET_Logical
+        /*    if(aTrack->GetLogicalVolumeAtVertex()->GetName() == "Water_log" || 
+		aTrack->GetLogicalVolumeAtVertex()->GetName() == "Lar_log" ||
                aTrack->GetLogicalVolumeAtVertex()->GetName() == "ULar_log" ||
                aTrack->GetLogicalVolumeAtVertex()->GetName() == "Ge_log" ||
                aTrack->GetLogicalVolumeAtVertex()->GetName() ==
                "Copper_log")  // ULar_phys  Ge_phys
-            {
+            {*/
                 fRunAction->increaseTotalNumberOfNeutronsInLAr();
                 fRunAction->addCoordinatsToFile(tmp_neutronXpos, tmp_neutronYpos,
                                                 tmp_neutronZpos);
@@ -89,7 +90,7 @@ void WLGDTrackingAction::PreUserTrackingAction(const G4Track* aTrack)
                 fRunAction->addEnergyToFile(aTrack->GetKineticEnergy() / eV);
                 fRunAction->addParentParticleType(
                         fEventAction->neutronProducerMap.find(aTrack->GetParentID())->second);
-            }
+            //}
         }
     }
 

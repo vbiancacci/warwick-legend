@@ -229,6 +229,11 @@ void WLGDDetectorConstruction::ConstructSDandField() {
         G4cout << " >>> Detector: set muon bias to " << fMuonBias << G4endl;
         biasmuXS->AddParticle("mu-");
 
+        biasmuXS->AddParticle("neutron");
+        biasmuXS->AddParticle("pi+");
+        biasmuXS->AddParticle("pi-");
+        biasmuXS->AddParticle("gamma");
+
         G4LogicalVolume *logicCavern = volumeStore->GetVolume("Cavern_log");
         biasmuXS->AttachTo(logicCavern);
         G4LogicalVolume *logicHall = volumeStore->GetVolume("Hall_log");

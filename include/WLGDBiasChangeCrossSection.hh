@@ -18,6 +18,7 @@ public:
   // -- method called at beginning of run:
   virtual void StartRun();
   void         SetNeutronFactor(G4double nf) { fNeutronBias = nf; }
+  void         SetNeutronYieldFactor(G4double nf) { fNeutronYieldBias = nf; }
   void         SetMuonFactor(G4double mf) { fMuonBias = mf; }
 
 private:
@@ -66,6 +67,7 @@ private:
   G4String                    fpname;
   G4double                    fNeutronBias = 1.0;
   G4double                    fMuonBias    = 1.0;
+  G4double                    fNeutronYieldBias = 1.0;
 };
 
 #endif

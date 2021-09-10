@@ -144,18 +144,20 @@ G4VBiasingOperation* WLGDBiasChangeCrossSection::ProposeOccurenceBiasingOperatio
   // -- only on the first time the operation is proposed, or if the interaction
   // -- occured. If the interaction did not occur for the process in the previous,
   // -- we update the number of interaction length instead of resampling.
-  if(previousOperation == nullptr)
+  if(previousOperation == nullptr || (previousOperation != operation))
   {
     operation->SetBiasedCrossSection(XStransformation * analogXS);
     operation->Sample();
   }
   else
   {
-    if(previousOperation != operation)
+//      G4cout << "operation->GetInteractionOccured(): " << operation->GetInteractionOccured() << " - previousOperation: " << previousOperation->GetName() << " " << previousOperation << " - operation: "  << operation->GetName() << " " << operation << G4endl;
+
+      if(previousOperation != operation)
     {
       // -- should not happen !
       G4ExceptionDescription ed;
-      ed << " Logic problem in operation handling !" << G4endl;
+      ed << " Logic problem in operation handling ! - previousOperation: " << previousOperation->GetName() << " " << previousOperation << " - operation: "  << operation->GetName() << " " << operation << G4endl;
       G4Exception("WLGDBiasChangeCrossSection::ProposeOccurenceBiasingOperation(...)",
                   "exWLGD.02", JustWarning, ed);
       return nullptr;
@@ -180,6 +182,7 @@ G4VBiasingOperation* WLGDBiasChangeCrossSection::ProposeOccurenceBiasingOperatio
       operation->UpdateForStep(0.0);
     }
   }
+
 
   return operation;
 }

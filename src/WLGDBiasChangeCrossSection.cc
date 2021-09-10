@@ -102,30 +102,31 @@ G4VBiasingOperation* WLGDBiasChangeCrossSection::ProposeOccurenceBiasingOperatio
   {
     XStransformation = fMuonBias;  // configurable cross section boost factor
   }
-  else if(fpname.contains("neutron"))
-  {
-      if(callingProcess->GetWrappedProcess()->GetProcessName() == "nCapture"){
-          if(track->GetStep()->GetPostStepPoint()
-                  ->GetTouchable()
-                  ->GetVolume(0)
-                  ->GetLogicalVolume()
-                  ->GetName() == "Ge_log")
-              XStransformation = fNeutronBias * 1.68;  // specific for this, boost n,gamma by 68% for 77Ge from 76Ge
-          else
-              XStransformation = fNeutronBias;  // specific for this, boost n,gamma by 68% for 77Ge from 76Ge
+  else{
+      if(track->GetParticleDefinition()->GetParticleName() == "neutron")
+      {
+          if(callingProcess->GetWrappedProcess()->GetProcessName() == "nCapture"){
+              if(track->GetStep()->GetPostStepPoint()
+                      ->GetTouchable()
+                      ->GetVolume(0)
+                      ->GetLogicalVolume()
+                      ->GetName() == "Ge_log")
+                  XStransformation = fNeutronBias * 1.68;  // specific for this, boost n,gamma by 68% for 77Ge from 76Ge
+              else
+                  XStransformation = fNeutronBias;  // specific for this, boost n,gamma by 68% for 77Ge from 76Ge
+          }
+          if(callingProcess->GetWrappedProcess()->GetProcessName() == "neutronInelastic"){
+              XStransformation = fNeutronYieldBias;
+          }
       }
-      if(callingProcess->GetWrappedProcess()->GetProcessName() == "neutronInelastic"){
-          XStransformation = fNeutronYieldBias;
+      else if(track->GetParticleDefinition()->GetParticleName() == "gamma"){XStransformation = fNeutronYieldBias;}
+      else if(track->GetParticleDefinition()->GetParticleName() == "pi+"){XStransformation = fNeutronYieldBias;}
+      else if(track->GetParticleDefinition()->GetParticleName() == "pi-"){XStransformation = fNeutronYieldBias;}
+      else
+      {
+        XStransformation = 1.0;  // should never be needed
       }
-  }
-  else if(fpname.contains("gamma")){XStransformation = fNeutronYieldBias;}
-  else if(fpname.contains("pi+")){XStransformation = fNeutronYieldBias;}
-  else if(fpname.contains("pi-")){XStransformation = fNeutronYieldBias;}
-  else
-  {
-    XStransformation = 1.0;  // should never be needed
-  }
-
+    }
   //G4cout << "XStransformation: " << XStransformation << " | " << fpname << " - " << callingProcess->GetWrappedProcess()->GetProcessName() << " - " << XStransformation * analogXS << G4endl;
   // -- fetch the operation associated to this callingProcess:
   G4BOptnChangeCrossSection* operation = fChangeCrossSectionOperations[callingProcess];

@@ -34,6 +34,8 @@ public:
   G4int getWriteOutGeneralNeutronInfo(){return fWriteOutGeneralNeutronInfo;}
   G4int getWriteOutAdvancedMultiplicity(){return fWriteOutAdvancedMultiplicity;}
     G4int getWriteOutAllNeutronInfoRoot(){return fWriteOutAllNeutronInfoRoot;}
+    G4int getIndividualGeDepositionInfo(){return fIndividualGeDepositionInfo;}
+    G4int getIndividualGdDepositionInfo(){return fIndividualGdDepositionInfo;}
 private:
   void DefineCommands();
 private:
@@ -48,6 +50,8 @@ private:
   G4int            fWriteOutGeneralNeutronInfo = 0;
   G4int            fWriteOutAdvancedMultiplicity = 0;
   G4int            fWriteOutAllNeutronInfoRoot = 0;
+    G4int fIndividualGeDepositionInfo = 0;
+    G4int fIndividualGdDepositionInfo = 0;
   std::vector<G4double> vector_x_dir;
   std::vector<G4double> vector_y_dir;
   std::vector<G4double> vector_z_dir;
@@ -60,6 +64,8 @@ private:
   void SetWriteOutGeneralNeutronInfo(G4int answer);
   void SetWriteOutAdvancedMultiplicity(G4int answer);
   void SetWriteOutAllNeutronInfoRoot(G4int answer);
+    void SetIndividualGeDepositionInfo(G4int answer);
+    void SetIndividualGdDepositionInfo(G4int answer);
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

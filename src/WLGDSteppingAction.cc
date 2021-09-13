@@ -23,10 +23,13 @@ WLGDSteppingAction::WLGDSteppingAction(WLGDEventAction* event, WLGDRunAction* ru
 }
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
+
 void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
 {
+#define MostOuterRadiusTracking 0
     // Edit: 2021/03/05 by Moritz Neuberger
     // Adding tracking of amount of neutrons crossing the detectors
+#if MostOuterRadiusTracking==1
     if(aStep->GetTrack()->GetParticleDefinition()->GetParticleName() == "neutron")
     {
         G4double tmp_x = aStep->GetTrack()->GetPosition().getX()/m;
@@ -43,6 +46,7 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
             }
         }
     }
+#endif
 
     // Edit: 2021/04/07 by Moritz Neuberger
     // Adding total energy deposition inside LAr
@@ -74,11 +78,13 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
 
             if(aStep->GetTotalEnergyDeposit() > 0)
             {
-                
+
+                // get position of deposition
                 G4double tmp_x = aStep->GetTrack()->GetPosition().getX();
                 G4double tmp_y = aStep->GetTrack()->GetPosition().getY();
                 G4double tmp_z = aStep->GetTrack()->GetPosition().getZ();
 
+                // get id of which reentrance tube
                 G4int whichReentranceTube;
                 if(abs(tmp_x) > abs(tmp_y) && tmp_x > 0)
                     whichReentranceTube = 0;
@@ -103,80 +109,228 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
                     whichReentranceTube = 0;
 
 
-                if(fEventAction->GetIDListOfGe77().count(aStep->GetTrack()->GetParentID())){
-                    fEventAction->AddGe77mGammaEmission_timing(aStep->GetPostStepPoint()->GetGlobalTime() / s);
-                    fEventAction->AddGe77mGammaEmission_x(aStep->GetPostStepPoint()->GetGlobalTime() / m);
-                    fEventAction->AddGe77mGammaEmission_y(aStep->GetPostStepPoint()->GetGlobalTime() / m);
-                    fEventAction->AddGe77mGammaEmission_z(aStep->GetPostStepPoint()->GetGlobalTime() / m);
-                    fEventAction->AddGe77mGammaEmission_edep(aStep->GetTotalEnergyDeposit() / eV);
-                    fEventAction->AddGe77mGammaEmission_id(aStep->GetTrack()->GetTrackID());
-                    fEventAction->AddGe77mGammaEmission_type(aStep->GetTrack()->GetParticleDefinition()->GetPDGEncoding());
-                    fEventAction->AddGe77mGammaEmission_whichGe77(aStep->GetTrack()->GetParentID());
-                    int whichVolume = -3;
-                    if(aStep->GetPostStepPoint()
-                               ->GetTouchable()
-                               ->GetVolume()
-                               ->GetLogicalVolume()
-                               ->GetName() == "Lar_log")
-                        whichVolume = -2;
-                    if(aStep->GetPostStepPoint()
-                               ->GetTouchable()
-                               ->GetVolume(0)
-                               ->GetLogicalVolume()
-                               ->GetName() == "ULar_log")
-                        whichVolume = -1;
-                    if(aStep->GetPostStepPoint()
-                               ->GetTouchable()
-                               ->GetVolume(0)
-                               ->GetLogicalVolume()
-                               ->GetName() == "Ge_log")
-                        whichVolume =
-                                aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetCopyNo() +
-                                whichReentranceTube * 96;
-                    fEventAction->AddGe77mGammaEmission_whichVolume(whichVolume);
-                }
-
-
-                if(fEventAction->GetIDListOfGe77SiblingParticles().count(aStep->GetTrack()->GetParentID()))
+                // calculate total energy deposition in water tank for muon veto
+                if(aStep->GetPostStepPoint()
+                           ->GetTouchable()
+                           ->GetVolume(0)
+                           ->GetLogicalVolume()
+                           ->GetName() == "Water_log")
                 {
-                    fEventAction->AddGe77Siblings_timing(
-                            aStep->GetPostStepPoint()->GetGlobalTime() / s);
-                    fEventAction->AddGe77Siblings_x(
-                            aStep->GetPostStepPoint()->GetPosition().getX() / m);
-                    fEventAction->AddGe77Siblings_y(
-                            aStep->GetPostStepPoint()->GetPosition().getY() / m);
-                    fEventAction->AddGe77Siblings_z(
-                            aStep->GetPostStepPoint()->GetPosition().getZ() / m);
-                    fEventAction->AddGe77Siblings_edep(aStep->GetTotalEnergyDeposit() / eV);
-                    fEventAction->AddGe77Siblings_id(aStep->GetTrack()->GetTrackID());
-                    fEventAction->AddGe77Siblings_type(
-                            aStep->GetTrack()->GetParticleDefinition()->GetPDGEncoding());
-                    int whichVolume = -3;
-                    if(aStep->GetPostStepPoint()
-                               ->GetTouchable()
-                               ->GetVolume()
-                               ->GetLogicalVolume()
-                               ->GetName() == "Lar_log")
-                        whichVolume = -2;
-                    if(aStep->GetPostStepPoint()
-                               ->GetTouchable()
-                               ->GetVolume(0)
-                               ->GetLogicalVolume()
-                               ->GetName() == "ULar_log")
-                        whichVolume = -1;
-                    if(aStep->GetPostStepPoint()
-                               ->GetTouchable()
-                               ->GetVolume(0)
-                               ->GetLogicalVolume()
-                               ->GetName() == "Ge_log")
-                        whichVolume =
-                                aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetCopyNo() +
-                                whichReentranceTube * 96;
-                    fEventAction->AddGe77Siblings_whichVolume(whichVolume);
+                    // if(aStep->GetPostStepPoint()->GetGlobalTime() / us < 10.)
+                    fEventAction->IncreaseEdepWater_prompt(aStep->GetTotalEnergyDeposit() / eV);
+                    // else if(aStep->GetPostStepPoint()->GetGlobalTime() / ms < 1.)
+                    // fEventAction->IncreaseEdepWater_delayed(aStep->GetTotalEnergyDeposit() / eV);
+                    return;
                 }
 
-                
-                if(fIndividualGdDepositionInfo){
+                // LAr veto
+
+                G4int whichVolume = -1;
+                if(aStep->GetPostStepPoint()
+                           ->GetTouchable()
+                           ->GetVolume(0)
+                           ->GetLogicalVolume()
+                           ->GetName() == "ULar_log" ||
+                   (fDetectorConstruction->GetGeometryName() == "hallA" &&
+                    aStep->GetTrack()->GetLogicalVolumeAtVertex()->GetName() == "Lar_log"))
+                {
+                    whichVolume = 0;
+                    if(aStep->GetPostStepPoint()->GetGlobalTime() / us < 10.)
+                    {
+                        fEventAction->IncreaseLArEnergyDeposition(aStep->GetTotalEnergyDeposit() / eV,
+                                                                  whichReentranceTube);
+                    } // prompt
+                    else
+                    {
+                        if(aStep->GetPostStepPoint()->GetGlobalTime() / ms < 1.)
+                        {
+                            fEventAction->IncreaseLArEnergyDeposition_delayed(
+                                    aStep->GetTotalEnergyDeposit() / eV, whichReentranceTube);
+                        } // delayed
+                        if(aStep->GetPostStepPoint()->GetGlobalTime() / s < 1. && fRunAction->getWriteOutAdvancedMultiplicity())
+                        {
+                            fEventAction->IncreaseLArEnergyDeposition_delayed_long(
+                                    aStep->GetTotalEnergyDeposit() / eV, whichReentranceTube);
+                        } // long delayed
+                    }
+                    if(aStep->GetPostStepPoint()->GetGlobalTime() / s > 1. && fRunAction->getWriteOutAdvancedMultiplicity())
+                    {
+                        fEventAction->IncreaseLArEnergyDeposition_after_delayed(
+                                aStep->GetTotalEnergyDeposit() / eV, whichReentranceTube);
+                    } // after delayed
+                }
+
+                // Ge energy
+
+                if(aStep->GetPostStepPoint()
+                           ->GetTouchable()
+                           ->GetVolume(0)
+                           ->GetLogicalVolume()
+                           ->GetName() == "Ge_log")
+                {
+                    whichVolume = 1;
+                    if(aStep->GetPostStepPoint()->GetGlobalTime() / us < 10.)
+                    {
+                        if(aStep->GetPostStepPoint()
+                                   ->GetTouchable()
+                                   ->GetVolume(1)
+                                   ->GetLogicalVolume()
+                                   ->GetName() == "Layer_log") {
+                            fEventAction->IncreaseEdepPerDetector(
+                                    aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetCopyNo() +
+                                    whichReentranceTube * 96,
+                                    aStep->GetTotalEnergyDeposit() / eV);
+                            if(fRunAction->getWriteOutAdvancedMultiplicity()){
+                                if(fEventAction->GetIDListOfGdSiblingParticles().count(aStep->GetTrack()->GetParentID()))
+                                    fEventAction->IncreaseEdepPerDetector_prompt_onlyGd(
+                                            aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetCopyNo() +
+                                            whichReentranceTube * 96,
+                                            aStep->GetTotalEnergyDeposit() / eV);
+                                else
+                                    fEventAction->IncreaseEdepPerDetector_prompt_woGd(
+                                            aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetCopyNo() +
+                                            whichReentranceTube * 96,
+                                            aStep->GetTotalEnergyDeposit() / eV);
+                            } // w/ and w/o Gd info (redundant)
+                        }
+                        else
+                            G4cout
+                                    << "Trying to access Layer_log for the prompt multiplicity but it is "
+                                    << aStep->GetPostStepPoint()
+                                            ->GetTouchable()
+                                            ->GetVolume(1)
+                                            ->GetLogicalVolume()
+                                            ->GetName()
+                                    << G4endl;
+                    } // prompt
+                    else
+                    {
+                        if(aStep->GetPostStepPoint()->GetGlobalTime() / ms < 1.)
+                        {
+                            if(aStep->GetPostStepPoint()
+                                       ->GetTouchable()
+                                       ->GetVolume(1)
+                                       ->GetLogicalVolume()
+                                       ->GetName() == "Layer_log") {
+                                fEventAction->IncreaseEdepPerDetector_delayed(
+                                        aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetCopyNo() +
+                                        whichReentranceTube * 96,
+                                        aStep->GetTotalEnergyDeposit() / eV);
+
+                                if(fRunAction->getWriteOutAdvancedMultiplicity()){
+                                    if(fEventAction->GetIDListOfGdSiblingParticles().count(aStep->GetTrack()->GetParentID()))
+                                        fEventAction->IncreaseEdepPerDetector_delayed_onlyGd(
+                                                aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetCopyNo() +
+                                                whichReentranceTube * 96,
+                                                aStep->GetTotalEnergyDeposit() / eV);
+                                    else
+                                        fEventAction->IncreaseEdepPerDetector_delayed_woGd(
+                                                aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetCopyNo() +
+                                                whichReentranceTube * 96,
+                                                aStep->GetTotalEnergyDeposit() / eV);
+                                }
+                            }
+                            else
+                                G4cout
+                                        << "Trying to access Layer_log for the delayed multiplicity but it is "
+                                        << aStep->GetPostStepPoint()
+                                                ->GetTouchable()
+                                                ->GetVolume(1)
+                                                ->GetLogicalVolume()
+                                                ->GetName()
+                                        << G4endl;
+                        } // delayed
+                        if(aStep->GetPostStepPoint()->GetGlobalTime() / s < 1. && fRunAction->getWriteOutAdvancedMultiplicity())
+                        {
+                            fEventAction->IncreaseEdepPerDetector_delayed_long(
+                                    aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetCopyNo() +
+                                    whichReentranceTube * 96,
+                                    aStep->GetTotalEnergyDeposit() / eV);
+                        } // long delayed
+                    }
+                    if(aStep->GetPostStepPoint()->GetGlobalTime() / s > 1. && fRunAction->getWriteOutAdvancedMultiplicity())
+                    {
+                        fEventAction->IncreaseGeEnergyDeposition_after_delayed(
+                                aStep->GetTotalEnergyDeposit() / eV, whichReentranceTube);
+                    } // after delayed
+                }
+
+
+                if(fRunAction->getIndividualGeDepositionInfo()){
+                    if(fEventAction->GetIDListOfGe77().count(aStep->GetTrack()->GetParentID())){
+                        fEventAction->AddGe77mGammaEmission_timing(aStep->GetPostStepPoint()->GetGlobalTime() / s);
+                        fEventAction->AddGe77mGammaEmission_x(aStep->GetPostStepPoint()->GetGlobalTime() / m);
+                        fEventAction->AddGe77mGammaEmission_y(aStep->GetPostStepPoint()->GetGlobalTime() / m);
+                        fEventAction->AddGe77mGammaEmission_z(aStep->GetPostStepPoint()->GetGlobalTime() / m);
+                        fEventAction->AddGe77mGammaEmission_edep(aStep->GetTotalEnergyDeposit() / eV);
+                        fEventAction->AddGe77mGammaEmission_id(aStep->GetTrack()->GetTrackID());
+                        fEventAction->AddGe77mGammaEmission_type(aStep->GetTrack()->GetParticleDefinition()->GetPDGEncoding());
+                        fEventAction->AddGe77mGammaEmission_whichGe77(aStep->GetTrack()->GetParentID());
+                        int whichVolume = -3;
+                        if(aStep->GetPostStepPoint()
+                                   ->GetTouchable()
+                                   ->GetVolume()
+                                   ->GetLogicalVolume()
+                                   ->GetName() == "Lar_log")
+                            whichVolume = -2;
+                        if(aStep->GetPostStepPoint()
+                                   ->GetTouchable()
+                                   ->GetVolume(0)
+                                   ->GetLogicalVolume()
+                                   ->GetName() == "ULar_log")
+                            whichVolume = -1;
+                        if(aStep->GetPostStepPoint()
+                                   ->GetTouchable()
+                                   ->GetVolume(0)
+                                   ->GetLogicalVolume()
+                                   ->GetName() == "Ge_log")
+                            whichVolume =
+                                    aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetCopyNo() +
+                                    whichReentranceTube * 96;
+                        fEventAction->AddGe77mGammaEmission_whichVolume(whichVolume);
+                    }
+
+
+                    if(fEventAction->GetIDListOfGe77SiblingParticles().count(aStep->GetTrack()->GetParentID()))
+                    {
+                        fEventAction->AddGe77Siblings_timing(
+                                aStep->GetPostStepPoint()->GetGlobalTime() / s);
+                        fEventAction->AddGe77Siblings_x(
+                                aStep->GetPostStepPoint()->GetPosition().getX() / m);
+                        fEventAction->AddGe77Siblings_y(
+                                aStep->GetPostStepPoint()->GetPosition().getY() / m);
+                        fEventAction->AddGe77Siblings_z(
+                                aStep->GetPostStepPoint()->GetPosition().getZ() / m);
+                        fEventAction->AddGe77Siblings_edep(aStep->GetTotalEnergyDeposit() / eV);
+                        fEventAction->AddGe77Siblings_id(aStep->GetTrack()->GetTrackID());
+                        fEventAction->AddGe77Siblings_type(
+                                aStep->GetTrack()->GetParticleDefinition()->GetPDGEncoding());
+                        int whichVolume = -3;
+                        if(aStep->GetPostStepPoint()
+                                   ->GetTouchable()
+                                   ->GetVolume()
+                                   ->GetLogicalVolume()
+                                   ->GetName() == "Lar_log")
+                            whichVolume = -2;
+                        if(aStep->GetPostStepPoint()
+                                   ->GetTouchable()
+                                   ->GetVolume(0)
+                                   ->GetLogicalVolume()
+                                   ->GetName() == "ULar_log")
+                            whichVolume = -1;
+                        if(aStep->GetPostStepPoint()
+                                   ->GetTouchable()
+                                   ->GetVolume(0)
+                                   ->GetLogicalVolume()
+                                   ->GetName() == "Ge_log")
+                            whichVolume =
+                                    aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetCopyNo() +
+                                    whichReentranceTube * 96;
+                        fEventAction->AddGe77Siblings_whichVolume(whichVolume);
+                    }
+                } // individual deposition of sibling or secundary Ge77 interactions
+
+                if(fRunAction->getIndividualGdDepositionInfo()){
                     if(fEventAction->GetIDListOfGdSiblingParticles().count(aStep->GetTrack()->GetParentID()))
                     {
                         //G4cout << " ______________________________________________ " << G4endl << aStep->GetTrack()->GetTrackID() << " " << aStep->GetTrack()->GetParticleDefinition()->GetPDGEncoding() << " "  << aStep->GetTrack()->GetParentID() << G4endl << " ______________________________________________ " << G4endl;
@@ -221,179 +375,41 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
                                     whichReentranceTube * 96;
                         fEventAction->AddGdSiblings_whichVolume(whichVolume);
                     }
-                }
-
-
-                if(aStep->GetPostStepPoint()
-                           ->GetTouchable()
-                           ->GetVolume(0)
-                           ->GetLogicalVolume()
-                           ->GetName() == "Water_log")
-                {
-                    // if(aStep->GetPostStepPoint()->GetGlobalTime() / us < 10.)
-                    fEventAction->IncreaseEdepWater_prompt(aStep->GetTotalEnergyDeposit() / eV);
-                    // else if(aStep->GetPostStepPoint()->GetGlobalTime() / ms < 1.)
-                    // fEventAction->IncreaseEdepWater_delayed(aStep->GetTotalEnergyDeposit() / eV);
-                    return;
-                }
-
-                G4int whichVolume = -1;
-                if(aStep->GetPostStepPoint()
-                           ->GetTouchable()
-                           ->GetVolume(0)
-                           ->GetLogicalVolume()
-                           ->GetName() == "ULar_log" ||
-                   (fDetectorConstruction->GetGeometryName() == "hallA" &&
-                    aStep->GetTrack()->GetLogicalVolumeAtVertex()->GetName() == "Lar_log"))
-                {
-                    whichVolume = 0;
-                    if(aStep->GetPostStepPoint()->GetGlobalTime() / us < 10.)
-                    {
-                        fEventAction->IncreaseLArEnergyDeposition(aStep->GetTotalEnergyDeposit() / eV,
-                                                                  whichReentranceTube);
-                    }
-                    else
-                    {
-                        if(aStep->GetPostStepPoint()->GetGlobalTime() / ms < 1.)
-                        {
-                            fEventAction->IncreaseLArEnergyDeposition_delayed(
-                                    aStep->GetTotalEnergyDeposit() / eV, whichReentranceTube);
-                        }
-                        if(aStep->GetPostStepPoint()->GetGlobalTime() / s < 1.)
-                        {
-                            fEventAction->IncreaseLArEnergyDeposition_delayed_long(
-                                    aStep->GetTotalEnergyDeposit() / eV, whichReentranceTube);
-                        }
-                    }
-                    if(aStep->GetPostStepPoint()->GetGlobalTime() / s > 1.)
-                    {
-                        fEventAction->IncreaseLArEnergyDeposition_after_delayed(
-                                aStep->GetTotalEnergyDeposit() / eV, whichReentranceTube);
-                    }
-                }
-
-                if(aStep->GetPostStepPoint()
-                           ->GetTouchable()
-                           ->GetVolume(0)
-                           ->GetLogicalVolume()
-                           ->GetName() == "Ge_log")
-                {
-                    whichVolume = 1;
-                    if(aStep->GetPostStepPoint()->GetGlobalTime() / us < 10.)
-                    {
-                        if(aStep->GetPostStepPoint()
-                                   ->GetTouchable()
-                                   ->GetVolume(1)
-                                   ->GetLogicalVolume()
-                                   ->GetName() == "Layer_log") {
-                            fEventAction->IncreaseEdepPerDetector(
-                                    aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetCopyNo() +
-                                    whichReentranceTube * 96,
-                                    aStep->GetTotalEnergyDeposit() / eV);
-                            if(fRunAction->getWriteOutAdvancedMultiplicity()){
-                                if(fEventAction->GetIDListOfGdSiblingParticles().count(aStep->GetTrack()->GetParentID()))
-                                    fEventAction->IncreaseEdepPerDetector_prompt_onlyGd(
-                                            aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetCopyNo() +
-                                            whichReentranceTube * 96,
-                                            aStep->GetTotalEnergyDeposit() / eV);
-                                else
-                                    fEventAction->IncreaseEdepPerDetector_prompt_woGd(
-                                            aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetCopyNo() +
-                                            whichReentranceTube * 96,
-                                            aStep->GetTotalEnergyDeposit() / eV);
-                            }
-                        }
-                        else
-                            G4cout
-                                    << "Trying to access Layer_log for the prompt multiplicity but it is "
-                                    << aStep->GetPostStepPoint()
-                                            ->GetTouchable()
-                                            ->GetVolume(1)
-                                            ->GetLogicalVolume()
-                                            ->GetName()
-                                    << G4endl;
-                    }
-                    else
-                    {
-                        if(aStep->GetPostStepPoint()->GetGlobalTime() / ms < 1.)
-                        {
-                            if(aStep->GetPostStepPoint()
-                                       ->GetTouchable()
-                                       ->GetVolume(1)
-                                       ->GetLogicalVolume()
-                                       ->GetName() == "Layer_log") {
-                                fEventAction->IncreaseEdepPerDetector_delayed(
-                                        aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetCopyNo() +
-                                        whichReentranceTube * 96,
-                                        aStep->GetTotalEnergyDeposit() / eV);
-
-                                if(fRunAction->getWriteOutAdvancedMultiplicity()){
-                                    if(fEventAction->GetIDListOfGdSiblingParticles().count(aStep->GetTrack()->GetParentID()))
-                                        fEventAction->IncreaseEdepPerDetector_delayed_onlyGd(
-                                                aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetCopyNo() +
-                                                whichReentranceTube * 96,
-                                                aStep->GetTotalEnergyDeposit() / eV);
-                                    else
-                                        fEventAction->IncreaseEdepPerDetector_delayed_woGd(
-                                                aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetCopyNo() +
-                                                whichReentranceTube * 96,
-                                                aStep->GetTotalEnergyDeposit() / eV);
-                                }
-                            }
-                            else
-                                G4cout
-                                        << "Trying to access Layer_log for the delayed multiplicity but it is "
-                                        << aStep->GetPostStepPoint()
-                                                ->GetTouchable()
-                                                ->GetVolume(1)
-                                                ->GetLogicalVolume()
-                                                ->GetName()
-                                        << G4endl;
-                        }
-                        if(aStep->GetPostStepPoint()->GetGlobalTime() / s < 1.)
-                        {
-                            fEventAction->IncreaseEdepPerDetector_delayed_long(
-                                    aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetCopyNo() +
-                                    whichReentranceTube * 96,
-                                    aStep->GetTotalEnergyDeposit() / eV);
-                        }
-                    }
-                    if(aStep->GetPostStepPoint()->GetGlobalTime() / s > 1.)
-                    {
-                        fEventAction->IncreaseGeEnergyDeposition_after_delayed(
-                                aStep->GetTotalEnergyDeposit() / eV, whichReentranceTube);
-                    }
-                }
+                } // individual Gd interactions
 
                 if(aStep->GetPostStepPoint()->GetGlobalTime() / s > 1 && fAllowForLongTimeEmissionReadout == 0)
-                    return;
-                if(fIndividualDepositionInfo == 0 && fIndividualGeDepositionInfo == 0) return;
+                    return; // skip all interactiosn >1s
 
-                if(fIndividualGeDepositionInfo == 1 && aStep->GetPostStepPoint()
+                if(fIndividualDepositionInfo == 0 && fRunAction->getIndividualGeDepositionInfo() == 0) return;
+
+                if(fRunAction->getIndividualGeDepositionInfo() == 1 && aStep->GetPostStepPoint()
                                                                ->GetTouchable()
                                                                ->GetVolume(1)
                                                                ->GetLogicalVolume()
                                                                ->GetName() != "Layer_log") return;
+                // all individual interactions
+                {
 
-                fEventAction->AddIndividualEnergyDeposition_Timing(
-                        aStep->GetPostStepPoint()->GetGlobalTime() / (1000*ns) );
-                fEventAction->AddIndividualEnergyDeposition_Energy(
-                        aStep->GetTotalEnergyDeposit() / eV);
-                fEventAction->AddIndividualEnergyDeposition_ReentranceTube(whichReentranceTube);
-                fEventAction->AddIndividualEnergyDeposition_Position_x(tmp_x / m);
-                fEventAction->AddIndividualEnergyDeposition_Position_y(tmp_y / m);
-                fEventAction->AddIndividualEnergyDeposition_Position_z(tmp_z / m);
-                fEventAction->AddIndividualEnergyDeposition_LArOrGe(whichVolume);
-                fEventAction->AddIndividualEnergyDeposition_ID(aStep->GetTrack()->GetTrackID());
-                fEventAction->AddIndividualEnergyDeposition_Type(aStep->GetTrack()->GetParticleDefinition()->GetPDGEncoding());
-                int tmp = -1;
-                if(aStep->GetPostStepPoint()
-                           ->GetTouchable()
-                           ->GetVolume(1)
-                           ->GetLogicalVolume()
-                           ->GetName() == "Layer_log")
-                    tmp = aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetCopyNo() + whichReentranceTube * 96;
-                fEventAction->AddIndividualEnergyDeposition_DetectorNumber(tmp);
+                    fEventAction->AddIndividualEnergyDeposition_Timing(
+                            aStep->GetPostStepPoint()->GetGlobalTime() / (1000*ns) );
+                    fEventAction->AddIndividualEnergyDeposition_Energy(
+                            aStep->GetTotalEnergyDeposit() / eV);
+                    fEventAction->AddIndividualEnergyDeposition_ReentranceTube(whichReentranceTube);
+                    fEventAction->AddIndividualEnergyDeposition_Position_x(tmp_x / m);
+                    fEventAction->AddIndividualEnergyDeposition_Position_y(tmp_y / m);
+                    fEventAction->AddIndividualEnergyDeposition_Position_z(tmp_z / m);
+                    fEventAction->AddIndividualEnergyDeposition_LArOrGe(whichVolume);
+                    fEventAction->AddIndividualEnergyDeposition_ID(aStep->GetTrack()->GetTrackID());
+                    fEventAction->AddIndividualEnergyDeposition_Type(aStep->GetTrack()->GetParticleDefinition()->GetPDGEncoding());
+                    int tmp = -1;
+                    if(aStep->GetPostStepPoint()
+                               ->GetTouchable()
+                               ->GetVolume(1)
+                               ->GetLogicalVolume()
+                               ->GetName() == "Layer_log")
+                        tmp = aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetCopyNo() + whichReentranceTube * 96;
+                    fEventAction->AddIndividualEnergyDeposition_DetectorNumber(tmp);
+                }
             }
         }
     }
@@ -401,8 +417,6 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
 
 void WLGDSteppingAction::GetDepositionInfo(G4int answer) { fDepositionInfo = answer; }
 void WLGDSteppingAction::GetIndividualDepositionInfo(G4int answer) { fIndividualDepositionInfo = answer; }
-void WLGDSteppingAction::GetIndividualGeDepositionInfo(G4int answer) { fIndividualGeDepositionInfo = answer; }
-void WLGDSteppingAction::GetIndividualGdDepositionInfo(G4int answer) { fIndividualGdDepositionInfo = answer; }
 void WLGDSteppingAction::AllowForLongTimeEmissionReadout(G4int answer) { fAllowForLongTimeEmissionReadout = answer; }
 
 void WLGDSteppingAction::DefineCommands()
@@ -429,25 +443,6 @@ void WLGDSteppingAction::DefineCommands()
             .SetGuidance("1 = do")
             .SetCandidates("0 1")
             .SetDefaultValue("0");
-
-    fStepMessenger
-            ->DeclareMethod("getIndividualGeDepositionInfo", &WLGDSteppingAction::GetIndividualGeDepositionInfo)
-            .SetGuidance(
-                    "Set whether to obtain individual energy deposition information inside Ge")
-            .SetGuidance("0 = don't")
-            .SetGuidance("1 = do")
-            .SetCandidates("0 1")
-            .SetDefaultValue("0");
-
-    fStepMessenger
-            ->DeclareMethod("getIndividualGdDepositionInfo", &WLGDSteppingAction::GetIndividualGdDepositionInfo)
-            .SetGuidance(
-                    "Set whether to obtain individual energy deposition information inside with Gd")
-            .SetGuidance("0 = don't")
-            .SetGuidance("1 = do")
-            .SetCandidates("0 1")
-            .SetDefaultValue("0");
-
 
     fStepMessenger
             ->DeclareMethod("AllowForLongTimeEmissionReadout", &WLGDSteppingAction::AllowForLongTimeEmissionReadout)

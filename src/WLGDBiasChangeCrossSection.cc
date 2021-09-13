@@ -145,7 +145,7 @@ G4VBiasingOperation* WLGDBiasChangeCrossSection::ProposeOccurenceBiasingOperatio
     // -- only on the first time the operation is proposed, or if the interaction
     // -- occured. If the interaction did not occur for the process in the previous,
     // -- we update the number of interaction length instead of resampling.
-    if(previousOperation == nullptr || (previousOperation != operation))
+    if(previousOperation == nullptr)// || (previousOperation != operation))
     {
         operation->SetBiasedCrossSection(XStransformation * analogXS);
         operation->Sample();

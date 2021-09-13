@@ -368,9 +368,6 @@ void WLGDEventAction::EndOfEventAction(const G4Event* event)
         return;  // no action on no hit
     }
 
-
-
-
     // get analysis manager
     auto analysisManager = G4AnalysisManager::Instance();
 

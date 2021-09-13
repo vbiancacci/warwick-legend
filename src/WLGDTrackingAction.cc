@@ -21,6 +21,7 @@ void WLGDTrackingAction::PreUserTrackingAction(const G4Track* aTrack)
         fpTrackingManager->SetTrajectory(new WLGDTrajectory(aTrack));
     }
 
+    // add Ge77 events to ListOfGe77
     if(aTrack->GetParticleDefinition()
                ->GetAtomicMass() == 77 &&
        aTrack->GetParticleDefinition()
@@ -29,10 +30,7 @@ void WLGDTrackingAction::PreUserTrackingAction(const G4Track* aTrack)
         fEventAction->AddIDListOfGe77(aTrack->GetTrackID());
     }
 
-    // Edit: 2021/03/30 by Moritz Neuberger
-    // Adding tracking of neutrons being later captured by Ge-76 as well as general produced
-    // in LAr
-
+    // Adding tracking of initial muons
     if(aTrack->GetParticleDefinition()->GetParticleName() == "mu-" || aTrack->GetParticleDefinition()->GetParticleName() == "mu+") {
         auto tmp_vector = aTrack->GetVertexPosition();
         tmp_MuonXpos = tmp_vector.getX() / m;
@@ -44,19 +42,24 @@ void WLGDTrackingAction::PreUserTrackingAction(const G4Track* aTrack)
         tmp_MuonZmom = tmp_vector.getZ();
     }
 
-
+    // Edit: 2021/03/30 by Moritz Neuberger
+    // Adding tracking of neutrons being later captured by Ge-76 as well as general produced
+    // in LAr
     if(aTrack->GetParticleDefinition()->GetParticleName() == "neutron")
     {
+        {
+            auto tmp_vector = aTrack->GetVertexPosition();
+            tmp_neutronXpos = tmp_vector.getX() / m;
+            tmp_neutronYpos = tmp_vector.getY() / m;
+            tmp_neutronZpos = tmp_vector.getZ() / m;
+            tmp_vector      = aTrack->GetMomentumDirection();
+            tmp_neutronXmom = tmp_vector.getX();
+            tmp_neutronYmom = tmp_vector.getY();
+            tmp_neutronZmom = tmp_vector.getZ();
+        } // readout of neutron production info
 
-        auto tmp_vector = aTrack->GetVertexPosition();
-        tmp_neutronXpos = tmp_vector.getX() / m;
-        tmp_neutronYpos = tmp_vector.getY() / m;
-        tmp_neutronZpos = tmp_vector.getZ() / m;
-        tmp_vector      = aTrack->GetMomentumDirection();
-        tmp_neutronXmom = tmp_vector.getX();
-        tmp_neutronYmom = tmp_vector.getY();
-        tmp_neutronZmom = tmp_vector.getZ();
 
+        // if all neutron info is readout, sent to output
         if(fRunAction->getWriteOutAllNeutronInfoRoot() == 1)
         {
             fEventAction->AddNeutronxLoc(tmp_neutronXpos);
@@ -68,21 +71,16 @@ void WLGDTrackingAction::PreUserTrackingAction(const G4Track* aTrack)
             fEventAction->AddNeutronTime(tmp_neutronTime);
         }
 
+        // initial value for furthest position of neutron away from center (for testing, can be removed)
         fEventAction->SetMostOuterRadius(sqrt(tmp_neutronXpos*tmp_neutronXpos + tmp_neutronYpos*tmp_neutronYpos));
 
-        //tmp_neutronTime = aTrack->GetStep()->GetPostStepPoint()->GetGlobalTime() / s;
+        // increase number of neutrons produced
         if(fRunAction->getWriteOutGeneralNeutronInfo() == 1)
             fEventAction->IncreaseByOne_NeutronInEvent();
 
+        // if production of neutrons in Ge76 nC is recorded, channel to output
         if(fRunAction->getWriteOutNeutronProductionInfo() == 1)
-        {// Tank_log Cout_log Cvac_log Cinn_log Lid_log BoratedPET_Logical
-        /*    if(aTrack->GetLogicalVolumeAtVertex()->GetName() == "Water_log" || 
-		aTrack->GetLogicalVolumeAtVertex()->GetName() == "Lar_log" ||
-               aTrack->GetLogicalVolumeAtVertex()->GetName() == "ULar_log" ||
-               aTrack->GetLogicalVolumeAtVertex()->GetName() == "Ge_log" ||
-               aTrack->GetLogicalVolumeAtVertex()->GetName() ==
-               "Copper_log")  // ULar_phys  Ge_phys
-            {*/
+        {
                 fRunAction->increaseTotalNumberOfNeutronsInLAr();
                 fRunAction->addCoordinatsToFile(tmp_neutronXpos, tmp_neutronYpos,
                                                 tmp_neutronZpos);
@@ -90,7 +88,7 @@ void WLGDTrackingAction::PreUserTrackingAction(const G4Track* aTrack)
                 fRunAction->addEnergyToFile(aTrack->GetKineticEnergy() / eV);
                 fRunAction->addParentParticleType(
                         fEventAction->neutronProducerMap.find(aTrack->GetParentID())->second);
-            //}
+
         }
     }
 
@@ -100,21 +98,22 @@ void WLGDTrackingAction::PreUserTrackingAction(const G4Track* aTrack)
 void WLGDTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
 {
 
-    if(fRunAction->getWriteOutAdvancedMultiplicity()){
+    // for tracking of particles creatd in Gd interactions
+    if(fRunAction->getIndividualGdDepositionInfo()){
         if(fEventAction->GetIDListOfGdSiblingParticles().count(aTrack->GetParentID())){
                 fEventAction->AddIDListOfGdSiblingParticles(aTrack->GetTrackID());
         }
     }
 
-    if(fEventAction->GetIDListOfGe77SiblingParticles().count(aTrack->GetParentID())){
+    // for tracking of sibling and secundary particles of Ge76 nC
+    if(fEventAction->GetIDListOfGe77SiblingParticles().count(aTrack->GetParentID()) && fRunAction->getIndividualGeDepositionInfo()){
             fEventAction->AddIDListOfGe77SiblingParticles(aTrack->GetTrackID());
     }
-
-    if(fEventAction->GetIDListOfGe77().count(aTrack->GetParentID())){
+    if(fEventAction->GetIDListOfGe77().count(aTrack->GetParentID()) && fRunAction->getIndividualGeDepositionInfo()){
             fEventAction->AddIDListOfGe77(aTrack->GetTrackID());
     }
 
-
+    // write to output muon information
     if(aTrack->GetTrackID() == 1){
         fEventAction->AddMuonxLoc(tmp_MuonXpos);
         fEventAction->AddMuonyLoc(tmp_MuonYpos);
@@ -123,6 +122,7 @@ void WLGDTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
         fEventAction->AddMuonyMom(tmp_MuonYmom);
         fEventAction->AddMuonzMom(tmp_MuonZmom);
     }
+
 
     if(fRunAction->getWriteOutNeutronProductionInfo() == 1)
     {
@@ -148,7 +148,6 @@ void WLGDTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
     }
 
     // For Ge77m IC readout
-
     if(aTrack->GetParticleDefinition()->GetPDGEncoding() == 1000320771){
         fEventAction->SetisMetastable(1);
         int NumberOfSecundaries = aTrack->GetStep()->GetSecondaryInCurrentStep()->size();
@@ -166,33 +165,13 @@ void WLGDTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
         }
     }
 
-
-
     // Edit: 2021/03/30 by Moritz Neuberger
-    // Adding tracking of neutrons being later captured by Ge-76
 
-    // RemoveAddIDListOfGe77OfGe77SiblingParticles
-/*
-    if((aTrack->GetStep()->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName() == "neutronInelastic"
-        || aTrack->GetStep()->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName() == "nFission"
-        || aTrack->GetStep()->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName() == "hBertiniCaptureAtRest"
-        || aTrack->GetStep()->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName() == "pi-Inelastic"
-        || aTrack->GetStep()->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName() == "Decay")
-        && aTrack->GetStep()->GetPostStepPoint()
-                            ->GetTouchable()
-                            ->GetVolume()
-                            ->GetLogicalVolume()
-                            ->GetName() == "Water_log"
-            aTrack->GetVolume()->GetName() == "Water_phys"){
-        fEventAction->AddIDListOfGdSiblingParticles(aTrack->GetTrackID());
-    }
-*/
-
-
+    // Adding tracking of nC on different nuclei
     if(aTrack->GetParticleDefinition()->GetParticleName() == "neutron")
     {
         if(aTrack->GetStep()->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName() ==
-           "biasWrapper(nCapture)")
+           "biasWrapper(nCapture)") // altered name necessary due to biasing
         {
             int NumberOfSecundaries = aTrack->GetStep()->GetSecondaryInCurrentStep()->size();
             for(int i = 0; i < NumberOfSecundaries; i++)
@@ -212,18 +191,6 @@ void WLGDTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
                     tmp_x = aTrack->GetStep()->GetPostStepPoint()->GetPosition().getX() / m;
                     tmp_y = aTrack->GetStep()->GetPostStepPoint()->GetPosition().getY() / m;
                     tmp_z = aTrack->GetStep()->GetPostStepPoint()->GetPosition().getZ() / m;
-/*
-          G4cout << "Got it!" << G4endl;
-          G4cout << "Position: " << tmp_neutronXpos << " " << tmp_neutronYpos << " "
-                 << tmp_neutronZpos << G4endl;
-          G4cout << "Direction: " << tmp_neutronXmom << " " << tmp_neutronYmom << " "
-                 << tmp_neutronZmom << G4endl;
-          G4cout << "Energy: "
-                 << aTrack->GetStep()->GetPreStepPoint()->GetKineticEnergy() / eV
-                 << G4endl;
-          G4cout << "Position of generated Ge-77: " << tmp_x << " " << tmp_y << " "
-                 << tmp_z << G4endl;
-*/
                     fEventAction->AddEkin(aTrack->GetStep()->GetPreStepPoint()->GetKineticEnergy() /
                                           eV);
                     fEventAction->AddNeutronxLoc(tmp_neutronXpos);
@@ -235,7 +202,7 @@ void WLGDTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
                     fEventAction->AddNeutronTime(tmp_neutronTime);
                     fEventAction->WriteMostOuterRadius();
                     fEventAction->AddIDListOfGe77SiblingParticles(aTrack->GetTrackID());
-                }
+                } // sending info of neutron producing Ge77 to output
                 else
                 {
                     if(aTrack->GetStep()
@@ -257,7 +224,7 @@ void WLGDTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
                                                         ->at(i)
                                                         ->GetParticleDefinition()
                                                         ->GetAtomicMass());
-                    }
+                    } // send info of nC on Ar
                     else
                     {
                         if(aTrack->GetStep()
@@ -280,7 +247,7 @@ void WLGDTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
                                                             ->GetParticleDefinition()
                                                             ->GetAtomicMass());
                             fEventAction->AddIDListOfGdSiblingParticles(aTrack->GetTrackID());
-                        }
+                        } // send info of nC on Gd
                         else
                         {
                             fEventAction->AddnCOther_timing(
@@ -301,7 +268,7 @@ void WLGDTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
                                                                 ->at(i)
                                                                 ->GetParticleDefinition()
                                                                 ->GetPDGCharge());
-                        }
+                        } // send info of all other nC
                     }
                 }
             }

@@ -22,7 +22,7 @@ WLGDRunAction::WLGDRunAction(WLGDEventAction* eventAction, G4String name)
     auto analysisManager = G4AnalysisManager::Instance();
 
     // Create directories
-    analysisManager->SetVerboseLevel(1);
+    analysisManager->SetVerboseLevel(4);
     analysisManager->SetNtupleMerging(true);
 
     // Creating ntuple with vector entries
@@ -218,7 +218,6 @@ void WLGDRunAction::EndOfRunAction(const G4Run* /*run*/)
     G4cout << "TotalNumberOfNeutronInLAr: " << fTotalNumberOfNeutronsInLAr << G4endl;
 
     // save ntuple
-    //
     analysisManager->Write();
     analysisManager->CloseFile();
 

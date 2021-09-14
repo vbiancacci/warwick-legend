@@ -22,7 +22,7 @@ WLGDRunAction::WLGDRunAction(WLGDEventAction* eventAction, G4String name)
     auto analysisManager = G4AnalysisManager::Instance();
 
     // Create directories
-    analysisManager->SetVerboseLevel(4);
+    analysisManager->SetVerboseLevel(1);
     analysisManager->SetNtupleMerging(true);
 
     // Creating ntuple with vector entries

@@ -100,7 +100,10 @@ G4VBiasingOperation* WLGDBiasChangeCrossSection::ProposeOccurenceBiasingOperatio
     //        << ", n factor " << fNeutronBias << G4endl;
     if(track->GetParticleDefinition()->GetParticleName() == "mu-")//fpname.contains("mu-"))
     {
-        XStransformation = fMuonBias;  // configurable cross section boost factor
+        if(callingProcess->GetWrappedProcess()->GetProcessName() == "muonNuclear")
+            XStransformation = fMuonBias;  // configurable cross section boost factor
+        if(callingProcess->GetWrappedProcess()->GetProcessName() == "muMinusCaptureAtRest")
+            XStransformation = fNeutronYieldBias;
     }
     else{
         if(track->GetParticleDefinition()->GetParticleName() == "neutron")
@@ -122,6 +125,8 @@ G4VBiasingOperation* WLGDBiasChangeCrossSection::ProposeOccurenceBiasingOperatio
         else if(track->GetParticleDefinition()->GetParticleName() == "gamma"){XStransformation = fNeutronYieldBias;}
         else if(track->GetParticleDefinition()->GetParticleName() == "pi+"){XStransformation = fNeutronYieldBias;}
         else if(track->GetParticleDefinition()->GetParticleName() == "pi-"){XStransformation = fNeutronYieldBias;}
+        else if(track->GetParticleDefinition()->GetParticleName() == "proton"){XStransformation = fNeutronYieldBias;}
+        else if(track->GetParticleDefinition()->GetParticleName() == "kaon-"){XStransformation = fNeutronYieldBias;}
         else
         {
             XStransformation = 1.0;  // should never be needed

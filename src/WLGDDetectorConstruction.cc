@@ -236,6 +236,8 @@ void WLGDDetectorConstruction::ConstructSDandField() {
             biasmuXS->AddParticle("pi+");
             biasmuXS->AddParticle("pi-");
             biasmuXS->AddParticle("gamma");
+            biasmuXS->AddParticle("kaon-");
+            biasmuXS->AddParticle("proton");
         }
         G4LogicalVolume *logicCavern = volumeStore->GetVolume("Cavern_log");
         biasmuXS->AttachTo(logicCavern);

@@ -105,7 +105,14 @@ int main(int argc, char** argv)
     pvec.clear();
     pname = "muonNuclear";
     pvec.push_back(pname);
+    pname = "muMinusCaptureAtRest";
+    pvec.push_back(pname);
     biasingPhysics->Bias("mu-", pvec);  // bias particle and process
+
+    pvec.clear();
+    pname = "protonInelastic";
+    pvec.push_back(pname);
+    biasingPhysics->Bias("proton", pvec);  // bias particle and process
 
     pvec.clear();
     pname = "pi+Inelastic";
@@ -113,7 +120,14 @@ int main(int argc, char** argv)
     biasingPhysics->Bias("pi+", pvec);  // bias particle and process
 
     pvec.clear();
+    pname = "hBertiniCaptureAtRest";
+    pvec.push_back(pname);
+    biasingPhysics->Bias("kaon-", pvec);  // bias particle and process
+
+    pvec.clear();
     pname = "pi-Inelastic";
+    pvec.push_back(pname);
+    pname = "hBertiniCaptureAtRest";
     pvec.push_back(pname);
     biasingPhysics->Bias("pi-", pvec);  // bias particle and process
 

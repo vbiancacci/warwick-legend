@@ -237,8 +237,8 @@ void WLGDPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
             std::uniform_int_distribution<int> distribution_2(0,1);
             G4int whichGe77State = distribution_2(generator);
             if(whichGe77State == 0){
-            fParticleGun->SetParticleDefinition(theParticleTable->GetIonTable()->GetIon(32,77,0*keV));
-            theMass = theParticleTable->GetIonTable()->GetIonMass(32,77,0,0);
+                fParticleGun->SetParticleDefinition(theParticleTable->GetIonTable()->GetIon(32,77,0*keV));
+                theMass = theParticleTable->GetIonTable()->GetIonMass(32,77,0,0);
             }
             else{
                 fParticleGun->SetParticleDefinition(theParticleTable->GetIonTable()->GetIon(32,77,159.71*keV));
@@ -340,45 +340,45 @@ void WLGDPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
 
         if(type == 3){
 
-	    G4double BPE_rad =	 fDetector->GetBoratedTurbineRadius();
+            G4double BPE_rad =	 fDetector->GetBoratedTurbineRadius();
             G4double BPE_wid =     fDetector->GetBoratedTurbineWidth();
             G4double BPE_hei =     fDetector->GetBoratedTurbineHeight()/2.;
             G4double BPE_zPos =     fDetector->GetBoratedTurbinezPosition()*cm - 100*cm;
 
-	    G4double volume_cyl = 3.1415926535*BPE_hei*2*(pow(BPE_rad+BPE_wid,2) - pow(BPE_rad,2));
-	    G4double volume_top = 3.1415926535*BPE_wid*pow(BPE_rad+BPE_wid,2);
+            G4double volume_cyl = 3.1415926535*BPE_hei*2*(pow(BPE_rad+BPE_wid,2) - pow(BPE_rad,2));
+            G4double volume_top = 3.1415926535*BPE_wid*pow(BPE_rad+BPE_wid,2);
 
-	    G4double prob_cyl = volume_cyl/(volume_cyl + 2*volume_top);
-	    G4double prob_top = (1 - prob_cyl)/2.;
+            G4double prob_cyl = volume_cyl/(volume_cyl + 2*volume_top);
+            G4double prob_top = (1 - prob_cyl)/2.;
 
-	    std::discrete_distribution<> distribution_2({prob_cyl,prob_top,prob_top});
+            std::discrete_distribution<> distribution_2({prob_cyl,prob_top,prob_top});
 
-	    G4int where = distribution_2(generator);
+            G4int where = distribution_2(generator);
 
-	    if(where == 0){
-		    G4double ran_rad = BPE_rad * cm + BPE_wid * cm * rndm(generator);
-		    G4double ran_phi = 360 * deg * rndm(generator);
-		    ran_x = ran_rad * sin(ran_phi);
-		    ran_y = ran_rad * cos(ran_phi);
-		    ran_z = BPE_hei * ( 1 - 2 * rndm(generator));
-		}
-	    if(where > 0){
-                    G4double ran_rad = BPE_rad * cm * rndm(generator);
-                    G4double ran_phi = 360 * deg * rndm(generator);
-                    ran_x = ran_rad * sin(ran_phi);
-                    ran_y = ran_rad * cos(ran_phi);
-                    ran_z = BPE_wid * ( 1 - 2 * rndm(generator));
-		    if(where == 1) ran_z += BPE_hei;
-		    if(where == 2) ran_z -= BPE_hei;
-	    }
-	}
+            if(where == 0){
+                G4double ran_rad = BPE_rad * cm + BPE_wid * cm * rndm(generator);
+                G4double ran_phi = 360 * deg * rndm(generator);
+                ran_x = ran_rad * sin(ran_phi);
+                ran_y = ran_rad * cos(ran_phi);
+                ran_z = BPE_hei * ( 1 - 2 * rndm(generator));
+            }
+            if(where > 0){
+                G4double ran_rad = BPE_rad * cm * rndm(generator);
+                G4double ran_phi = 360 * deg * rndm(generator);
+                ran_x = ran_rad * sin(ran_phi);
+                ran_y = ran_rad * cos(ran_phi);
+                ran_z = BPE_wid * ( 1 - 2 * rndm(generator));
+                if(where == 1) ran_z += BPE_hei;
+                if(where == 2) ran_z -= BPE_hei;
+            }
+        }
 
 
 
         G4double particle_time = 0 * s;
         G4double energy = (*neutronEnergySpectrumInBPE)(generator) * keV;
-	G4cout << energy << G4endl;
-	G4double theta = rndm(generator) * 180. * deg;
+        G4cout << energy << G4endl;
+        G4double theta = rndm(generator) * 180. * deg;
         G4double phi = rndm(generator) * 360. * deg;
         G4double x = ran_x;
         G4double y = ran_y;
@@ -403,13 +403,98 @@ void WLGDPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
         fParticleGun->GeneratePrimaryVertex(event);
 
     }
+    if(fGenerator == "ExternalNeutrons")
+    {
+        if(neutronEnergySpectrumFromOutside == 0){
+            string filelistName = "../data/FluxOverEnergy.txt";
+            ifstream filestream;
+            filestream.open(filelistName.c_str());
+            vector<double> x_val;
+            vector<double> y_val;
+            double tmp_x, tmp_y;
+            while(filestream >> tmp_x >> tmp_y){
+                x_val.push_back(tmp_x);
+                y_val.push_back(tmp_y);
+            }
+            neutronEnergySpectrumFromOutside = new std::piecewise_linear_distribution<double>(x_val.begin(),x_val.end(),y_val.begin());
+        }
+
+        std::uniform_real_distribution<> rndm(0.0, 1.0);   // azimuth angle
+
+        G4double WaterTankHeight    = (650+0.8)*cm;
+        G4double WaterTankRadius    = (550+0.6)*cm;
+        G4double Offset             = (200-100-(850-650))*cm;
+
+
+        G4double area_cyl = 2*CLHEP::twopi*WaterTankRadius*2*WaterTankHeight;//3.1415926535*BPE_hei*2*(pow(BPE_rad+BPE_wid,2) - pow(BPE_rad,2));
+        G4double area_top = CLHEP::twopi/2.*WaterTankRadius*WaterTankRadius;//3.1415926535*BPE_wid*pow(BPE_rad+BPE_wid,2);
+
+        G4double prob_cyl = area_cyl/(area_cyl + 2*area_top);
+        G4double prob_top = (1 - prob_cyl)/2.;
+
+        std::discrete_distribution<> distribution_2({prob_cyl,prob_top,prob_top});
+
+        G4int where = distribution_2(generator);
+        G4double px, py, pz, pos_x , pos_y, pos_z;
+        if(where==0){
+            G4double pos_phi = CLHEP::twopi * rndm(generator);
+            G4double pos_height = WaterTankHeight * (1 - 2 * rndm(generator));
+
+             pos_x = WaterTankRadius*cos(pos_phi);
+             pos_y = WaterTankRadius*sin(pos_phi);
+             pos_z = pos_height;
+
+            G4double mom_phi = CLHEP::twopi/4. * (3 - 2 * rndm(generator)) + pos_phi;
+            G4double mom_theta = CLHEP::twopi/2. * rndm(generator);
+
+             px = sin(mom_theta) * cos(mom_phi);
+             py = sin(mom_theta) * sin(mom_phi);
+             pz = cos(mom_theta);
+
+//            G4cout << pos_phi << " " << pos_height << " | " << mom_phi << " " << mom_theta << " | " << sin(mom_theta) << " " << cos(mom_phi) << G4endl;
+        }
+
+        if(where>0){
+            G4double pos_phi = CLHEP::twopi * rndm(generator);
+            G4double pos_height;
+            if(where == 1) pos_height = WaterTankHeight;
+            if(where == 2) pos_height = -WaterTankHeight;
+            G4double pos_rad = WaterTankRadius * rndm(generator);
+
+             pos_x = pos_rad*cos(pos_phi);
+             pos_y = pos_rad*sin(pos_phi);
+             pos_z = pos_height;
+
+            G4double mom_phi = CLHEP::twopi * rndm(generator);
+            G4double mom_theta = -CLHEP::twopi/4. * rndm(generator);
+            if(where==2) mom_theta += CLHEP::twopi/4.;
+
+             px = sin(mom_theta) * cos(mom_phi);
+             py = sin(mom_theta) * sin(mom_phi);
+             pz = cos(mom_theta);
+
+  //          G4cout << pos_phi << " " << pos_height << " " << pos_rad << " | " << mom_phi << " " << mom_theta << " | " << sin(mom_theta) << " " << cos(mom_phi) << G4endl;
+        }
+
+    //    G4cout << " ------------ " << pos_x << " " << pos_y << " " << pos_z << " | " << px << " " << py << " " << pz << G4endl;
+
+        G4ParticleTable* theParticleTable = G4ParticleTable::GetParticleTable();
+        fParticleGun->SetParticleDefinition(theParticleTable->FindParticle("neutron"));
+        G4ThreeVector momentumDir(px, py, pz);
+        fParticleGun->SetParticleMomentumDirection(momentumDir);
+        G4double ekin = (*neutronEnergySpectrumFromOutside)(generator);  // get random number (*neutronEnergySpectrumInBPE)(generator) * keV
+        ekin *= MeV;
+        fParticleGun->SetParticleEnergy(ekin);
+        fParticleGun->SetParticlePosition(G4ThreeVector(pos_x, pos_y, pos_z+Offset));
+        fParticleGun->GeneratePrimaryVertex(event);
+    }
 }
 
 void WLGDPrimaryGeneratorAction::SetGenerator(const G4String& name)
 {
 
 
-    std::set<G4String> knownGenerators = { "MeiAndHume", "Musun" , "Ge77m", "Ge77andGe77m", "BoratedPENeutrons"};
+    std::set<G4String> knownGenerators = { "MeiAndHume", "Musun" , "Ge77m", "Ge77andGe77m", "BoratedPENeutrons","ExternalNeutrons"};
     if(knownGenerators.count(name) == 0)
     {
         G4Exception("WLGDPrimaryGeneratorAction::SetGenerator", "WLGD0101", JustWarning,
@@ -452,6 +537,7 @@ void WLGDPrimaryGeneratorAction::DefineCommands()
             .SetGuidance("Ge77m = generate Ge77m inside the HPGe detectors")
             .SetGuidance("Ge77andGe77m = generate 50% Ge77, 50% Ge77m inside the HPGe detectors")
             .SetGuidance("BoratedPENeutrons = generate neutrons inside the borated PE")
-            .SetCandidates("MeiAndHume Musun Ge77m Ge77andGe77m BoratedPENeutrons" );
+            .SetGuidance("ExternalNeutrons = generate neutrons from outside the water tank")
+            .SetCandidates("MeiAndHume Musun Ge77m Ge77andGe77m BoratedPENeutrons ExternalNeutrons" );
 }
 

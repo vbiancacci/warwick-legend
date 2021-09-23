@@ -118,6 +118,7 @@ private:
   G4double           fZShift;
 
   piecewise_linear_distribution<double>*      neutronEnergySpectrumInBPE;
+    piecewise_linear_distribution<double>*      neutronEnergySpectrumFromOutside;
 };
 
 #endif

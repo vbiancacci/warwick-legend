@@ -116,21 +116,18 @@ G4VBiasingOperation* WLGDBiasChangeCrossSection::ProposeOccurenceBiasingOperatio
                            ->GetName() == "Ge_log")
                     XStransformation = fNeutronBias * 1.68;  // specific for this, boost n,gamma by 68% for 77Ge from 76Ge
                 else
-                    XStransformation = fNeutronBias;  // specific for this, boost n,gamma by 68% for 77Ge from 76Ge
+                    XStransformation = fNeutronBias;
             }
             if(callingProcess->GetWrappedProcess()->GetProcessName() == "neutronInelastic"){
                 XStransformation = fNeutronYieldBias;
             }
         }
-        else if(track->GetParticleDefinition()->GetParticleName() == "gamma"){XStransformation = fNeutronYieldBias;}
-        else if(track->GetParticleDefinition()->GetParticleName() == "pi+"){XStransformation = fNeutronYieldBias;}
-        else if(track->GetParticleDefinition()->GetParticleName() == "pi-"){XStransformation = fNeutronYieldBias;}
-        else if(track->GetParticleDefinition()->GetParticleName() == "proton"){XStransformation = fNeutronYieldBias;}
-        else if(track->GetParticleDefinition()->GetParticleName() == "kaon-"){XStransformation = fNeutronYieldBias;}
-        else
-        {
-            XStransformation = 1.0;  // should never be needed
-        }
+        else if(track->GetParticleDefinition()->GetParticleName() == "gamma")  {XStransformation = fNeutronYieldBias;}
+        else if(track->GetParticleDefinition()->GetParticleName() == "pi+")    {XStransformation = fNeutronYieldBias;}
+        else if(track->GetParticleDefinition()->GetParticleName() == "pi-")    {XStransformation = fNeutronYieldBias;}
+        else if(track->GetParticleDefinition()->GetParticleName() == "proton") {XStransformation = fNeutronYieldBias;}
+        else if(track->GetParticleDefinition()->GetParticleName() == "kaon-")  {XStransformation = fNeutronYieldBias;}
+        else { XStransformation = 1.0;}
     }
     //G4cout << "XStransformation: " << XStransformation << " | " << fpname << " - " << callingProcess->GetWrappedProcess()->GetProcessName() << " - " << XStransformation * analogXS << G4endl;
     // -- fetch the operation associated to this callingProcess:

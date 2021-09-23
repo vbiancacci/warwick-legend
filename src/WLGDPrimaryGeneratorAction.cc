@@ -415,6 +415,7 @@ void WLGDPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
             while(filestream >> tmp_x >> tmp_y){
                 x_val.push_back(tmp_x);
                 y_val.push_back(tmp_y);
+                G4cout << tmp_x << " " << tmp_y << G4endl;
             }
             neutronEnergySpectrumFromOutside = new std::piecewise_linear_distribution<double>(x_val.begin(),x_val.end(),y_val.begin());
         }

@@ -212,8 +212,10 @@ Macros to adjust whether additional output (additional to the Ge77 production) i
 ```
 /WLGD/detector/setGeometry baseline             # setting the geometry of the detector to the baseline design
 /WLGD/event/saveAllEvents 0                     # only the Ge77 producing events are saved
-/WLGD/detector/With_NeutronModerators 3         # using the moderator design with the tubes right around the re-entrance tubes
+/WLGD/detector/With_NeutronModerators 2         # using the moderator design with the tubes right around the re-entrance tubes
 /WLGD/detector/With_Gd_Water 1                  # using the Gd in the water
+/WLGD/detector/Borated_Turbine_Radius 200       # set the radius on which the center of mass of the pannels are alligned on [cm]
+/WLGD/detector/Borated_Turbine_Length 100       # set the length of the moderator pannelss [cm]
 /WLGD/step/getDepositionInfo 1                  # save the information of multiplicity and total energy deposited in detectors
 /run/initialize                                 
 /WLGD/generator/setGenerator Musun              # set the primary generator to the (Alpha,n) generator in the moderators

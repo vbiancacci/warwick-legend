@@ -131,10 +131,13 @@ Volume definitions in detector construction.
 
 # Changes after the fork from the original
 
+A lot has been added in my version of the fork. 
+An output for the Ge77m veto has been added, more options to adjust the geometry via macros and several new primary generators.
+
 ## Overview over the Macros
 
 ### Runaction Macro
-Macro commands regarding the output of the simulation 
+Macros regarding the output of the simulation 
 
 /WLGD/runaction/
   - WriteOutNeutronProductionInfo
@@ -179,7 +182,7 @@ Macros to controll the detector geometry
     - NPanels
 
 ### Bias Macro
-Macro to adjust the bias of the cross-sections
+Macros to adjust the bias of the cross-sections
 
 /WLGD/bias/
   - setNeutronBias
@@ -187,7 +190,7 @@ Macro to adjust the bias of the cross-sections
   - setNeutronYieldBias
 
 ### Step Macro
-Macro to adjust whether additional output (additional to the Ge77 production) is recorded in the first place
+Macros to adjust whether additional output (additional to the Ge77 production) is recorded in the first place
 
 /WLGD/step/
   - getDepositionInfo (multiplicity and energy deposition in the detectors)

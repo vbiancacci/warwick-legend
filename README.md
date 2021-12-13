@@ -138,30 +138,30 @@ An output for the Ge77m veto has been added, more options to adjust the geometry
 
 ### Runaction Macro
 Macros regarding the output of the simulation 
-
+```
 /WLGD/runaction/
   - WriteOutNeutronProductionInfo
   - WriteOutGeneralNeutronInfo
   - getIndividualGeDepositionInfo
   - getIndividualGdDepositionInfo
-
+```
 ### Event Macro
 Macro to adjust the condition to save all events (1) or just the ones with Ge77 production (0) 
-
+```
 /WLGD/event/
   - saveAllEvents (no: [0], yes: 1)
-
+```
 ### Generator Macro
 Macros to controll the primary generator 
-
+```
 /WLGD/generator/
   - depth
   - setMUSUNFile (path to file)
   - setGenerator (options: "MeiAndHume", "Musun", "Ge77m", "Ge77andGe77m", "BoratedPENeutrons", "ExternalNeutrons")
-
+```
 ### Detector Macro
 Macros to controll the detector geometry
-
+```
 /WLGD/detector/
   - setPositionOfDetectors
   - setGeometry
@@ -180,23 +180,23 @@ Macros to controll the detector geometry
     - Height
     - zPosition
     - NPanels
-
+```
 ### Bias Macro
 Macros to adjust the bias of the cross-sections
-
+```
 /WLGD/bias/
   - setNeutronBias
   - setMuonBias
   - setNeutronYieldBias
-
+```
 ### Step Macro
 Macros to adjust whether additional output (additional to the Ge77 production) is recorded in the first place
-
+```
 /WLGD/step/
   - getDepositionInfo (multiplicity and energy deposition in the detectors)
   - getIndividualDepositionInfo (energy depositions in the whole cryostat)
   - AllowForLongTimeEmissionReadout (allow for energy depositions >1s after muon crossing to be recorded)
-
+```
 ## Example for Ge77 production by Radiogenic Neutron from the moderators:
 ```
 /WLGD/detector/setGeometry baseline             # setting the geometry of the detector to the baseline design

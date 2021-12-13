@@ -223,7 +223,7 @@ Macros to adjust whether additional output (additional to the Ge77 production) i
 /run/beamOn 100                                 # should never exceed the size of the musun input file
 ```
 
-## Example for investigating the output of all muons and their individual energy depositions in the while cryostat
+## Example for investigating the output of all muons and their individual energy depositions in the whole cryostat
 ```
 /WLGD/detector/setGeometry baseline             # setting the geometry of the detector to the baseline design
 /WLGD/event/saveAllEvents 1                     # only the Ge77 producing events are saved

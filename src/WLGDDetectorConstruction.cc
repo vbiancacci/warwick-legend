@@ -1481,7 +1481,7 @@ void WLGDDetectorConstruction::DefineCommands()
   // option to include borated PE in the setup (1: tubes around the re-entrance tubes, 2:
   // trubine structure)
   fDetectorMessenger
-    ->DeclareMethod("With_Borated_PET", &WLGDDetectorConstruction::SetNeutronModerator)
+    ->DeclareMethod("With_NeutronModerators", &WLGDDetectorConstruction::SetNeutronModerator)
     .SetGuidance("Set whether to include Neutron Moderators or not")
     .SetGuidance("0 = without Neutron Moderators")
     .SetGuidance("1 = with Neutron Moderators around Re-Entrance tubes")

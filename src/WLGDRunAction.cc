@@ -234,10 +234,11 @@ void WLGDRunAction::EndOfRunAction(const G4Run* /*run*/)
 
     // Edit: 2021/03/12 by Moritz Neuberger
     // Adding detail output for neutron production information
+        G4cout << "N of neutrons total: " << vector_x_dir.size() << G4endl;
     if(fWriteOutNeutronProductionInfo == 1){
         for(int i = 0; i < vector_x_dir.size(); i++)
         {
-            outputStream_2 << vector_x_dir[i] << " " << vector_y_dir[i] << " " << vector_z_dir[i] << " " << vector_x_mom[i] << " " << vector_y_mom[i] << " " << vector_z_mom[i] << " " << vector_energy[i] << " " << vector_parentParticleType[i] << endl;
+            outputStream_2 << vector_eventNumber[i] << " " << vector_x_dir[i] << " " << vector_y_dir[i] << " " << vector_z_dir[i] << " " << vector_x_mom[i] << " " << vector_y_mom[i] << " " << vector_z_mom[i] << " " << vector_energy[i] << " " << vector_parentParticleType[i] << endl;
         }
         outputStream_2.close();
     }

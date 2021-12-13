@@ -26,6 +26,7 @@ public:
   void increaseNumberOfCrossingNeutrons(){fNumberOfCrossingNeutrons++;}
   void increaseTotalNumberOfNeutronsInLAr(){fTotalNumberOfNeutronsInLAr++;}
   G4int getNumberOfNeutronsInLAr(){return fTotalNumberOfNeutronsInLAr;}
+  void addEventNumber(G4int i){vector_eventNumber.push_back(i);}//{outputStream_2 << x << " " << y << " " << z << endl;}
   void addCoordinatsToFile(G4double x, G4double y, G4double z){vector_x_dir.push_back(x);vector_y_dir.push_back(y);vector_z_dir.push_back(z);}//{outputStream_2 << x << " " << y << " " << z << endl;}
   void addMomentumToFile(G4double x, G4double y, G4double z){vector_x_mom.push_back(x);vector_y_mom.push_back(y);vector_z_mom.push_back(z);}//{outputStream_2 << x << " " << y << " " << z << endl;}
   void addEnergyToFile(G4double ekin){vector_energy.push_back(ekin);}//{outputStream_2 << x << " " << y << " " << z << endl;}
@@ -52,6 +53,7 @@ private:
   G4int            fWriteOutAllNeutronInfoRoot = 0;
     G4int fIndividualGeDepositionInfo = 0;
     G4int fIndividualGdDepositionInfo = 0;
+  std::vector<G4int> vector_eventNumber;
   std::vector<G4double> vector_x_dir;
   std::vector<G4double> vector_y_dir;
   std::vector<G4double> vector_z_dir;

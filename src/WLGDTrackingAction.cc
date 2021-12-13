@@ -82,6 +82,7 @@ void WLGDTrackingAction::PreUserTrackingAction(const G4Track* aTrack)
         if(fRunAction->getWriteOutNeutronProductionInfo() == 1)
         {
                 fRunAction->increaseTotalNumberOfNeutronsInLAr();
+                fRunAction->addEventNumber(G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
                 fRunAction->addCoordinatsToFile(tmp_neutronXpos, tmp_neutronYpos,
                                                 tmp_neutronZpos);
                 fRunAction->addMomentumToFile(tmp_neutronXmom, tmp_neutronYmom, tmp_neutronZmom);

@@ -3,8 +3,8 @@
 
 // std c++ includes
 #include <cmath>
-#include <random>
 #include <fstream>
+#include <random>
 
 #include "G4GenericMessenger.hh"
 #include "G4VUserPrimaryGeneratorAction.hh"
@@ -92,15 +92,19 @@ public:
 
   virtual void GeneratePrimaries(G4Event*);
 
+  // -- input parameters for the MeiAndHume algorithm
   void     SetDepth(G4double val) { fDepth = val; }
   G4double GetDepth() const { return fDepth; }
 
-  void     SetGenerator(const G4String& name);
-  void     SetZShift(G4double fZShift);
+  // -- set the generator method by name
+  void SetGenerator(const G4String& name);
+  // -- adjust the z-offset for the Musun algorithm
+  void SetZShift(G4double fZShift);
 
-  void     ChangeFileName(G4String newFile);
-  void     OpenFile();
-  void     shortcutToChangeFileName(const G4String& newFile);
+  void ChangeFileName(G4String newFile);
+  void OpenFile();
+  void shortcutToChangeFileName(const G4String& newFile);
+
 private:
   void DefineCommands();
 
@@ -117,8 +121,8 @@ private:
   G4String           fFileName;
   G4double           fZShift;
 
-  piecewise_linear_distribution<double>*      neutronEnergySpectrumInBPE;
-    piecewise_linear_distribution<double>*      neutronEnergySpectrumFromOutside;
+  piecewise_linear_distribution<double>* neutronEnergySpectrumInBPE;
+  piecewise_linear_distribution<double>* neutronEnergySpectrumFromOutside;
 };
 
 #endif

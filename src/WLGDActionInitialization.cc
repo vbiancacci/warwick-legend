@@ -27,12 +27,13 @@ void WLGDActionInitialization::Build() const
   // Edit: Moritz Neuberger
   // added connection between the event action and run/tracking/stepping action classes
   // added connection between run action and tracking/stepping action class
+  // Yeah, I know its not pretty but for my first G4 project, I think it's ok. Sorry for the mess. If you have any problems, just write me on Slack
   SetUserAction(new WLGDPrimaryGeneratorAction(fDet));
   auto event = new WLGDEventAction();
   SetUserAction(event);
   auto run = new WLGDRunAction(event, foutname);
   SetUserAction(run);
-  SetUserAction(new WLGDTrackingAction(event,run));
-  SetUserAction(new WLGDSteppingAction(event,run, fDet));
+  SetUserAction(new WLGDTrackingAction(event, run));
+  SetUserAction(new WLGDSteppingAction(event, run, fDet));
   SetUserAction(new WLGDStackingAction);
 }

@@ -74,8 +74,7 @@ private:
   WLGDBiasChangeCrossSection*                                        fCurrentOperator;
   G4double                                                           fNeutronBias = 1.0;
   G4double                                                           fMuonBias    = 1.0;
-  G4double                                                           fNeutronYieldBias = 1.0;
-
+  G4double fNeutronYieldBias                                                      = 1.0;
 };
 
 #endif

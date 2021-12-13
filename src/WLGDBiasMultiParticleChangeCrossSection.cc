@@ -1,3 +1,6 @@
+// -- this is as far as I can see a copy of the tutorial how to use the Bias Change Cross-Section from the G4 tutorials
+// -- for a better explanation go there
+
 #include "WLGDBiasMultiParticleChangeCrossSection.hh"
 #include "G4BiasingProcessInterface.hh"
 

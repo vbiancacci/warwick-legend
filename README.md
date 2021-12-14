@@ -157,7 +157,7 @@ Macros to controll the primary generator
 /WLGD/generator/
   - depth
   - setMUSUNFile (path to file)
-  - setGenerator (options: "MeiAndHume", "Musun", "Ge77m", "Ge77andGe77m", "BoratedPENeutrons", "ExternalNeutrons")
+  - setGenerator (options: "MeiAndHume", "Musun", "Ge77m", "Ge77andGe77m", "ModeratorNeutrons", "ExternalNeutrons")
 ```
 ### Detector Macro
 Macros to controll the detector geometry

@@ -289,7 +289,7 @@ void WLGDPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
 
     fParticleGun->GeneratePrimaryVertex(event);
   }
-  if(fGenerator == "BoratedPENeutrons")
+  if(fGenerator == "ModeratorNeutrons")
   {
     if(neutronEnergySpectrumInBPE == 0)
     {
@@ -557,7 +557,7 @@ void WLGDPrimaryGeneratorAction::SetGenerator(const G4String& name)
 {
   std::set<G4String> knownGenerators = {
     "MeiAndHume",        "Musun",           "Ge77m", "Ge77andGe77m",
-    "BoratedPENeutrons", "ExternalNeutrons"
+    "ModeratorNeutrons", "ExternalNeutrons"
   };
   if(knownGenerators.count(name) == 0)
   {
@@ -605,8 +605,8 @@ void WLGDPrimaryGeneratorAction::DefineCommands()
     .SetGuidance("Musun = Used in previous MaGe simulation")
     .SetGuidance("Ge77m = generate Ge77m inside the HPGe detectors")
     .SetGuidance("Ge77andGe77m = generate 50% Ge77, 50% Ge77m inside the HPGe detectors")
-    .SetGuidance("BoratedPENeutrons = generate neutrons inside the borated PE")
+    .SetGuidance("ModeratorNeutrons = generate neutrons inside the neutron moderators")
     .SetGuidance("ExternalNeutrons = generate neutrons from outside the water tank")
     .SetCandidates(
-      "MeiAndHume Musun Ge77m Ge77andGe77m BoratedPENeutrons ExternalNeutrons");
+      "MeiAndHume Musun Ge77m Ge77andGe77m ModeratorNeutrons ExternalNeutrons");
 }

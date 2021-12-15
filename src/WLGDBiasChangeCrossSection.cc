@@ -1,21 +1,10 @@
 #include "WLGDBiasChangeCrossSection.hh"
-#include "G4BOptnChangeCrossSection.hh"
-#include "G4BiasingProcessInterface.hh"
-
-#include "G4ParticleDefinition.hh"
-#include "G4ParticleTable.hh"
-#include "G4VProcess.hh"
-
-#include "Randomize.hh"
-
-#include "G4InteractionLawPhysical.hh"
 
 WLGDBiasChangeCrossSection::WLGDBiasChangeCrossSection(G4String particleToBias,
                                                        G4String name)
-        : G4VBiasingOperator(std::move(name))
-        , fSetup(true)
-        , fpname(std::move(particleToBias))
-{
+: G4VBiasingOperator(std::move(name))
+, fSetup(true)
+, fpname(std::move(particleToBias)){
     fParticleToBias = G4ParticleTable::GetParticleTable()->FindParticle(fpname);
 
     if(fParticleToBias == nullptr)
@@ -26,16 +15,14 @@ WLGDBiasChangeCrossSection::WLGDBiasChangeCrossSection(G4String particleToBias,
     }
 }
 
-WLGDBiasChangeCrossSection::~WLGDBiasChangeCrossSection()
-{
+WLGDBiasChangeCrossSection::~WLGDBiasChangeCrossSection(){
     for(auto& it : fChangeCrossSectionOperations)
     {
         delete it.second;
     }
 }
 
-void WLGDBiasChangeCrossSection::StartRun()
-{
+void WLGDBiasChangeCrossSection::StartRun(){
     // --------------
     // -- Setup stage:
     // ---------------
@@ -65,8 +52,7 @@ void WLGDBiasChangeCrossSection::StartRun()
 }
 
 G4VBiasingOperation* WLGDBiasChangeCrossSection::ProposeOccurenceBiasingOperation(
-        const G4Track* track, const G4BiasingProcessInterface* callingProcess)
-{
+        const G4Track* track, const G4BiasingProcessInterface* callingProcess){
     // -----------------------------------------------------
     // -- Check if current particle type is the one to bias:
     // -----------------------------------------------------
@@ -192,8 +178,7 @@ G4VBiasingOperation* WLGDBiasChangeCrossSection::ProposeOccurenceBiasingOperatio
 void WLGDBiasChangeCrossSection::OperationApplied(
         const G4BiasingProcessInterface* callingProcess, G4BiasingAppliedCase /*unused*/,
         G4VBiasingOperation*             occurenceOperationApplied, G4double /*unused*/,
-        G4VBiasingOperation* /*unused*/, const G4VParticleChange* /*unused*/)
-{
+        G4VBiasingOperation* /*unused*/, const G4VParticleChange* /*unused*/){
     G4BOptnChangeCrossSection* operation = fChangeCrossSectionOperations[callingProcess];
     if(operation == occurenceOperationApplied)
     {

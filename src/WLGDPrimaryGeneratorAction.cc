@@ -17,7 +17,7 @@
 #include <set>
 /*#include "TH1F.h"
 #include "TFile.h"*/
-#include "TH1.h"
+//#include "TH1.h"
 
 // G4String WLGDPrimaryGeneratorAction::fFileName;
 // std::ifstream* WLGDPrimaryGeneratorAction::fInputFile;
@@ -425,7 +425,7 @@ void WLGDPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
 
     G4double particle_time = 0 * s;
     G4double energy        = (*neutronEnergySpectrumInBPE)(generator) *keV;
-    G4cout << energy << G4endl;
+    //G4cout << energy << G4endl;
     G4double theta = rndm(generator) * 180. * deg;
     G4double phi   = rndm(generator) * 360. * deg;
     G4double x     = ran_x;

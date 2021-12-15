@@ -7,6 +7,14 @@ class G4ParticleDefinition;
 
 #include <map>
 
+#include "G4BiasingProcessInterface.hh"
+
+#include "G4ParticleDefinition.hh"
+#include "G4ParticleTable.hh"
+#include "WLGDBiasChangeCrossSection.hh"
+
+#include "G4SystemOfUnits.hh"
+
 class WLGDBiasMultiParticleChangeCrossSection : public G4VBiasingOperator
 {
 public:

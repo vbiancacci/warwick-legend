@@ -6,6 +6,14 @@ class G4BOptnChangeCrossSection;
 class G4ParticleDefinition;
 #include <map>
 
+#include "G4BOptnChangeCrossSection.hh"
+#include "G4BiasingProcessInterface.hh"
+#include "G4ParticleDefinition.hh"
+#include "G4ParticleTable.hh"
+#include "G4VProcess.hh"
+#include "Randomize.hh"
+#include "G4InteractionLawPhysical.hh"
+
 class WLGDBiasChangeCrossSection : public G4VBiasingOperator
 {
 public:
@@ -75,4 +83,5 @@ private:
   // -- Experimental: Scalar to manually adjust all the cross-sections acting into the neutron yield
   G4double                    fNeutronYieldBias = 1.0;
 
+};
 #endif

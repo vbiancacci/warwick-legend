@@ -126,3 +126,111 @@ Volume definitions in detector construction.
 - lookup["Ge_log"]       = 12;
 - lookup["Pu_log"]       = 13;
 - lookup["Membrane_log"] = 14;
+
+
+
+# Changes after the fork from the original
+
+A lot has been added in my version of the fork. 
+An output for the Ge77m veto has been added, more options to adjust the geometry via macros and several new primary generators.
+
+## Overview over the Macros
+
+### Runaction Macro
+Macros regarding the output of the simulation 
+```
+/WLGD/runaction/
+  - WriteOutNeutronProductionInfo
+  - WriteOutGeneralNeutronInfo
+  - getIndividualGeDepositionInfo
+  - getIndividualGdDepositionInfo
+```
+### Event Macro
+Macro to adjust the condition to save all events (1) or just the ones with Ge77 production (0) 
+```
+/WLGD/event/
+  - saveAllEvents (no: [0], yes: 1)
+```
+### Generator Macro
+Macros to controll the primary generator 
+```
+/WLGD/generator/
+  - depth
+  - setMUSUNFile (path to file)
+  - setGenerator (options: "MeiAndHume", "Musun", "Ge77m", "Ge77andGe77m", "ModeratorNeutrons", "ExternalNeutrons")
+```
+### Detector Macro
+Macros to controll the detector geometry
+```
+/WLGD/detector/
+  - setPositionOfDetectors
+  - setGeometry
+  - exportGeometry
+  - XeConc
+  - He3Conc
+  - Cryostat_Radius_Outer
+  - Cryostat_Height
+  - Without_Cupper_Tubes
+  - With_Gd_Water
+  - With_NeutronModerators (options: 0: [no moderators], 1: around re-entrance tubes, 2: in turbine mode, 3: in large hollow tube mode)
+  - Which_Material (options: [BoratedPE], PolyEthylene, PMMA)
+  - TurbineAndTube
+    - Radius
+    - Width
+    - Height
+    - zPosition
+    - NPanels
+```
+### Bias Macro
+Macros to adjust the bias of the cross-sections
+```
+/WLGD/bias/
+  - setNeutronBias
+  - setMuonBias
+  - setNeutronYieldBias
+```
+### Step Macro
+Macros to adjust whether additional output (additional to the Ge77 production) is recorded in the first place
+```
+/WLGD/step/
+  - getDepositionInfo (multiplicity and energy deposition in the detectors)
+  - getIndividualDepositionInfo (energy depositions in the whole cryostat)
+  - AllowForLongTimeEmissionReadout (allow for energy depositions >1s after muon crossing to be recorded)
+```
+## Example for Ge77 production by Radiogenic Neutron from the moderators:
+```
+/WLGD/detector/setGeometry baseline             # setting the geometry of the detector to the baseline design
+/WLGD/event/saveAllEvents 0                     # only the Ge77 producing events are saved
+/WLGD/detector/With_NeutronModerators 1         # using the moderator design with the tubes right around the re-entrance tubes
+/WLGD/step/getDepositionInfo 1                  # save the information of multiplicity and total energy deposited in detectors
+/run/initialize                                 
+/WLGD/generator/setGenerator ModeratorNeutrons  # set the primary generator to the (Alpha,n) generator in the moderators
+/run/beamOn 1000000
+```
+
+## Example for Ge77 production using Gd water and Turbine-like Moderators by Musun code:
+```
+/WLGD/detector/setGeometry baseline             # setting the geometry of the detector to the baseline design
+/WLGD/event/saveAllEvents 0                     # only the Ge77 producing events are saved
+/WLGD/detector/With_NeutronModerators 2         # using the moderator design with the tubes right around the re-entrance tubes
+/WLGD/detector/With_Gd_Water 1                  # using the Gd in the water
+/WLGD/detector/TurbineAndTube_Radius 200       # set the radius on which the center of mass of the pannels are alligned on [cm]
+/WLGD/detector/TurbineAndTube_Length 100       # set the length of the moderator pannelss [cm]
+/WLGD/step/getDepositionInfo 1                  # save the information of multiplicity and total energy deposited in detectors
+/run/initialize                                 
+/WLGD/generator/setGenerator Musun              # set the primary generator to the (Alpha,n) generator in the moderators
+/WLGD/generator/setMUSUNFile path/to/file       # see the example/example_musun_file.dat
+/run/beamOn 100                                 # should never exceed the size of the musun input file
+```
+
+## Example for investigating the output of all muons and their individual energy depositions in the whole cryostat
+```
+/WLGD/detector/setGeometry baseline             # setting the geometry of the detector to the baseline design
+/WLGD/event/saveAllEvents 1                     # only the Ge77 producing events are saved
+/WLGD/step/getDepositionInfo 1                  # save the information of multiplicity and total energy deposited in detectors
+/WLGD/step/getIndividualDepositionInfo 1        # save the information of individual energy depositions inside the cryostat
+/run/initialize                                 
+/WLGD/generator/setGenerator Musun              # set the primary generator to the (Alpha,n) generator in the moderators
+/WLGD/generator/setMUSUNFile path/to/file       # see the example/example_musun_file.dat
+/run/beamOn 100                                 # should never exceed the size of the musun input file
+```

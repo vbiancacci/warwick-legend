@@ -7,6 +7,14 @@ class G4ParticleDefinition;
 
 #include <map>
 
+#include "G4BiasingProcessInterface.hh"
+
+#include "G4ParticleDefinition.hh"
+#include "G4ParticleTable.hh"
+#include "WLGDBiasChangeCrossSection.hh"
+
+#include "G4SystemOfUnits.hh"
+
 class WLGDBiasMultiParticleChangeCrossSection : public G4VBiasingOperator
 {
 public:
@@ -74,8 +82,7 @@ private:
   WLGDBiasChangeCrossSection*                                        fCurrentOperator;
   G4double                                                           fNeutronBias = 1.0;
   G4double                                                           fMuonBias    = 1.0;
-  G4double                                                           fNeutronYieldBias = 1.0;
-
+  G4double fNeutronYieldBias                                                      = 1.0;
 };
 
 #endif

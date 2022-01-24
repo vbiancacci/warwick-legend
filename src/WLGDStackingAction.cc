@@ -3,13 +3,13 @@
 
 G4ClassificationOfNewTrack WLGDStackingAction ::ClassifyNewTrack(const G4Track* aTrack)
 {
-  G4ClassificationOfNewTrack classification = fWaiting;//fUrgent; //
+  G4ClassificationOfNewTrack classification = fWaiting;  // fUrgent; //
 
-//  if(aTrack->GetParentID() == 0)  // Primary particle
-//  {
-//    WLGDTrackInformation* trackInfo = new WLGDTrackInformation(aTrack);
-//    aTrack->SetUserInformation(trackInfo);  // attach own track info
-//  }
+  //  if(aTrack->GetParentID() == 0)  // Primary particle
+  //  {
+  //    WLGDTrackInformation* trackInfo = new WLGDTrackInformation(aTrack);
+  //    aTrack->SetUserInformation(trackInfo);  // attach own track info
+  //  }
   return classification;
 }
 

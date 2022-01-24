@@ -930,7 +930,7 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
 
     boratedPETSolid_Tube = new G4Tubs("BoratedPET", fBoratedTurbineRadius * cm,
                                       (fBoratedTurbineRadius * cm + b_width * 2),
-                                      b_height / 2, 0.0, CLHEP::twopi);
+                                      b_height, 0.0, CLHEP::twopi);
     fBoratedPETLogical_Tube =
       new G4LogicalVolume(boratedPETSolid_Tube, BoratedPETMat, "BoratedPET_Logical");
 
@@ -949,11 +949,11 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
 
     new G4PVPlacement(
       nullptr,
-      G4ThreeVector(0, 0, fBoratedTurbinezPosition * cm - b_height / 2 - b_width),
+      G4ThreeVector(0, 0, fBoratedTurbinezPosition * cm - b_height - b_width),
       fBoratedPETLogical_Tube, "BoratedPET_phys", fLarLogical, false, 0, true);
     new G4PVPlacement(
       nullptr,
-      G4ThreeVector(0, 0, fBoratedTurbinezPosition * cm + b_height / 2 + b_width),
+      G4ThreeVector(0, 0, fBoratedTurbinezPosition * cm + b_height + b_width),
       fBoratedPETLogical_Tube, "BoratedPET_phys", fLarLogical, false, 0, true);
   }
 
@@ -1507,7 +1507,6 @@ void WLGDDetectorConstruction::DefineCommands()
                     &WLGDDetectorConstruction::SetTurbineAndTubeRadius)
     .SetGuidance("Set the radius on which the borated PE pannels are aligned on [cm]")
     .SetDefaultValue("200.0")
-    .SetStates(G4State_PreInit)
     .SetToBeBroadcasted(false);
 
   // option to set the radius of the turbine structure
@@ -1516,7 +1515,6 @@ void WLGDDetectorConstruction::DefineCommands()
                     &WLGDDetectorConstruction::SetTurbineAndTubeLength)
     .SetGuidance("Set the length of a panel of borated PE [cm]")
     .SetDefaultValue("50.0")
-    .SetStates(G4State_PreInit)
     .SetToBeBroadcasted(false);
 
   // option to set the radius of the turbine structure
@@ -1525,7 +1523,6 @@ void WLGDDetectorConstruction::DefineCommands()
                     &WLGDDetectorConstruction::SetTurbineAndTubeAngle)
     .SetGuidance("Set the angle on which the borated PE pannels are aligned on [deg]")
     .SetDefaultValue("45.0")
-    .SetStates(G4State_PreInit)
     .SetToBeBroadcasted(false);
 
   // option to set the radius of the turbine structure
@@ -1534,7 +1531,6 @@ void WLGDDetectorConstruction::DefineCommands()
                     &WLGDDetectorConstruction::SetTurbineAndTubeWidth)
     .SetGuidance("Set the width of the borated PE pannels [cm]")
     .SetDefaultValue("45.0")
-    .SetStates(G4State_PreInit)
     .SetToBeBroadcasted(false);
 
   // option to set the radius of the turbine structure
@@ -1543,7 +1539,6 @@ void WLGDDetectorConstruction::DefineCommands()
                     &WLGDDetectorConstruction::SetTurbineAndTubeHeight)
     .SetGuidance("Set the height of the borated PE pannels [cm]")
     .SetDefaultValue("600")
-    .SetStates(G4State_PreInit)
     .SetToBeBroadcasted(false);
 
   // option to set the radius of the turbine structure
@@ -1552,7 +1547,6 @@ void WLGDDetectorConstruction::DefineCommands()
                     &WLGDDetectorConstruction::SetTurbineAndTubezPosition)
     .SetGuidance("Set the zPosition of the borated PE pannels [cm]")
     .SetDefaultValue("0")
-    .SetStates(G4State_PreInit)
     .SetToBeBroadcasted(false);
 
   // option to set the number of panels of the turbine structure
@@ -1561,7 +1555,6 @@ void WLGDDetectorConstruction::DefineCommands()
                     &WLGDDetectorConstruction::SetTurbineAndTubeNPanels)
     .SetGuidance("Set the number of panels of the borated PE pannels [cm]")
     .SetDefaultValue("0")
-    .SetStates(G4State_PreInit)
     .SetToBeBroadcasted(false);
 
   // option to change the water to gadolinium weighted water in the water tank

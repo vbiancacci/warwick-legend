@@ -923,6 +923,85 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
     }
   }
 #endif
+<<<<<<< HEAD
+    if (fWithBoratedPET == 3) {
+
+        G4double densityOfBPE = 0.95;
+        double radiusOfPanels = fBoratedTurbineRadius * cm;
+
+        boratedPETSolid_Tube = new G4Tubs("BoratedPET", fBoratedTurbineRadius * cm, (fBoratedTurbineRadius * cm + b_width*2),
+                                          b_height/2, 0.0, CLHEP::twopi);
+        fBoratedPETLogical_Tube = new G4LogicalVolume(boratedPETSolid_Tube, BoratedPETMat, "BoratedPET_Logical");
+
+        G4cout << "Total Mass of B-PE: " << 3.141592653589 * b_height/cm * (pow(fBoratedTurbineRadius + b_width/cm*2,2) - pow(fBoratedTurbineRadius,2)) * densityOfBPE << G4endl;
+
+        new G4PVPlacement(nullptr, G4ThreeVector(0,0,fBoratedTurbinezPosition*cm),
+                          fBoratedPETLogical_Tube, "BoratedPET_phys", fLarLogical, false, 0, true);
+
+        boratedPETSolid_Tube = new G4Tubs("BoratedPET", 0, (fBoratedTurbineRadius * cm + b_width*2),
+                                          b_width, 0.0, CLHEP::twopi);
+        fBoratedPETLogical_Tube = new G4LogicalVolume(boratedPETSolid_Tube, BoratedPETMat, "BoratedPET_Logical");
+
+        new G4PVPlacement(nullptr, G4ThreeVector(0,0,fBoratedTurbinezPosition*cm - b_height/2 - b_width),
+                          fBoratedPETLogical_Tube, "BoratedPET_phys", fLarLogical, false, 0, true);
+        new G4PVPlacement(nullptr, G4ThreeVector(0,0,fBoratedTurbinezPosition*cm + b_height/2 + b_width),
+                          fBoratedPETLogical_Tube, "BoratedPET_phys", fLarLogical, false, 0, true);
+    }
+
+    //
+    // Visualization attributes
+    //
+    fWorldLogical->SetVisAttributes(G4VisAttributes::GetInvisible());
+
+    G4Color testColor(0., 109 / 225., 119 / 225.);
+    auto *testVisAtt = new G4VisAttributes(testColor);
+    testVisAtt->SetVisibility(true);
+
+    G4Color testColor2(131 / 255., 197 / 225., 190 / 225.);
+    auto *testVisAtt2 = new G4VisAttributes(testColor2);
+    testVisAtt2->SetVisibility(true);
+
+    G4Color testColor3(226 / 255., 149 / 225., 120 / 225.);
+    auto *testVisAtt3 = new G4VisAttributes(testColor3);
+    testVisAtt3->SetVisibility(true);
+
+    G4Color testColor4(255 / 255., 221 / 225., 210 / 225.);
+    auto *testVisAtt4 = new G4VisAttributes(testColor4);
+    testVisAtt4->SetVisibility(true);
+
+
+    auto *redVisAtt = new G4VisAttributes(G4Colour::Red());
+    redVisAtt->SetVisibility(true);
+    auto *whiteVisAtt = new G4VisAttributes(G4Colour::White());
+    whiteVisAtt->SetVisibility(true);
+    auto *orangeVisAtt = new G4VisAttributes(G4Colour::Brown());
+    orangeVisAtt->SetVisibility(true);
+
+    auto *greyVisAtt = new G4VisAttributes(G4Colour::Grey());
+    greyVisAtt->SetVisibility(true);
+    auto *greenVisAtt = new G4VisAttributes(G4Colour::Green());
+    greenVisAtt->SetVisibility(true);
+    auto *blueVisAtt = new G4VisAttributes(G4Colour::Blue());
+    blueVisAtt->SetVisibility(true);
+
+    fCavernLogical->SetVisAttributes(greyVisAtt);
+    fHallLogical->SetVisAttributes(whiteVisAtt);
+    fTankLogical->SetVisAttributes(greyVisAtt);
+    fWaterLogical->SetVisAttributes(testVisAtt);
+    fLarLogical->SetVisAttributes(testVisAtt2);
+    fCoutLogical->SetVisAttributes(greyVisAtt);
+    fCvacLogical->SetVisAttributes(greyVisAtt);
+    fCinnLogical->SetVisAttributes(greyVisAtt);
+    fLidLogical->SetVisAttributes(greyVisAtt);
+    fBotLogical->SetVisAttributes(greyVisAtt);
+    fCopperLogical->SetVisAttributes(testVisAtt4);
+    fUlarLogical->SetVisAttributes(testVisAtt2);
+    fGapLogical->SetVisAttributes(testVisAtt2);
+    fGeLogical->SetVisAttributes(testVisAtt3);
+    fBoratedPETLogical_Tube->SetVisAttributes(testVisAtt4);
+    fBoratedPETLogical_Box->SetVisAttributes(testVisAtt4);
+    return fWorldPhysical;
+=======
   if(fWithBoratedPET == 3)
   {
     G4double densityOfBPE   = 0.95;
@@ -1009,6 +1088,7 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
   fBoratedPETLogical_Tube->SetVisAttributes(testVisAtt4);
   fBoratedPETLogical_Box->SetVisAttributes(testVisAtt4);
   return fWorldPhysical;
+>>>>>>> 2507401600752c71a73928c5cb71b6fe45bb4d83
 }
 
 auto WLGDDetectorConstruction::SetupHallA() -> G4VPhysicalVolume*

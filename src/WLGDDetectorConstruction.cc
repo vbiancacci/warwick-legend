@@ -209,7 +209,7 @@ void WLGDDetectorConstruction::ConstructSDandField()
     G4LogicalVolumeStore* volumeStore = G4LogicalVolumeStore::GetInstance();
 
     // -- Attach neutron XS biasing to Germanium -> enhance nCapture
-    /*auto *biasnXS = new WLGDBiasMultiParticleChangeCrossSection();
+    auto *biasnXS = new WLGDBiasMultiParticleChangeCrossSection();
     biasnXS->SetNeutronFactor(fNeutronBias);
     biasnXS->SetMuonFactor(fMuonBias);
     biasnXS->SetNeutronYieldFactor(fNeutronYieldBias);
@@ -224,7 +224,7 @@ void WLGDDetectorConstruction::ConstructSDandField()
     G4LogicalVolume *logicCavern = volumeStore->GetVolume("Cavern_log");
     biasnXS->AttachTo(logicCavern);
     G4LogicalVolume *logicHall = volumeStore->GetVolume("Hall_log");
-    biasnXS->AttachTo(logicHall);*/
+    biasnXS->AttachTo(logicHall);
 
     // -- Attach muon XS biasing to all required volumes consistently
     auto* biasmuXS = new WLGDBiasMultiParticleChangeCrossSection();

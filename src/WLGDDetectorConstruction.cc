@@ -125,13 +125,13 @@ void WLGDDetectorConstruction::DefineMaterials()
   G4Element* elS  = new G4Element("Sulfur", "S", 16., 32.066 * g / mole);
   G4cout << elGd << G4endl;
 
-  G4double density = 3.01 * g / cm3;  // https://www.sigmaaldrich.com/catalog/product/aldrich/203300?lang=de&region=DE @room temp 
+  G4double density = 3.01 * g / cm3;  // https://www.sigmaaldrich.com/catalog/product/aldrich/203300?lang=de&region=DE
+                                      // @room temp
   G4Material* gadoliniumSulfate =
     new G4Material("GadoliniumSulfate", density, 3);  // Gd2(SO4)3
   gadoliniumSulfate->AddElement(elGd, 2);
   gadoliniumSulfate->AddElement(elS, 3);
   gadoliniumSulfate->AddElement(O, 12);
-
 
   G4Material* purewater = G4Material::GetMaterial(
     "G4_WATER");  // EDIT: changed water to purewater & use it to create "special" water
@@ -207,32 +207,32 @@ void WLGDDetectorConstruction::ConstructSDandField()
     // -- operator creation and attachment to volume:
     // ----------------------------------------------
     G4LogicalVolumeStore* volumeStore = G4LogicalVolumeStore::GetInstance();
-/*
+    /*
+        // -- Attach neutron XS biasing to Germanium -> enhance nCapture
+        auto *biasnXS = new WLGDBiasMultiParticleChangeCrossSection();
+        biasnXS->SetNeutronFactor(fNeutronBias);
+        biasnXS->SetMuonFactor(fMuonBias);
+        biasnXS->SetNeutronYieldFactor(fNeutronYieldBias);
+        G4cout << " >>> Detector: set neutron bias to " << fNeutronBias << G4endl;
+        biasnXS->AddParticle("neutron");
+        G4LogicalVolume *logicGe = volumeStore->GetVolume("Ge_log");
+        biasnXS->AttachTo(logicGe);
+        G4LogicalVolume *logicLar = volumeStore->GetVolume("Lar_log");
+        biasnXS->AttachTo(logicLar);
+        G4LogicalVolume *logicTank = volumeStore->GetVolume("Tank_log");
+        biasnXS->AttachTo(logicTank);
+        G4LogicalVolume *logicCavern = volumeStore->GetVolume("Cavern_log");
+        biasnXS->AttachTo(logicCavern);
+        G4LogicalVolume *logicHall = volumeStore->GetVolume("Hall_log");
+        biasnXS->AttachTo(logicHall);
+    */
     // -- Attach neutron XS biasing to Germanium -> enhance nCapture
-    auto *biasnXS = new WLGDBiasMultiParticleChangeCrossSection();
+    auto* biasnXS = new WLGDBiasMultiParticleChangeCrossSection();
     biasnXS->SetNeutronFactor(fNeutronBias);
     biasnXS->SetMuonFactor(fMuonBias);
-    biasnXS->SetNeutronYieldFactor(fNeutronYieldBias);
     G4cout << " >>> Detector: set neutron bias to " << fNeutronBias << G4endl;
     biasnXS->AddParticle("neutron");
-    G4LogicalVolume *logicGe = volumeStore->GetVolume("Ge_log");
-    biasnXS->AttachTo(logicGe);
-    G4LogicalVolume *logicLar = volumeStore->GetVolume("Lar_log");
-    biasnXS->AttachTo(logicLar);
-    G4LogicalVolume *logicTank = volumeStore->GetVolume("Tank_log");
-    biasnXS->AttachTo(logicTank);
-    G4LogicalVolume *logicCavern = volumeStore->GetVolume("Cavern_log");
-    biasnXS->AttachTo(logicCavern);
-    G4LogicalVolume *logicHall = volumeStore->GetVolume("Hall_log");
-    biasnXS->AttachTo(logicHall);
-*/
-    // -- Attach neutron XS biasing to Germanium -> enhance nCapture
-    auto *biasnXS = new WLGDBiasMultiParticleChangeCrossSection();
-    biasnXS->SetNeutronFactor(fNeutronBias);
-    biasnXS->SetMuonFactor(fMuonBias);
-    G4cout << " >>> Detector: set neutron bias to " << fNeutronBias << G4endl;
-    biasnXS->AddParticle("neutron");
-    G4LogicalVolume *logicGe = volumeStore->GetVolume("Ge_log");
+    G4LogicalVolume* logicGe = volumeStore->GetVolume("Ge_log");
     biasnXS->AttachTo(logicGe);
 
     // -- Attach muon XS biasing to all required volumes consistently
@@ -253,8 +253,8 @@ void WLGDDetectorConstruction::ConstructSDandField()
       biasmuXS->AddParticle("proton");
     }
 
-    //G4LogicalVolume* logicGe = volumeStore->GetVolume("Ge_log");
-    //biasmuXS->AttachTo(logicGe);
+    // G4LogicalVolume* logicGe = volumeStore->GetVolume("Ge_log");
+    // biasmuXS->AttachTo(logicGe);
     G4LogicalVolume* logicCavern = volumeStore->GetVolume("Cavern_log");
     biasmuXS->AttachTo(logicCavern);
     G4LogicalVolume* logicHall = volumeStore->GetVolume("Hall_log");
@@ -898,7 +898,7 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
 #endif
 #if whichGeometry == 1
 
-  if(fWithBoratedPET == 2)
+  if(fWithBoratedPET == 2 || fWithBoratedPET == 4)
   {
     G4double densityOfBPE   = 0.95;
     double   radiusOfPanels = fBoratedTurbineRadius * cm;
@@ -914,7 +914,8 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
     fNPanels          = NPanels;
     double anglePanel = 360. / NPanels * deg;
 
-    G4double totalVolume = NPanels * 2 * b_length / cm * 2 * b_width / cm * 2 * b_height / cm;
+    G4double totalVolume =
+      NPanels * 2 * b_length / cm * 2 * b_width / cm * 2 * b_height / cm;
 
     G4cout << "Total Mass of B-PE: " << totalVolume * densityOfBPE << G4endl;
 
@@ -930,86 +931,113 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
       new G4PVPlacement(rotMat, G4ThreeVector(xpos, ypos, zpos), fBoratedPETLogical_Box,
                         "BoratedPET_phys", fLarLogical, false, j, true);
     }
+
+    if(fWithBoratedPET == 4)
+    {
+      boratedPETSolid_Tube =
+        new G4Tubs("BoratedPET", 0, (fBoratedTurbineRadius * cm + b_width * 2), b_width,
+                   0.0, CLHEP::twopi);
+      fBoratedPETLogical_Tube =
+        new G4LogicalVolume(boratedPETSolid_Tube, BoratedPETMat, "BoratedPET_Logical");
+
+      new G4PVPlacement(
+        nullptr, G4ThreeVector(0, 0, fBoratedTurbinezPosition * cm - b_height - b_width),
+        fBoratedPETLogical_Tube, "BoratedPET_phys", fLarLogical, false, 0, true);
+      new G4PVPlacement(
+        nullptr, G4ThreeVector(0, 0, fBoratedTurbinezPosition * cm + b_height + b_width),
+        fBoratedPETLogical_Tube, "BoratedPET_phys", fLarLogical, false, 0, true);
+    }
   }
 #endif
 
-    if (fWithBoratedPET == 3) {
+  if(fWithBoratedPET == 3)
+  {
+    G4double densityOfBPE   = 0.95;
+    double   radiusOfPanels = fBoratedTurbineRadius * cm;
 
-        G4double densityOfBPE = 0.95;
-        double radiusOfPanels = fBoratedTurbineRadius * cm;
+    boratedPETSolid_Tube =
+      new G4Tubs("BoratedPET", fBoratedTurbineRadius * cm,
+                 (fBoratedTurbineRadius * cm + b_width * 2), b_height, 0.0, CLHEP::twopi);
+    fBoratedPETLogical_Tube =
+      new G4LogicalVolume(boratedPETSolid_Tube, BoratedPETMat, "BoratedPET_Logical");
 
-        boratedPETSolid_Tube = new G4Tubs("BoratedPET", fBoratedTurbineRadius * cm, (fBoratedTurbineRadius * cm + b_width*2),
-                                          b_height, 0.0, CLHEP::twopi);
-        fBoratedPETLogical_Tube = new G4LogicalVolume(boratedPETSolid_Tube, BoratedPETMat, "BoratedPET_Logical");
+    G4cout << "Total Mass of B-PE: "
+           << 3.141592653589 * b_height / cm *
+                (pow(fBoratedTurbineRadius + b_width / cm * 2, 2) -
+                 pow(fBoratedTurbineRadius, 2)) *
+                densityOfBPE
+           << G4endl;
 
-        G4cout << "Total Mass of B-PE: " << 3.141592653589 * b_height/cm * (pow(fBoratedTurbineRadius + b_width/cm*2,2) - pow(fBoratedTurbineRadius,2)) * densityOfBPE << G4endl;
+    new G4PVPlacement(nullptr, G4ThreeVector(0, 0, fBoratedTurbinezPosition * cm),
+                      fBoratedPETLogical_Tube, "BoratedPET_phys", fLarLogical, false, 0,
+                      true);
 
-        new G4PVPlacement(nullptr, G4ThreeVector(0,0,fBoratedTurbinezPosition*cm),
-                          fBoratedPETLogical_Tube, "BoratedPET_phys", fLarLogical, false, 0, true);
+    boratedPETSolid_Tube =
+      new G4Tubs("BoratedPET", 0, (fBoratedTurbineRadius * cm + b_width * 2), b_width,
+                 0.0, CLHEP::twopi);
+    fBoratedPETLogical_Tube =
+      new G4LogicalVolume(boratedPETSolid_Tube, BoratedPETMat, "BoratedPET_Logical");
 
-        boratedPETSolid_Tube = new G4Tubs("BoratedPET", 0, (fBoratedTurbineRadius * cm + b_width*2),
-                                          b_width, 0.0, CLHEP::twopi);
-        fBoratedPETLogical_Tube = new G4LogicalVolume(boratedPETSolid_Tube, BoratedPETMat, "BoratedPET_Logical");
+    new G4PVPlacement(
+      nullptr, G4ThreeVector(0, 0, fBoratedTurbinezPosition * cm - b_height - b_width),
+      fBoratedPETLogical_Tube, "BoratedPET_phys", fLarLogical, false, 0, true);
+    new G4PVPlacement(
+      nullptr, G4ThreeVector(0, 0, fBoratedTurbinezPosition * cm + b_height + b_width),
+      fBoratedPETLogical_Tube, "BoratedPET_phys", fLarLogical, false, 0, true);
+  }
 
-        new G4PVPlacement(nullptr, G4ThreeVector(0,0,fBoratedTurbinezPosition*cm - b_height - b_width),
-                          fBoratedPETLogical_Tube, "BoratedPET_phys", fLarLogical, false, 0, true);
-        new G4PVPlacement(nullptr, G4ThreeVector(0,0,fBoratedTurbinezPosition*cm + b_height + b_width),
-                          fBoratedPETLogical_Tube, "BoratedPET_phys", fLarLogical, false, 0, true);
-    }
+  //
+  // Visualization attributes
+  //
+  fWorldLogical->SetVisAttributes(G4VisAttributes::GetInvisible());
 
-    //
-    // Visualization attributes
-    //
-    fWorldLogical->SetVisAttributes(G4VisAttributes::GetInvisible());
+  G4Color testColor(0., 109 / 225., 119 / 225.);
+  auto*   testVisAtt = new G4VisAttributes(testColor);
+  testVisAtt->SetVisibility(true);
 
-    G4Color testColor(0., 109 / 225., 119 / 225.);
-    auto *testVisAtt = new G4VisAttributes(testColor);
-    testVisAtt->SetVisibility(true);
+  G4Color testColor2(131 / 255., 197 / 225., 190 / 225.);
+  auto*   testVisAtt2 = new G4VisAttributes(testColor2);
+  testVisAtt2->SetVisibility(true);
 
-    G4Color testColor2(131 / 255., 197 / 225., 190 / 225.);
-    auto *testVisAtt2 = new G4VisAttributes(testColor2);
-    testVisAtt2->SetVisibility(true);
+  G4Color testColor3(226 / 255., 149 / 225., 120 / 225.);
+  auto*   testVisAtt3 = new G4VisAttributes(testColor3);
+  testVisAtt3->SetVisibility(true);
 
-    G4Color testColor3(226 / 255., 149 / 225., 120 / 225.);
-    auto *testVisAtt3 = new G4VisAttributes(testColor3);
-    testVisAtt3->SetVisibility(true);
+  G4Color testColor4(255 / 255., 221 / 225., 210 / 225.);
+  auto*   testVisAtt4 = new G4VisAttributes(testColor4);
+  testVisAtt4->SetVisibility(true);
 
-    G4Color testColor4(255 / 255., 221 / 225., 210 / 225.);
-    auto *testVisAtt4 = new G4VisAttributes(testColor4);
-    testVisAtt4->SetVisibility(true);
+  auto* redVisAtt = new G4VisAttributes(G4Colour::Red());
+  redVisAtt->SetVisibility(true);
+  auto* whiteVisAtt = new G4VisAttributes(G4Colour::White());
+  whiteVisAtt->SetVisibility(true);
+  auto* orangeVisAtt = new G4VisAttributes(G4Colour::Brown());
+  orangeVisAtt->SetVisibility(true);
 
+  auto* greyVisAtt = new G4VisAttributes(G4Colour::Grey());
+  greyVisAtt->SetVisibility(true);
+  auto* greenVisAtt = new G4VisAttributes(G4Colour::Green());
+  greenVisAtt->SetVisibility(true);
+  auto* blueVisAtt = new G4VisAttributes(G4Colour::Blue());
+  blueVisAtt->SetVisibility(true);
 
-    auto *redVisAtt = new G4VisAttributes(G4Colour::Red());
-    redVisAtt->SetVisibility(true);
-    auto *whiteVisAtt = new G4VisAttributes(G4Colour::White());
-    whiteVisAtt->SetVisibility(true);
-    auto *orangeVisAtt = new G4VisAttributes(G4Colour::Brown());
-    orangeVisAtt->SetVisibility(true);
-
-    auto *greyVisAtt = new G4VisAttributes(G4Colour::Grey());
-    greyVisAtt->SetVisibility(true);
-    auto *greenVisAtt = new G4VisAttributes(G4Colour::Green());
-    greenVisAtt->SetVisibility(true);
-    auto *blueVisAtt = new G4VisAttributes(G4Colour::Blue());
-    blueVisAtt->SetVisibility(true);
-
-    fCavernLogical->SetVisAttributes(greyVisAtt);
-    fHallLogical->SetVisAttributes(whiteVisAtt);
-    fTankLogical->SetVisAttributes(greyVisAtt);
-    fWaterLogical->SetVisAttributes(testVisAtt);
-    fLarLogical->SetVisAttributes(testVisAtt2);
-    fCoutLogical->SetVisAttributes(greyVisAtt);
-    fCvacLogical->SetVisAttributes(greyVisAtt);
-    fCinnLogical->SetVisAttributes(greyVisAtt);
-    fLidLogical->SetVisAttributes(greyVisAtt);
-    fBotLogical->SetVisAttributes(greyVisAtt);
-    fCopperLogical->SetVisAttributes(testVisAtt4);
-    fUlarLogical->SetVisAttributes(testVisAtt2);
-    fGapLogical->SetVisAttributes(testVisAtt2);
-    fGeLogical->SetVisAttributes(testVisAtt3);
-    fBoratedPETLogical_Tube->SetVisAttributes(testVisAtt4);
-    fBoratedPETLogical_Box->SetVisAttributes(testVisAtt4);
-    return fWorldPhysical;
+  fCavernLogical->SetVisAttributes(greyVisAtt);
+  fHallLogical->SetVisAttributes(whiteVisAtt);
+  fTankLogical->SetVisAttributes(greyVisAtt);
+  fWaterLogical->SetVisAttributes(testVisAtt);
+  fLarLogical->SetVisAttributes(testVisAtt2);
+  fCoutLogical->SetVisAttributes(greyVisAtt);
+  fCvacLogical->SetVisAttributes(greyVisAtt);
+  fCinnLogical->SetVisAttributes(greyVisAtt);
+  fLidLogical->SetVisAttributes(greyVisAtt);
+  fBotLogical->SetVisAttributes(greyVisAtt);
+  fCopperLogical->SetVisAttributes(testVisAtt4);
+  fUlarLogical->SetVisAttributes(testVisAtt2);
+  fGapLogical->SetVisAttributes(testVisAtt2);
+  fGeLogical->SetVisAttributes(testVisAtt3);
+  fBoratedPETLogical_Tube->SetVisAttributes(testVisAtt4);
+  fBoratedPETLogical_Box->SetVisAttributes(testVisAtt4);
+  return fWorldPhysical;
 }
 
 auto WLGDDetectorConstruction::SetupHallA() -> G4VPhysicalVolume*
@@ -1482,13 +1510,15 @@ void WLGDDetectorConstruction::DefineCommands()
   // option to include borated PE in the setup (1: tubes around the re-entrance tubes, 2:
   // trubine structure)
   fDetectorMessenger
-    ->DeclareMethod("With_NeutronModerators", &WLGDDetectorConstruction::SetNeutronModerator)
+    ->DeclareMethod("With_NeutronModerators",
+                    &WLGDDetectorConstruction::SetNeutronModerator)
     .SetGuidance("Set whether to include Neutron Moderators or not")
     .SetGuidance("0 = without Neutron Moderators")
     .SetGuidance("1 = with Neutron Moderators around Re-Entrance tubes")
     .SetGuidance("2 = with Neutron Moderators in turbine mode")
     .SetGuidance("3 = with Neutron Moderators in large tub")
-    .SetCandidates("0 1 2 3")
+    .SetGuidance("4 = with Neutron Moderators in turbine mode with lids")
+    .SetCandidates("0 1 2 4")
     .SetDefaultValue("0");
 
   // option to include borated PE in the setup (1: tubes around the re-entrance tubes, 2:

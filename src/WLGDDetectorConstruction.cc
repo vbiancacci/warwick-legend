@@ -730,14 +730,20 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
   // copper tubes, hollow cylinder shell
   //
 
-  auto* boratedPETSolid_Tube =
-    new G4Tubs("BoratedPET", curad * cm, (BoratedPETouterrad + curad) * cm,
-               cuhheight * cm, 0.0, CLHEP::twopi);
 
   // Box variables
   G4double b_width  = fBoratedTurbineWidth / 2. * cm;   // 2.5 * cm;
   G4double b_length = fBoratedTurbineLength / 2. * cm;  // 0.25 * m;
   G4double b_height = fBoratedTurbineHeight / 2. * cm;  // fCryostatHeight * cm - 0.5 * m;
+
+ /* auto* boratedPETSolid_Tube =
+    new G4Tubs("BoratedPET", curad * cm, (BoratedPETouterrad + curad) * cm,
+               cuhheight * cm, 0.0, CLHEP::twopi);
+ */
+
+  auto* boratedPETSolid_Tube =
+    new G4Tubs("BoratedPET", curad * cm, (2*b_width + curad) * cm,
+               cuhheight * cm, 0.0, CLHEP::twopi);
 
   auto* boratedPETSolid_Box = new G4Box("BoratedPET", b_length, b_width, b_height);
 
@@ -1518,7 +1524,7 @@ void WLGDDetectorConstruction::DefineCommands()
     .SetGuidance("2 = with Neutron Moderators in turbine mode")
     .SetGuidance("3 = with Neutron Moderators in large tub")
     .SetGuidance("4 = with Neutron Moderators in turbine mode with lids")
-    .SetCandidates("0 1 2 4")
+    .SetCandidates("0 1 2 3 4")
     .SetDefaultValue("0");
 
   // option to include borated PE in the setup (1: tubes around the re-entrance tubes, 2:
@@ -1561,15 +1567,15 @@ void WLGDDetectorConstruction::DefineCommands()
     ->DeclareMethod("TurbineAndTube_Width",
                     &WLGDDetectorConstruction::SetTurbineAndTubeWidth)
     .SetGuidance("Set the width of the borated PE pannels [cm]")
-    .SetDefaultValue("45.0")
+    .SetDefaultValue("5.0")
     .SetToBeBroadcasted(false);
 
   // option to set the radius of the turbine structure
   fDetectorMessenger
     ->DeclareMethod("TurbineAndTube_Height",
                     &WLGDDetectorConstruction::SetTurbineAndTubeHeight)
-    .SetGuidance("Set the height of the borated PE pannels [cm]")
-    .SetDefaultValue("600")
+    .SetGuidance("Set the height of the borated PE pannels [cm] (this is total height)")
+    .SetDefaultValue("400")
     .SetToBeBroadcasted(false);
 
   // option to set the radius of the turbine structure

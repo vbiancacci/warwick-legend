@@ -50,7 +50,7 @@ auto WLGDDetectorConstruction::Construct() -> G4VPhysicalVolume*
   G4LogicalVolumeStore::GetInstance()->Clean();
   G4SolidStore::GetInstance()->Clean();
 
-  if(fGeometryName == "baseline" || fGeometryName == "baseline_smaller")
+  if(fGeometryName == "baseline" || fGeometryName == "baseline_smaller" || fGeometryName == "baseline_large_reentrance_tube")
   {
     return SetupBaseline();
   }
@@ -275,7 +275,7 @@ void WLGDDetectorConstruction::ConstructSDandField()
 
     // Baseline also has a water volume and cryostat
     if(fGeometryName == "baseline" || fGeometryName == "hallA" ||
-       fGeometryName == "baseline_smaller")
+       fGeometryName == "baseline_smaller" || fGeometryName == "baseline_large_reentrance_tube")
     {
       G4LogicalVolume* logicWater = volumeStore->GetVolume("Water_log");
       biasmuXS->AttachTo(logicWater);
@@ -607,6 +607,10 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
     cuhheight = 137.5;  // cupper height 2.25 m
     cushift   = 87.5;   // shift
   }
+  if(fGeometryName == "baseline_large_reentrance_tube")
+  {
+    curad     = 95.0;  
+  }
   G4double ringrad = 100.0;  // cu tube placement ring radius
   // Ge cylinder 2.67 kg at 5.32 g/cm3
   G4double roiradius = 30.0;  // string radius curad - Ge radius - gap
@@ -795,18 +799,70 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
   G4double angle = CLHEP::twopi / nofStrings;
 
   // layer logical into ULarlogical
-  for(G4int j = 0; j < nofStrings; j++)
-  {
-    xpos = roiradius * cm * std::cos(j * angle);
-    ypos = roiradius * cm * std::sin(j * angle);
-    for(G4int i = 0; i < nofLayers; i++)
+  if(fGeometryName != "baseline_large_reentrance_tube"){
+    for(G4int j = 0; j < nofStrings; j++)
     {
-      new G4PVPlacement(
-        nullptr,
-        G4ThreeVector(xpos, ypos,
-                      -step + (nofLayers / 2 * layerthickness - i * layerthickness) * cm -
-                        offset_3 * cm),
-        fLayerLogical, "Layer_phys", fUlarLogical, false, i + j * nofLayers, true);
+      xpos = roiradius * cm * std::cos(j * angle);
+      ypos = roiradius * cm * std::sin(j * angle);
+
+      for(G4int i = 0; i < nofLayers; i++)
+      {
+        new G4PVPlacement(
+          nullptr,
+          G4ThreeVector(xpos, ypos,
+                        -step + (nofLayers / 2 * layerthickness - i * layerthickness) * cm -
+                          offset_3 * cm),
+          fLayerLogical, "Layer_phys", fUlarLogical, false, i + j * nofLayers, true);
+      }
+    }
+  }
+  else{
+    G4double length = 16.75 * cm;
+
+    G4double vec_main_x = 1/2.;
+    G4double vec_main_y = sqrt(1 - vec_main_x*vec_main_x);
+    G4double vec_left_x = -1/2.;
+    G4double vec_left_y = sqrt(1 - vec_left_x*vec_left_x);
+    G4double vec_right_x = 1;
+    G4double vec_right_y = 0;
+
+    for(G4int i = -4; i <= 4; i++){
+
+      for(G4int j = 0; j <= 4 && j <= 4 - i; j++){
+
+        xpos = length * ( vec_main_x * i + vec_left_x * j);
+        ypos = length * ( vec_main_y * i + vec_left_y * j) ;
+
+        G4cout << "i: " << i << " j: " << j << " | x: " << xpos << " - y: " << ypos << G4endl;
+
+        for(G4int k = 0; k < nofLayers; k++)
+        {
+          int copyNumber = k + nofLayers * (i + 4 + j * 9);
+          new G4PVPlacement(
+            nullptr,
+            G4ThreeVector(xpos, ypos,
+                          -step + (nofLayers / 2 * layerthickness - k * layerthickness) * cm -
+                            offset_3 * cm),
+            fLayerLogical, "Layer_phys", fUlarLogical, false, copyNumber, true);
+        }
+      }
+
+      for(G4int j = 1; j <= 4 && j <= 4 - i; j++){
+
+        xpos = length * ( vec_main_x * i + vec_right_x * j);
+        ypos = length * ( vec_main_y * i + vec_right_y * j) ;
+
+        for(G4int k = 0; k < nofLayers; k++)
+        {
+          int copyNumber = k + nofLayers * (i + 4 - j * 9);
+          new G4PVPlacement(
+            nullptr,
+            G4ThreeVector(xpos, ypos,
+                          -step + (nofLayers / 2 * layerthickness - k * layerthickness) * cm -
+                            offset_3 * cm),
+            fLayerLogical, "Layer_phys", fUlarLogical, false, copyNumber, true);
+        }
+      }
     }
   }
 
@@ -865,7 +921,7 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
                       fUlarLogical, "ULar_phys4", fLarLogical, false, 3, true);
   }
 
-  if(fGeometryName == "baseline_smaller")
+  if(fGeometryName == "baseline_smaller" || fGeometryName == "baseline_large_reentrance_tube")
   {
     // placements
     if(fWithBoratedPET == 1)
@@ -1289,7 +1345,7 @@ void WLGDDetectorConstruction::SetPositionOfDetectors(G4String name)
 
 void WLGDDetectorConstruction::SetGeometry(const G4String& name)
 {
-  std::set<G4String> knownGeometries = { "baseline", "baseline_smaller", "alternative",
+  std::set<G4String> knownGeometries = { "baseline", "baseline_smaller", "baseline_large_reentrance_tube", "alternative",
                                          "hallA" };
   if(knownGeometries.count(name) == 0)
   {
@@ -1450,9 +1506,10 @@ void WLGDDetectorConstruction::DefineCommands()
     .SetGuidance("Set geometry model of cavern and detector")
     .SetGuidance("baseline = NEEDS DESCRIPTION")
     .SetGuidance("baseline_smaller = Gerda cryostat with only one module")
+    .SetGuidance("baseline_large_reentrance_tube = large single re-entrance tube")
     .SetGuidance("alternative = NEEDS DESCRIPTION")
     .SetGuidance("hallA = Gerda mock-up for validation.")
-    .SetCandidates("baseline baseline_smaller alternative hallA")
+    .SetCandidates("baseline baseline_smaller baseline_large_reentrance_tube alternative hallA")
     .SetStates(G4State_PreInit)
     .SetToBeBroadcasted(false);
 

@@ -830,6 +830,7 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
 
       for(G4int j = 0; j <= 4 && j <= 4 - i; j++){
 
+        // leave out calibration ports
         if( ( i == -3 && j == 0 ) || ( i == 0 && j == 0 ) || ( i == 3 && j == 0) || ( i == -3 && j == 3) || ( i == 0 && j == 3) ) continue;
 
         xpos = length * ( vec_main_x * i + vec_left_x * j);
@@ -839,18 +840,23 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
 
         for(G4int k = 0; k < nofLayers; k++)
         {
-          int copyNumber = k + nofLayers * (i + 4 + j * 9);
+          // Cube coordinates
+          int x_coor = i;
+          int y_coor = j;
+          int z_coor = -(i + j);
+          int coordinate = (x_coor<0)*1e6 + abs(x_coor)*1e5 + (y_coor<0)*1e4 + abs(y_coor)*1e3 + (z_coor<0)*1e2 + abs(z_coor)*1e1 + k;
           new G4PVPlacement(
             nullptr,
             G4ThreeVector(xpos, ypos,
                           -step + (nofLayers / 2 * layerthickness - k * layerthickness) * cm -
                             offset_3 * cm),
-            fLayerLogical, "Layer_phys", fUlarLogical, false, copyNumber, true);
+            fLayerLogical, "Layer_phys", fUlarLogical, false, coordinate, true);
         }
       }
 
       for(G4int j = 1; j <= 4 && j <= 4 - i; j++){
 
+        // leave out calibration ports
         if( ( i == -3 && j == 3 ) || ( i == 0 && j == 3 ) ) continue;
 
         xpos = length * ( vec_main_x * i + vec_right_x * j);
@@ -858,13 +864,17 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
 
         for(G4int k = 0; k < nofLayers; k++)
         {
-          int copyNumber = k + nofLayers * (i + 4 - j * 9);
+          // Cube coordinates
+          int x_coor = i + j;
+          int y_coor = -j;
+          int z_coor = -i;
+          int coordinate = (x_coor<0)*1e6 + abs(x_coor)*1e5 + (y_coor<0)*1e4 + abs(y_coor)*1e3 + (z_coor<0)*1e2 + abs(z_coor)*1e1 + k;
           new G4PVPlacement(
             nullptr,
             G4ThreeVector(xpos, ypos,
                           -step + (nofLayers / 2 * layerthickness - k * layerthickness) * cm -
                             offset_3 * cm),
-            fLayerLogical, "Layer_phys", fUlarLogical, false, copyNumber, true);
+            fLayerLogical, "Layer_phys", fUlarLogical, false, coordinate, true);
         }
       }
     }

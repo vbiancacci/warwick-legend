@@ -830,6 +830,8 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
 
       for(G4int j = 0; j <= 4 && j <= 4 - i; j++){
 
+        if( ( i == -3 && j == 0 ) || ( i == 0 && j == 0 ) || ( i == 3 && j == 0) || ( i == -3 && j == 3) || ( i == 0 && j == 3) ) continue;
+
         xpos = length * ( vec_main_x * i + vec_left_x * j);
         ypos = length * ( vec_main_y * i + vec_left_y * j) ;
 
@@ -848,6 +850,8 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
       }
 
       for(G4int j = 1; j <= 4 && j <= 4 - i; j++){
+
+        if( ( i == -3 && j == 3 ) || ( i == 0 && j == 3 ) ) continue;
 
         xpos = length * ( vec_main_x * i + vec_right_x * j);
         ypos = length * ( vec_main_y * i + vec_right_y * j) ;

@@ -826,6 +826,8 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
     G4double vec_right_x = 1;
     G4double vec_right_y = 0;
 
+    int N = 0;
+
     for(G4int i = -4; i <= 4; i++){
 
       for(G4int j = 0; j <= 4 && j <= 4 - i; j++){
@@ -844,13 +846,15 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
           int x_coor = i;
           int y_coor = j;
           int z_coor = -(i + j);
-          int coordinate = (x_coor<0)*1e6 + abs(x_coor)*1e5 + (y_coor<0)*1e4 + abs(y_coor)*1e3 + (z_coor<0)*1e2 + abs(z_coor)*1e1 + k;
+          int coordinate = N;//(x_coor<0)*1e6 + abs(x_coor)*1e5 + (y_coor<0)*1e4 + abs(y_coor)*1e3 + (z_coor<0)*1e2 + abs(z_coor)*1e1 + k;
+          G4cout << "coordinate: " << coordinate << G4endl;
           new G4PVPlacement(
             nullptr,
             G4ThreeVector(xpos, ypos,
                           -step + (nofLayers / 2 * layerthickness - k * layerthickness) * cm -
                             offset_3 * cm),
             fLayerLogical, "Layer_phys", fUlarLogical, false, coordinate, true);
+            N++;
         }
       }
 
@@ -868,13 +872,15 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
           int x_coor = i + j;
           int y_coor = -j;
           int z_coor = -i;
-          int coordinate = (x_coor<0)*1e6 + abs(x_coor)*1e5 + (y_coor<0)*1e4 + abs(y_coor)*1e3 + (z_coor<0)*1e2 + abs(z_coor)*1e1 + k;
+          int coordinate = N;//(x_coor<0)*1e6 + abs(x_coor)*1e5 + (y_coor<0)*1e4 + abs(y_coor)*1e3 + (z_coor<0)*1e2 + abs(z_coor)*1e1 + k;
+          G4cout << "coordinate: " << coordinate << G4endl;
           new G4PVPlacement(
             nullptr,
             G4ThreeVector(xpos, ypos,
                           -step + (nofLayers / 2 * layerthickness - k * layerthickness) * cm -
                             offset_3 * cm),
             fLayerLogical, "Layer_phys", fUlarLogical, false, coordinate, true);
+            N++;
         }
       }
     }

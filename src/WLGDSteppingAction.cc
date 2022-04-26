@@ -120,6 +120,14 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
           return;
         }
 
+        G4int detector_number;
+        if(fDetectorConstruction->GetGeometryName() == "baseline_large_reentrance_tube"){
+          detector_number = aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetCopyNo();
+        }
+        else{
+          detector_number = aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetCopyNo() + whichReentranceTube * 96;
+        }
+
         // LAr veto
 
         G4int whichVolume = -1;
@@ -176,22 +184,20 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
                  ->GetLogicalVolume()
                  ->GetName() == "Layer_log")
             {
+
               fEventAction->IncreaseEdepPerDetector(
-                aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetCopyNo() +
-                  whichReentranceTube * 96,
+                detector_number,
                 aStep->GetTotalEnergyDeposit() / eV);
               if(fRunAction->getWriteOutAdvancedMultiplicity())
               {
                 if(fEventAction->GetIDListOfGdSiblingParticles().count(
                      aStep->GetTrack()->GetParentID()))
                   fEventAction->IncreaseEdepPerDetector_prompt_onlyGd(
-                    aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetCopyNo() +
-                      whichReentranceTube * 96,
+                    detector_number,
                     aStep->GetTotalEnergyDeposit() / eV);
                 else
                   fEventAction->IncreaseEdepPerDetector_prompt_woGd(
-                    aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetCopyNo() +
-                      whichReentranceTube * 96,
+                    detector_number,
                     aStep->GetTotalEnergyDeposit() / eV);
               }  // w/ and w/o Gd info (redundant)
             }
@@ -216,8 +222,7 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
                    ->GetName() == "Layer_log")
               {
                 fEventAction->IncreaseEdepPerDetector_delayed(
-                  aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetCopyNo() +
-                    whichReentranceTube * 96,
+                  detector_number,
                   aStep->GetTotalEnergyDeposit() / eV);
 
                 if(fRunAction->getWriteOutAdvancedMultiplicity())
@@ -225,19 +230,11 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
                   if(fEventAction->GetIDListOfGdSiblingParticles().count(
                        aStep->GetTrack()->GetParentID()))
                     fEventAction->IncreaseEdepPerDetector_delayed_onlyGd(
-                      aStep->GetPostStepPoint()
-                          ->GetTouchable()
-                          ->GetVolume(1)
-                          ->GetCopyNo() +
-                        whichReentranceTube * 96,
+                      detector_number,
                       aStep->GetTotalEnergyDeposit() / eV);
                   else
                     fEventAction->IncreaseEdepPerDetector_delayed_woGd(
-                      aStep->GetPostStepPoint()
-                          ->GetTouchable()
-                          ->GetVolume(1)
-                          ->GetCopyNo() +
-                        whichReentranceTube * 96,
+                      detector_number,
                       aStep->GetTotalEnergyDeposit() / eV);
                 }
               }
@@ -255,8 +252,7 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
                fRunAction->getWriteOutAdvancedMultiplicity())
             {
               fEventAction->IncreaseEdepPerDetector_delayed_long(
-                aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetCopyNo() +
-                  whichReentranceTube * 96,
+                detector_number,
                 aStep->GetTotalEnergyDeposit() / eV);
             }  // long delayed
           }
@@ -305,8 +301,7 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
                  ->GetLogicalVolume()
                  ->GetName() == "Ge_log")
               whichVolume =
-                aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetCopyNo() +
-                whichReentranceTube * 96;
+                detector_number;
             fEventAction->AddGe77mGammaEmission_whichVolume(whichVolume);
           }
 
@@ -344,8 +339,7 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
                  ->GetLogicalVolume()
                  ->GetName() == "Ge_log")
               whichVolume =
-                aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetCopyNo() +
-                whichReentranceTube * 96;
+                detector_number;
             fEventAction->AddGe77Siblings_whichVolume(whichVolume);
           }
         }  // individual deposition of sibling or secundary Ge77 interactions
@@ -397,8 +391,7 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
                  ->GetLogicalVolume()
                  ->GetName() == "Ge_log")
               whichVolume =
-                aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetCopyNo() +
-                whichReentranceTube * 96;
+                detector_number;
             fEventAction->AddGdSiblings_whichVolume(whichVolume);
           }
         }  // individual Gd interactions
@@ -438,8 +431,7 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
                ->GetVolume(1)
                ->GetLogicalVolume()
                ->GetName() == "Layer_log")
-            tmp = aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetCopyNo() +
-                  whichReentranceTube * 96;
+            tmp = detector_number;
           fEventAction->AddIndividualEnergyDeposition_DetectorNumber(tmp);
         }
       }

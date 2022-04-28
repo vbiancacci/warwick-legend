@@ -75,9 +75,11 @@ G4bool WLGDCrystalSD::ProcessHits(G4Step* aStep, G4TouchableHistory*)
   if(fGeometryName == "hallA")
     whichReentranceTube = 0;
   newHit->SetWhichReentranceTube(whichReentranceTube);
-  if(fGeometryName == "baseline_large_reentrance_tube")
+  if(fGeometryName == "baseline_large_reentrance_tube"){
     newHit->SetWhichDetector(
       aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetCopyNo());
+      whichReentranceTube = 0;
+  }
   else
     newHit->SetWhichDetector(
       aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetCopyNo() +

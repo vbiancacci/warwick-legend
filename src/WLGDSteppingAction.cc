@@ -123,6 +123,7 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
         G4int detector_number;
         if(fDetectorConstruction->GetGeometryName() == "baseline_large_reentrance_tube"){
           detector_number = aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetCopyNo();
+          whichReentranceTube = 0;
         }
         else{
           detector_number = aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetCopyNo() + whichReentranceTube * 96;

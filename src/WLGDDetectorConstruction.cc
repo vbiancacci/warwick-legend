@@ -586,6 +586,10 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
   // cryostat
   G4double cryowall   = 3.0;                   // cryostat wall thickness from GERDA
   G4double vacgap     = 1.0;                   // vacuum gap between walls
+  if(fGeometryName == "baseline_large_reentrance_tube")
+  {
+    vacgap     = 50.0;  
+  }
   G4double cryrad     = fCryostatOuterRadius;  // 350.0;  // cryostat diam 7 m
   G4double cryhheight = fCryostatHeight;       // 350.0;  // cryostat height 7 m
   if(fGeometryName == "baseline_smaller")
@@ -1089,6 +1093,24 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
   auto*   testVisAtt4 = new G4VisAttributes(testColor4);
   testVisAtt4->SetVisibility(true);
 
+
+  G4Color testColor_copper(1., 190 / 225., 102 / 225.); //255, 190, 182
+  auto*   testVisAtt_copper = new G4VisAttributes(testColor_copper);
+  testVisAtt_copper->SetVisibility(true);
+
+  G4Color testColor_LAr(153 / 255., 193 / 225., 151 / 225.); //153, 193, 151
+  auto*   testVisAtt_LAr = new G4VisAttributes(testColor_LAr);
+  testVisAtt_LAr->SetVisibility(true);
+
+  G4Color testColor_Ge(193 / 255., 193 / 225., 193 / 225.); //193, 193, 193
+  auto*   testVisAtt_Ge = new G4VisAttributes(testColor_Ge);
+  testVisAtt_Ge->SetVisibility(true);
+
+  G4Color testColor_water(170 / 255., 191 / 225., 219 / 225.); //170, 191, 219
+  auto*   testVisAtt_water = new G4VisAttributes(testColor_water);
+  testVisAtt_water->SetVisibility(true);
+
+
   auto* redVisAtt = new G4VisAttributes(G4Colour::Red());
   redVisAtt->SetVisibility(true);
   auto* whiteVisAtt = new G4VisAttributes(G4Colour::White());
@@ -1106,17 +1128,22 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
   fCavernLogical->SetVisAttributes(greyVisAtt);
   fHallLogical->SetVisAttributes(whiteVisAtt);
   fTankLogical->SetVisAttributes(greyVisAtt);
-  fWaterLogical->SetVisAttributes(testVisAtt);
+  //fWaterLogical->SetVisAttributes(testVisAtt);
+  fWaterLogical->SetVisAttributes(testVisAtt_water);
   fLarLogical->SetVisAttributes(testVisAtt2);
   fCoutLogical->SetVisAttributes(greyVisAtt);
   fCvacLogical->SetVisAttributes(greyVisAtt);
   fCinnLogical->SetVisAttributes(greyVisAtt);
   fLidLogical->SetVisAttributes(greyVisAtt);
   fBotLogical->SetVisAttributes(greyVisAtt);
-  fCopperLogical->SetVisAttributes(testVisAtt4);
-  fUlarLogical->SetVisAttributes(testVisAtt2);
-  fGapLogical->SetVisAttributes(testVisAtt2);
-  fGeLogical->SetVisAttributes(testVisAtt3);
+  //fCopperLogical->SetVisAttributes(testVisAtt4);
+  fCopperLogical->SetVisAttributes(testVisAtt_copper);
+  //fUlarLogical->SetVisAttributes(testVisAtt2);
+  fUlarLogical->SetVisAttributes(testVisAtt_LAr);
+  //fGapLogical->SetVisAttributes(testVisAtt2);
+  fGapLogical->SetVisAttributes(testVisAtt_LAr);
+  //fGeLogical->SetVisAttributes(testVisAtt3);
+  fGeLogical->SetVisAttributes(testVisAtt_Ge);
   fBoratedPETLogical_Tube->SetVisAttributes(testVisAtt4);
   fBoratedPETLogical_Box->SetVisAttributes(testVisAtt4);
   return fWorldPhysical;

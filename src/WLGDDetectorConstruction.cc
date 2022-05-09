@@ -586,12 +586,14 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
   // cryostat
   G4double cryowall   = 3.0;                   // cryostat wall thickness from GERDA
   G4double vacgap     = 1.0;                   // vacuum gap between walls
-  if(fGeometryName == "baseline_large_reentrance_tube")
+  G4double cryrad     = fCryostatOuterRadius;  // 350.0;  // cryostat diam 7 m
+  G4double cryhheight = fCryostatHeight;       // 350.0;  // cryostat height 7 m
+
+  if(fGeometryName == "baseline_large_reentrance_tube" && fCryostatOuterRadius == 350)
   {
     vacgap     = 50.0;  
   }
-  G4double cryrad     = fCryostatOuterRadius;  // 350.0;  // cryostat diam 7 m
-  G4double cryhheight = fCryostatHeight;       // 350.0;  // cryostat height 7 m
+
   if(fGeometryName == "baseline_smaller")
   {
     cryrad     = 200.0;  // cryostat diam 4 m
@@ -697,7 +699,7 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
   // vacuum gap
   //
   auto* cvacSolid     = new G4Tubs("Cvac", 0.0 * cm, (cryrad - cryowall) * cm,
-                                   cryhheight * cm, 0.0, CLHEP::twopi);
+                                   (cryhheight - cryowall) * cm, 0.0, CLHEP::twopi);
   auto* fCvacLogical  = new G4LogicalVolume(cvacSolid, worldMaterial, "Cvac_log");
   auto* fCvacPhysical = new G4PVPlacement(nullptr, G4ThreeVector(), fCvacLogical,
                                           "Cvac_phys", fCoutLogical, false, 0, true);
@@ -706,7 +708,7 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
   // inner cryostat
   //
   auto* cinnSolid     = new G4Tubs("Cinn", 0.0 * cm, (cryrad - cryowall - vacgap) * cm,
-                                   cryhheight * cm, 0.0, CLHEP::twopi);
+                                   (cryhheight - cryowall - vacgap) * cm, 0.0, CLHEP::twopi);
   auto* fCinnLogical  = new G4LogicalVolume(cinnSolid, steelMat, "Cinn_log");
   auto* fCinnPhysical = new G4PVPlacement(nullptr, G4ThreeVector(), fCinnLogical,
                                           "Cinn_phys", fCvacLogical, false, 0, true);
@@ -715,7 +717,7 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
   // LAr bath
   //
   auto* larSolid     = new G4Tubs("LAr", 0.0 * cm, (cryrad - 2 * cryowall - vacgap) * cm,
-                                  cryhheight * cm, 0.0, CLHEP::twopi);
+                                  (cryhheight - 2 * cryowall - vacgap) * cm, 0.0, CLHEP::twopi);
   auto* fLarLogical  = new G4LogicalVolume(larSolid, larMat, "Lar_log");
   auto* fLarPhysical = new G4PVPlacement(nullptr, G4ThreeVector(), fLarLogical,
                                          "Lar_phys", fCinnLogical, false, 0, true);

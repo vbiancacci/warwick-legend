@@ -50,7 +50,7 @@ auto WLGDDetectorConstruction::Construct() -> G4VPhysicalVolume*
   G4LogicalVolumeStore::GetInstance()->Clean();
   G4SolidStore::GetInstance()->Clean();
 
-  if(fGeometryName == "baseline" || fGeometryName == "baseline_smaller" || fGeometryName == "baseline_large_reentrance_tube")
+  if(fGeometryName == "baseline" || fGeometryName == "baseline_smaller" || fGeometryName == "baseline_large_reentrance_tube" || fGeometryName == "baseline_large_reentrance_tube_4m_cryo")
   {
     return SetupBaseline();
   }
@@ -275,7 +275,7 @@ void WLGDDetectorConstruction::ConstructSDandField()
 
     // Baseline also has a water volume and cryostat
     if(fGeometryName == "baseline" || fGeometryName == "hallA" ||
-       fGeometryName == "baseline_smaller" || fGeometryName == "baseline_large_reentrance_tube")
+       fGeometryName == "baseline_smaller" || fGeometryName == "baseline_large_reentrance_tube" || fGeometryName == "baseline_large_reentrance_tube_4m_cryo")
     {
       G4LogicalVolume* logicWater = volumeStore->GetVolume("Water_log");
       biasmuXS->AttachTo(logicWater);
@@ -571,7 +571,7 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
   G4double offset_3 = 100;  // 69.5; // shift to get to the baseline lowered position
   if(fDetectorPosition == "original")
     offset_3 = 0;
-  if(fGeometryName == "baseline_smaller")
+  if(fGeometryName == "baseline_smaller"  || fGeometryName == "baseline_large_reentrance_tube_4m_cryo")
     offset_3 = 37.5;
 
   // cavern
@@ -589,12 +589,12 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
   G4double cryrad     = fCryostatOuterRadius;  // 350.0;  // cryostat diam 7 m
   G4double cryhheight = fCryostatHeight;       // 350.0;  // cryostat height 7 m
 
-  if(fGeometryName == "baseline_large_reentrance_tube" && fCryostatOuterRadius == 350)
+  if(fGeometryName == "baseline_large_reentrance_tube")
   {
     vacgap     = 50.0;  
   }
 
-  if(fGeometryName == "baseline_smaller")
+  if(fGeometryName == "baseline_smaller" || fGeometryName == "baseline_large_reentrance_tube_4m_cryo")
   {
     cryrad     = 200.0;  // cryostat diam 4 m
     cryhheight = 225.0;  // cryostat height 4.5 m
@@ -606,14 +606,13 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
   G4double curad     = 40.0;  // copper tube diam 80 cm
   G4double cuhheight = (400 - (350 - fCryostatHeight)) /
                        2.;  // 200.0;  // copper tube height 4 m inside cryostat
-  G4double cushift =
-    fCryostatHeight - cuhheight;  // 150.0;  // shift cu tube inside cryostat to top
-  if(fGeometryName == "baseline_smaller")
+  G4double cushift = fCryostatHeight - cuhheight;  // 150.0;  // shift cu tube inside cryostat to top
+  if(fGeometryName == "baseline_smaller" || fGeometryName == "baseline_large_reentrance_tube_4m_cryo")
   {
     cuhheight = 137.5;  // cupper height 2.25 m
     cushift   = 87.5;   // shift
   }
-  if(fGeometryName == "baseline_large_reentrance_tube")
+  if(fGeometryName == "baseline_large_reentrance_tube" && fGeometryName == "baseline_large_reentrance_tube_4m_cryo")
   {
     curad     = 95.0;  
   }
@@ -805,7 +804,7 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
   G4double angle = CLHEP::twopi / nofStrings;
 
   // layer logical into ULarlogical
-  if(fGeometryName != "baseline_large_reentrance_tube"){
+  if(fGeometryName != "baseline_large_reentrance_tube" && fGeometryName != "baseline_large_reentrance_tube_4m_cryo"){
     for(G4int j = 0; j < nofStrings; j++)
     {
       xpos = roiradius * cm * std::cos(j * angle);
@@ -947,7 +946,7 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
                       fUlarLogical, "ULar_phys4", fLarLogical, false, 3, true);
   }
 
-  if(fGeometryName == "baseline_smaller" || fGeometryName == "baseline_large_reentrance_tube")
+  if(fGeometryName == "baseline_smaller" || fGeometryName == "baseline_large_reentrance_tube" || fGeometryName == "baseline_large_reentrance_tube_4m_cryo")
   {
     // placements
     if(fWithBoratedPET == 1)
@@ -1395,7 +1394,7 @@ void WLGDDetectorConstruction::SetPositionOfDetectors(G4String name)
 void WLGDDetectorConstruction::SetGeometry(const G4String& name)
 {
   std::set<G4String> knownGeometries = { "baseline", "baseline_smaller", "baseline_large_reentrance_tube", "alternative",
-                                         "hallA" };
+                                         "hallA", "baseline_large_reentrance_tube_4m_cryo" };
   if(knownGeometries.count(name) == 0)
   {
     G4Exception("WLGDDetectorConstruction::SetGeometry", "WLGD0001", JustWarning,
@@ -1556,6 +1555,7 @@ void WLGDDetectorConstruction::DefineCommands()
     .SetGuidance("baseline = NEEDS DESCRIPTION")
     .SetGuidance("baseline_smaller = Gerda cryostat with only one module")
     .SetGuidance("baseline_large_reentrance_tube = large single re-entrance tube")
+    .SetGuidance("baseline_large_reentrance_tube_4m_cryo")
     .SetGuidance("alternative = NEEDS DESCRIPTION")
     .SetGuidance("hallA = Gerda mock-up for validation.")
     .SetCandidates("baseline baseline_smaller baseline_large_reentrance_tube alternative hallA")

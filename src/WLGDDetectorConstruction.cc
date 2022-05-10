@@ -604,15 +604,14 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
   // copper tubes with Germanium ROI
   G4double copper    = 0.35;  // tube thickness 3.5 mm
   G4double curad     = 40.0;  // copper tube diam 80 cm
-  G4double cuhheight = (400 - (350 - fCryostatHeight)) /
-                       2.;  // 200.0;  // copper tube height 4 m inside cryostat
+  G4double cuhheight = (400 - (350 - fCryostatHeight)) / 2.;  // 200.0;  // copper tube height 4 m inside cryostat
   G4double cushift = fCryostatHeight - cuhheight;  // 150.0;  // shift cu tube inside cryostat to top
   if(fGeometryName == "baseline_smaller" || fGeometryName == "baseline_large_reentrance_tube_4m_cryo")
   {
     cuhheight = 137.5;  // cupper height 2.25 m
     cushift   = 87.5;   // shift
   }
-  if(fGeometryName == "baseline_large_reentrance_tube" && fGeometryName == "baseline_large_reentrance_tube_4m_cryo")
+  if(fGeometryName == "baseline_large_reentrance_tube" || fGeometryName == "baseline_large_reentrance_tube_4m_cryo")
   {
     curad     = 95.0;  
   }
@@ -804,24 +803,7 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
   G4double angle = CLHEP::twopi / nofStrings;
 
   // layer logical into ULarlogical
-  if(fGeometryName != "baseline_large_reentrance_tube" && fGeometryName != "baseline_large_reentrance_tube_4m_cryo"){
-    for(G4int j = 0; j < nofStrings; j++)
-    {
-      xpos = roiradius * cm * std::cos(j * angle);
-      ypos = roiradius * cm * std::sin(j * angle);
-
-      for(G4int i = 0; i < nofLayers; i++)
-      {
-        new G4PVPlacement(
-          nullptr,
-          G4ThreeVector(xpos, ypos,
-                        -step + (nofLayers / 2 * layerthickness - i * layerthickness) * cm -
-                          offset_3 * cm),
-          fLayerLogical, "Layer_phys", fUlarLogical, false, i + j * nofLayers, true);
-      }
-    }
-  }
-  else{
+  if(fGeometryName == "baseline_large_reentrance_tube" || fGeometryName == "baseline_large_reentrance_tube_4m_cryo"){
     G4double length = 16.75 * cm;
 
     G4double vec_main_x = 1/2.;
@@ -887,6 +869,23 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
             fLayerLogical, "Layer_phys", fUlarLogical, false, coordinate, true);
             N++;
         }
+      }
+    }
+  }
+  else{
+    for(G4int j = 0; j < nofStrings; j++)
+    {
+      xpos = roiradius * cm * std::cos(j * angle);
+      ypos = roiradius * cm * std::sin(j * angle);
+
+      for(G4int i = 0; i < nofLayers; i++)
+      {
+        new G4PVPlacement(
+          nullptr,
+          G4ThreeVector(xpos, ypos,
+                        -step + (nofLayers / 2 * layerthickness - i * layerthickness) * cm -
+                          offset_3 * cm),
+          fLayerLogical, "Layer_phys", fUlarLogical, false, i + j * nofLayers, true);
       }
     }
   }

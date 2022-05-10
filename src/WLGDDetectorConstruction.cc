@@ -1558,7 +1558,7 @@ void WLGDDetectorConstruction::DefineCommands()
     .SetGuidance("baseline_large_reentrance_tube_4m_cryo")
     .SetGuidance("alternative = NEEDS DESCRIPTION")
     .SetGuidance("hallA = Gerda mock-up for validation.")
-    .SetCandidates("baseline baseline_smaller baseline_large_reentrance_tube alternative hallA")
+    .SetCandidates("baseline baseline_smaller baseline_large_reentrance_tube alternative hallA baseline_large_reentrance_tube_4m_cryo")
     .SetStates(G4State_PreInit)
     .SetToBeBroadcasted(false);
 

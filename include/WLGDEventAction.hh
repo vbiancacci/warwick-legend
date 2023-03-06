@@ -46,6 +46,7 @@ public:
   std::vector<G4double>& GetMuonxMom() { return Muonxmom; }
   std::vector<G4double>& GetMuonyMom() { return Muonymom; }
   std::vector<G4double>& GetMuonzMom() { return Muonzmom; }
+  std::vector<G4double>& GetMuonEnergy() { return Muonenergy; }
 
   std::vector<G4double>& GetNeutronxLoc() { return neutronxloc; }
   std::vector<G4double>& GetNeutronyLoc() { return neutronyloc; }
@@ -230,6 +231,14 @@ public:
   std::vector<G4int>&    GetnCOther_A() { return v_nCOther_A; }
   std::vector<G4int>&    GetnCOther_ZC() { return v_nCOther_ZC; }
 
+  std::vector<G4double>& Getprod_timing() { return v_prod_timing; }
+  std::vector<G4double>& Getprod_x() { return v_prod_x; }
+  std::vector<G4double>& Getprod_y() { return v_prod_y; }
+  std::vector<G4double>& Getprod_z() { return v_prod_z; }
+  std::vector<G4int>&    Getprod_A() { return v_prod_A; }
+  std::vector<G4int>&    Getprod_ZC() { return v_prod_ZC; }
+  std::vector<G4int>&    Getprod_parentType() { return v_prod_parentType;}
+
   std::vector<G4double>& GetGe77mGammaEmission_timing()
   {
     return v_Ge77mGammaEmission_timing;
@@ -269,6 +278,20 @@ public:
   std::vector<G4int>&    GetGdSiblings_id() { return v_GdSiblings_id; }
   std::vector<G4int>&    GetGdSiblings_type() { return v_GdSiblings_type; }
   std::vector<G4int>&    GetGdSiblings_whichVolume() { return v_GdSiblings_whichVolume; }
+
+  std::vector<G4double>& Get_Muon_WLSR_intersect_x(){ return v_Muon_WLSR_intersect_x; }
+  std::vector<G4double>& Get_Muon_WLSR_intersect_y(){ return v_Muon_WLSR_intersect_y; }
+  std::vector<G4double>& Get_Muon_WLSR_intersect_z(){ return v_Muon_WLSR_intersect_z; }
+  std::vector<G4double>& Get_Muon_WLSR_Edep(){ return v_Muon_WLSR_Edep; }
+
+  void Add_Muon_WLSR_intersect(G4double x, G4double y, G4double z){
+    v_Muon_WLSR_intersect_x.push_back(x);
+    v_Muon_WLSR_intersect_y.push_back(y);
+    v_Muon_WLSR_intersect_z.push_back(z);
+  }
+  void Add_Muon_WLSR_Edep(double Edep){
+    v_Muon_WLSR_Edep[0] += Edep;
+  }
 
   void SetisIC(int ans) { v_isIC[0] = ans; }
   void SetisMetastable(int ans) { v_isMetastable[0] = ans; }
@@ -316,6 +339,15 @@ public:
   void AddnCOther_A(G4int A) { v_nCOther_A.push_back(A); }
   void AddnCOther_ZC(G4int A) { v_nCOther_ZC.push_back(A); }
 
+  void Addprod_timing(G4double time) { v_prod_timing.push_back(time); }
+  void Addprod_x(G4double x) { v_prod_x.push_back(x); }
+  void Addprod_y(G4double y) { v_prod_y.push_back(y); }
+  void Addprod_z(G4double z) { v_prod_z.push_back(z); }
+  void Addprod_A(G4int A) { v_prod_A.push_back(A); }
+  void Addprod_ZC(G4int A) { v_prod_ZC.push_back(A); }
+  void Addprod_parentType(G4int A){ v_prod_parentType.push_back(A); }
+
+
   void AddGe77mGammaEmission_timing(G4double time)
   {
     v_Ge77mGammaEmission_timing.push_back(time);
@@ -344,6 +376,7 @@ public:
   void AddMuonxMom(G4double posx) { Muonxmom.push_back(posx); }
   void AddMuonyMom(G4double posy) { Muonymom.push_back(posy); }
   void AddMuonzMom(G4double posz) { Muonzmom.push_back(posz); }
+  void AddMuonEnergy(G4double energy) { Muonenergy.push_back(energy); }
 
   void AddEkin(G4double kin) { ekin.push_back(kin); }
   void AddNeutronxLoc(G4double posx) { neutronxloc.push_back(posx); }
@@ -493,6 +526,7 @@ public:
 
   // The default is that only events with Ge77 production are saved. This function relaxes the condition so that all events are saved.
   void SaveAllEvents(G4int answer);
+  void SaveAllProductions(G4int answer);
 
   void DefineCommands();
 
@@ -521,6 +555,7 @@ public:
       tmp_mostOuterRadius = r;
   }
   void WriteMostOuterRadius() { out_mostOuterRadius.push_back(tmp_mostOuterRadius); }
+  G4int isAllProductions(){return fAllProductions;};
 
 private:
   // methods
@@ -529,6 +564,7 @@ private:
   void                       makeMap();
   G4GenericMessenger*        fEventMessenger;
   G4int                      fAllEvents = 0;
+  G4int                      fAllProductions = 0;
 
   //! Brief description
   /*!
@@ -608,6 +644,7 @@ private:
   std::vector<G4double> Muonxmom;
   std::vector<G4double> Muonymom;
   std::vector<G4double> Muonzmom;
+  std::vector<G4double> Muonenergy;
 
   // -- additional data for other produced particles
   // - production location, timing and mass of nuclei produced in neutron capture in Ar
@@ -631,6 +668,15 @@ private:
   std::vector<G4double> v_nCOther_z;
   std::vector<G4int>    v_nCOther_A;
   std::vector<G4int>    v_nCOther_ZC;
+
+  // - production location, timing and mass of nuclei produced in a general matter
+  std::vector<G4double> v_prod_timing;
+  std::vector<G4double> v_prod_x;
+  std::vector<G4double> v_prod_y;
+  std::vector<G4double> v_prod_z;
+  std::vector<G4int>    v_prod_A;
+  std::vector<G4int>    v_prod_ZC;
+  std::vector<G4int>    v_prod_parentType;
 
   // - output of the subsidiary particles after an IC of a Ge77m
   std::vector<G4double> v_Ge77mGammaEmission_timing;
@@ -712,6 +758,8 @@ private:
   // - if the Ge77 is produced in the meta-stable state, raise flag (one should consider that with muon primaries this will never be the case)
   std::vector<G4int>    v_isMetastable;
 
+
+
   // -- the particle id list of the particles of interest 
   std::set<G4int> IDListOfGe77;
   std::set<G4int> IDListOfGdSiblingParticles;
@@ -751,6 +799,12 @@ private:
 
   G4double              tmp_mostOuterRadius;
   std::vector<G4double> out_mostOuterRadius;
+
+
+  std::vector<G4double> v_Muon_WLSR_intersect_x;
+  std::vector<G4double> v_Muon_WLSR_intersect_y;
+  std::vector<G4double> v_Muon_WLSR_intersect_z;
+  std::vector<G4double> v_Muon_WLSR_Edep;
 };
 
 #endif

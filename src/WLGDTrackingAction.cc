@@ -38,6 +38,8 @@ void WLGDTrackingAction::PreUserTrackingAction(const G4Track* aTrack)
     tmp_MuonXmom    = tmp_vector.getX();
     tmp_MuonYmom    = tmp_vector.getY();
     tmp_MuonZmom    = tmp_vector.getZ();
+    tmp_MuonZmom    = tmp_vector.getZ();
+    tmp_MuonEnergy  = aTrack->GetKineticEnergy();
   }
 
   // Edit: 2021/03/30 by Moritz Neuberger
@@ -66,6 +68,7 @@ void WLGDTrackingAction::PreUserTrackingAction(const G4Track* aTrack)
       fEventAction->AddNeutronyMom(tmp_neutronYmom);
       fEventAction->AddNeutronzMom(tmp_neutronZmom);
       fEventAction->AddNeutronTime(tmp_neutronTime);
+      // fEventAction->AddNeutronEkin(aTrack->GetKineticEnergy() / eV);
     }
 
     // initial value for furthest position of neutron away from center (for testing, can
@@ -124,6 +127,7 @@ void WLGDTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
     fEventAction->AddMuonxMom(tmp_MuonXmom);
     fEventAction->AddMuonyMom(tmp_MuonYmom);
     fEventAction->AddMuonzMom(tmp_MuonZmom);
+    fEventAction->AddMuonEnergy(tmp_MuonEnergy);
   }
 
   if(fRunAction->getWriteOutNeutronProductionInfo() == 1)
@@ -275,6 +279,38 @@ void WLGDTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
           }
         }
       }
+    }
+  }
+  if(fEventAction->isAllProductions()){
+    int NumberOfSecundaries = aTrack->GetStep()->GetSecondaryInCurrentStep()->size();
+    for(int i = 0; i < NumberOfSecundaries; i++)
+    {
+      if(aTrack->GetStep()
+                ->GetSecondaryInCurrentStep()
+                ->at(i)
+                ->GetParticleDefinition()
+                ->GetAtomicMass() > 0){
+                    fEventAction->Addprod_timing(
+                      aTrack->GetStep()->GetPostStepPoint()->GetGlobalTime() / s);
+                    fEventAction->Addprod_x(
+                      aTrack->GetStep()->GetPostStepPoint()->GetPosition().getX() / m);
+                    fEventAction->Addprod_y(
+                      aTrack->GetStep()->GetPostStepPoint()->GetPosition().getY() / m);
+                    fEventAction->Addprod_z(
+                      aTrack->GetStep()->GetPostStepPoint()->GetPosition().getZ() / m);
+                    fEventAction->Addprod_A(aTrack->GetStep()
+                                ->GetSecondaryInCurrentStep()
+                                ->at(i)
+                                ->GetParticleDefinition()
+                                ->GetAtomicMass());
+                    fEventAction->Addprod_ZC(aTrack->GetStep()
+                                ->GetSecondaryInCurrentStep()
+                                ->at(i)
+                                ->GetParticleDefinition()
+                                ->GetPDGCharge());
+                    fEventAction->Addprod_parentType(aTrack->GetParticleDefinition()
+                                ->GetPDGEncoding());
+                }
     }
   }
 }

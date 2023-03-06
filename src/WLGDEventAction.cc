@@ -92,6 +92,7 @@ void WLGDEventAction::BeginOfEventAction(const G4Event*
   Muonxmom.clear();
   Muonymom.clear();
   Muonzmom.clear();
+  Muonenergy.clear();
 
   neutronxloc.clear();
   neutronyloc.clear();
@@ -225,6 +226,14 @@ void WLGDEventAction::BeginOfEventAction(const G4Event*
   v_nCOther_A.clear();
   v_nCOther_ZC.clear();
 
+  v_prod_timing.clear();
+  v_prod_x.clear();
+  v_prod_y.clear();
+  v_prod_z.clear();
+  v_prod_A.clear();
+  v_prod_ZC.clear();
+  v_prod_parentType.clear();
+
   TotalEnergyDepositionInLAr_prompt.clear();
   TotalEnergyDepositionInLAr_prompt.push_back(0);
   TotalEnergyDepositionInLAr_prompt.push_back(0);
@@ -325,6 +334,12 @@ void WLGDEventAction::BeginOfEventAction(const G4Event*
   v_Ge77mGammaEmission_type.clear();
   v_Ge77mGammaEmission_whichVolume.clear();
   v_Ge77mGammaEmission_whichGe77.clear();
+
+  v_Muon_WLSR_intersect_x.clear();
+  v_Muon_WLSR_intersect_y.clear();
+  v_Muon_WLSR_intersect_z.clear();
+  v_Muon_WLSR_Edep.clear();
+  v_Muon_WLSR_Edep.push_back(0);
 
   makeMap();
 }
@@ -507,6 +522,7 @@ void WLGDEventAction::EndOfEventAction(const G4Event* event)
 }
 
 void WLGDEventAction::SaveAllEvents(G4int answer) { fAllEvents = answer; }
+void WLGDEventAction::SaveAllProductions(G4int answer) { fAllProductions = answer; }
 
 void WLGDEventAction::DefineCommands()
 {
@@ -519,6 +535,13 @@ void WLGDEventAction::DefineCommands()
     .SetGuidance("Set whether to save not only Ge77 but all events")
     .SetGuidance("0 = only Ge77 events")
     .SetGuidance("1 = all events")
+    .SetCandidates("0 1")
+    .SetDefaultValue("0");
+
+  fEventMessenger->DeclareMethod("saveAllProductions", &WLGDEventAction::SaveAllProductions)
+    .SetGuidance("Set whether all productions of nucleis are saved or not")
+    .SetGuidance("0 = no additional output")
+    .SetGuidance("1 = productions are saved")
     .SetCandidates("0 1")
     .SetDefaultValue("0");
 }

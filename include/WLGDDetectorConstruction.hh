@@ -36,6 +36,7 @@ public:
   G4int    GetBoratedTurbinezNPanels() { return fNPanels; }
   // -- a getter to know whether Gd water is used
   G4int isSetWithGdWater() { return fWithGdWater; }
+  G4int isSetWithWoWater() { return fWithWoWater; }
 
   
   void  SetGeometry(const G4String& name);
@@ -59,6 +60,7 @@ public:
 
   // - w/wo Gd in the water (options: 0:[no], 1:yes)
   void  SetGdWater(G4int answer);
+  void  SetWoWater(G4int answer);
 
   // - setters to adjust the size and radius of the turbines and tubes (I know confusingly named)
   void  SetTurbineAndTubeRadius(G4double radius);
@@ -72,6 +74,7 @@ public:
   // - set the concentration of Xe and He3 in the LAr
   void  SetXeConc(G4double nf);
   void  SetHe3Conc(G4double nf);
+  void  SetMaGeMaterial(G4int answer);
 
   // - set the size of the cryostat
   void  SetOuterCryostatRadius(G4double rad);
@@ -90,6 +93,7 @@ private:
 
   G4GenericMessenger*     fDetectorMessenger       = nullptr;
   G4GenericMessenger*     fBiasMessenger           = nullptr;
+  G4GenericMessenger*     fMaterialMessenger       = nullptr;
   G4double                fvertexZ                 = -1.0;
   G4double                fmaxrad                  = -1.0;
   G4String                fGeometryName            = "baseline";
@@ -114,8 +118,11 @@ private:
   G4int                   fWithBoratedPET        = 0;
   G4String                fSetMaterial           = "";
   G4int                   fWithGdWater           = 0;
+  G4int                   fWithWoWater           = 0;
+  G4int                   fMaGeMaterial          = 0;
   G4Material*             CombinedArXeHe3;
   G4Material*             water;
+  G4Material*             larMat;
 };
 
 #endif

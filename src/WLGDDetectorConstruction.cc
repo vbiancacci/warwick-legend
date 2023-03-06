@@ -54,7 +54,7 @@ auto WLGDDetectorConstruction::Construct() -> G4VPhysicalVolume*
   {
     return SetupBaseline();
   }
-  else if(fGeometryName == "hallA")
+  else if(fGeometryName == "hallA" || fGeometryName == "hallA_wo_ge" || fGeometryName == "hallA_only_WLSR")
   {
     return SetupHallA();
   }
@@ -143,11 +143,26 @@ void WLGDDetectorConstruction::DefineMaterials()
   auto* Ge_74 = new G4Isotope("Ge74", 32, 74, 74.0 * g / mole);
   auto* Ge_76 = new G4Isotope("Ge76", 32, 76, 76.0 * g / mole);
 
-  auto* eGe = new G4Element("enriched Germanium", "enrGe", 2);
+  G4Isotope* Ge_70 = new G4Isotope("Ge70",  32, 70, 69.92*g/mole);
+  G4Isotope* Ge_72 = new G4Isotope("Ge72",  32, 72, 71.92*g/mole);
+  G4Isotope* Ge_73 = new G4Isotope("Ge73",  32, 73, 73.0*g/mole);
+
+  G4Element* eGe = new G4Element("enriched Germanium", "enrGe", 2);
+
   eGe->AddIsotope(Ge_76, 87. * perCent);
   eGe->AddIsotope(Ge_74, 13. * perCent);
-
   density      = 5.323 * g / cm3;
+
+  if(fMaGeMaterial){
+    density = 5.56 * g / cm3;
+    eGe = new G4Element("enriched Germanium", "enrGe", 5);  
+    eGe->AddIsotope(Ge_70,0.0*perCent);
+    eGe->AddIsotope(Ge_72,0.1*perCent);
+    eGe->AddIsotope(Ge_73,0.2*perCent);
+    eGe->AddIsotope(Ge_74,13.1*perCent);
+    eGe->AddIsotope(Ge_76,86.6*perCent);
+  }
+
   auto* roiMat = new G4Material("enrGe", density, 1);
   roiMat->AddElement(eGe, 1);
 
@@ -170,12 +185,20 @@ void WLGDDetectorConstruction::DefineMaterials()
   G4cout << "dComb:   " << dComb << G4endl;
   G4cout << "___________________________________________" << G4endl;
 
-  // auto* eLAr = new G4Element("LAr", "Ar", 18., 39.95 * g / mole);
-  auto*      larMat = G4Material::GetMaterial("G4_lAr");
+  
+  //auto* eLAr = new G4Element("LAr", "Ar", 18., 39.95 * g / mole);
+  larMat = G4Material::GetMaterial("G4_lAr");
   auto*      eLXe   = new G4Element("LXe", "Xe", 54., 131.29 * g / mole);
   auto*      eHe3   = new G4Element("He3", "He3", 1);
   G4Isotope* iHe3   = new G4Isotope("He3", 2, 3);
   eHe3->AddIsotope(iHe3, 1);
+
+  if(fMaGeMaterial){
+    double densityLAr = 1.396  * g / cm3; 
+    G4Element* larEl = new G4Element("LAr", "Ar", 18., 39.95 * g / mole);
+    larMat = new G4Material("LAr", densityLAr, 1);
+    larMat->AddElement(larEl, 1);
+  }
 
   CombinedArXeHe3 =
     new G4Material("CombinedArXeHe3", dComb, 3, kStateLiquid, 87. * kelvin);
@@ -274,7 +297,7 @@ void WLGDDetectorConstruction::ConstructSDandField()
     }
 
     // Baseline also has a water volume and cryostat
-    if(fGeometryName == "baseline" || fGeometryName == "hallA" ||
+    if(fGeometryName == "baseline" || fGeometryName == "hallA" || fGeometryName == "hallA_wo_ge" || fGeometryName == "hallA_only_WLSR" ||
        fGeometryName == "baseline_smaller" || fGeometryName == "baseline_large_reentrance_tube" || fGeometryName == "baseline_large_reentrance_tube_4m_cryo")
     {
       G4LogicalVolume* logicWater = volumeStore->GetVolume("Water_log");
@@ -307,7 +330,7 @@ auto WLGDDetectorConstruction::SetupAlternative() -> G4VPhysicalVolume*
 {
   // Get materials
   auto* worldMaterial = G4Material::GetMaterial("G4_Galactic");
-  auto* larMat        = G4Material::GetMaterial("G4_lAr");
+  //auto* larMat        = G4Material::GetMaterial("G4_lAr");
   auto* airMat        = G4Material::GetMaterial("G4_AIR");
   auto* steelMat      = G4Material::GetMaterial("G4_STAINLESS-STEEL");
   auto* copperMat     = G4Material::GetMaterial("G4_Cu");
@@ -316,8 +339,8 @@ auto WLGDDetectorConstruction::SetupAlternative() -> G4VPhysicalVolume*
   auto* roiMat        = G4Material::GetMaterial("enrGe");
   auto* larMat_alt    = G4Material::GetMaterial("CombinedArXeHe3");
 
-  // if(fXeConc != 0 || fHe3Conc != 0)
-  larMat = larMat_alt;
+  if(fXeConc != 0 || fHe3Conc != 0)
+    larMat = larMat_alt;
   // size parameter, unit [cm]
   // cavern
   G4double stone     = 100.0;  // Hall wall thickness 1 m
@@ -544,6 +567,8 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
   auto* waterMat = G4Material::GetMaterial("G4_WATER");
   if(fWithGdWater == 1)
     waterMat = water;
+  if(fWithWoWater == 1)
+    waterMat = airMat;
   auto* steelMat      = G4Material::GetMaterial("G4_STAINLESS-STEEL");
   auto* copperMat     = G4Material::GetMaterial("G4_Cu");
   auto* stdRock       = G4Material::GetMaterial("StdRock");
@@ -553,12 +578,16 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
     BoratedPETMat = G4Material::GetMaterial("PolyEthylene");
   if(fSetMaterial == "PMMA")
     BoratedPETMat = G4Material::GetMaterial("PMMA");
-  auto* larMat /*_alt*/ = G4Material::GetMaterial("CombinedArXeHe3");
+  //auto* larMat /*_alt*/ = G4Material::GetMaterial("CombinedArXeHe3");
   // if(fXeConc != 0 || fHe3Conc != 0) BoratedPET
-  larMat = CombinedArXeHe3;
+  
+  if(!((fXeConc + fHe3Conc) == 0))
+    larMat = CombinedArXeHe3;
+  //larMat = G4Material::GetMaterial("G4_lAr");
+
   // G4cout << larMat << G4endl;
 
-  // Edit: 2020/03/30 by Moritz Neuberger
+  // Edit: 2021/03/30 by Moritz Neuberger
   // Adjusted size of stone (1m->5m) s.t. MUSUN cuboid lies inside.
   // Also adjusted relative geometry relations s.t. they are independent of the stone
   // size.
@@ -1154,25 +1183,27 @@ auto WLGDDetectorConstruction::SetupHallA() -> G4VPhysicalVolume*
   // Full copy of baseline set up but smaller as a Gerda mock-up.
   // Get materials
   auto* worldMaterial = G4Material::GetMaterial("G4_Galactic");
-  auto* larMat        = G4Material::GetMaterial("G4_lAr");
+  //auto* larMat        = G4Material::GetMaterial("G4_lAr");
   auto* airMat        = G4Material::GetMaterial("G4_AIR");
   auto* waterMat      = G4Material::GetMaterial("G4_WATER");
   if(fWithGdWater == 1)
     waterMat = water;
+  if(fWithWoWater == 1)
+    waterMat = airMat;
   auto* steelMat   = G4Material::GetMaterial("G4_STAINLESS-STEEL");
   auto* copperMat  = G4Material::GetMaterial("G4_Cu");
   auto* stdRock    = G4Material::GetMaterial("StdRock");
   auto* roiMat     = G4Material::GetMaterial("enrGe");
   auto* larMat_alt = G4Material::GetMaterial("CombinedArXeHe3");
 
-  // if(fXeConc != 0 || fHe3Conc != 0)
-  larMat = larMat_alt;
+  if(fXeConc != 0 || fHe3Conc != 0)
+    larMat = larMat_alt;
   // constants
   // size parameter, unit [cm]
   G4double offset = 250.0;  // shift cavern floor to keep detector centre at origin
   // cavern
-  G4double stone       = 100.0;  // Hall wall thickness 1 m
-  G4double hallrad     = 800.0;  // Hall cylinder diam 16 m
+  G4double stone       = 400.0;  // Hall wall thickness 1 m
+  G4double hallrad     = 700.0;  // Hall cylinder diam 16 m
   G4double hallhheight = 650.0;  // Hall cylinder height 13 m
   // water tank
   G4double tankwalltop = 0.6;  // water tank thickness at top 6 mm
@@ -1260,7 +1291,7 @@ auto WLGDDetectorConstruction::SetupHallA() -> G4VPhysicalVolume*
   // vacuum gap
   //
   auto* cvacSolid     = new G4Tubs("Cvac", 0.0 * cm, (cryrad - cryowall) * cm,
-                                   cryhheight * cm, 0.0, CLHEP::twopi);
+                                   (cryhheight - cryowall) * cm, 0.0, CLHEP::twopi);
   auto* fCvacLogical  = new G4LogicalVolume(cvacSolid, worldMaterial, "Cvac_log");
   auto* fCvacPhysical = new G4PVPlacement(nullptr, G4ThreeVector(), fCvacLogical,
                                           "Cvac_phys", fCoutLogical, false, 0, true);
@@ -1269,7 +1300,7 @@ auto WLGDDetectorConstruction::SetupHallA() -> G4VPhysicalVolume*
   // inner cryostat
   //
   auto* cinnSolid     = new G4Tubs("Cinn", 0.0 * cm, (cryrad - cryowall - vacgap) * cm,
-                                   cryhheight * cm, 0.0, CLHEP::twopi);
+                                   (cryhheight - cryowall - vacgap) * cm, 0.0, CLHEP::twopi);
   auto* fCinnLogical  = new G4LogicalVolume(cinnSolid, steelMat, "Cinn_log");
   auto* fCinnPhysical = new G4PVPlacement(nullptr, G4ThreeVector(), fCinnLogical,
                                           "Cinn_phys", fCvacLogical, false, 0, true);
@@ -1278,11 +1309,12 @@ auto WLGDDetectorConstruction::SetupHallA() -> G4VPhysicalVolume*
   // LAr bath
   //
   auto* larSolid     = new G4Tubs("LAr", 0.0 * cm, (cryrad - 2 * cryowall - vacgap) * cm,
-                                  cryhheight * cm, 0.0, CLHEP::twopi);
+                                  (cryhheight - 2 * cryowall - vacgap) * cm, 0.0, CLHEP::twopi);
   auto* fLarLogical  = new G4LogicalVolume(larSolid, larMat, "Lar_log");
   auto* fLarPhysical = new G4PVPlacement(nullptr, G4ThreeVector(), fLarLogical,
                                          "Lar_phys", fCinnLogical, false, 0, true);
 
+/*
   //
   // cryostat Lid
   //
@@ -1296,6 +1328,7 @@ auto WLGDDetectorConstruction::SetupHallA() -> G4VPhysicalVolume*
   auto* fBotPhysical =
     new G4PVPlacement(nullptr, G4ThreeVector(0., 0., -(cryhheight + cryowall / 2.0) * cm),
                       fBotLogical, "Bot_phys", fWaterLogical, false, 0, true);
+*/
 
   //
   // String tower
@@ -1332,18 +1365,32 @@ auto WLGDDetectorConstruction::SetupHallA() -> G4VPhysicalVolume*
   G4double ypos;
   G4double angle = CLHEP::twopi / 6.0;
 
-  for(G4int j = 0; j < 6; j++)
-  {
-    xpos = roiradius * cm * std::cos(j * angle);
-    ypos = roiradius * cm * std::sin(j * angle);
-    for(G4int i = 0; i < nofLayers; i++)
+  if(fGeometryName != "hallA_wo_ge" && fGeometryName != "hallA_only_WLSR"){
+    for(G4int j = 0; j < 6; j++)
     {
-      new G4PVPlacement(
-        nullptr,
-        G4ThreeVector(xpos, ypos,
-                      -step + (nofLayers / 2 * layerthickness - i * layerthickness) * cm),
-        fLayerLogical, "Layer_phys", fLarLogical, false, i + j * nofLayers, true);
+      xpos = roiradius * cm * std::cos(j * angle);
+      ypos = roiradius * cm * std::sin(j * angle);
+      for(G4int i = 0; i < nofLayers; i++)
+      {
+        new G4PVPlacement(
+          nullptr,
+          G4ThreeVector(xpos, ypos,
+                        -step + (nofLayers / 2 * layerthickness - i * layerthickness) * cm),
+          fLayerLogical, "Layer_phys", fLarLogical, false, i + j * nofLayers, true);
+      }
     }
+  }
+
+  // WLSR volume - its a workaround to access the volume of the WLSR w/o implementing it properly
+  if(fGeometryName == "hallA_only_WLSR"){
+    // cavern
+    G4double WLSR_r       = 70.0;  
+    G4double WLSR_h       = 300.0/2.; 
+
+    auto WLSR_LAr_solid = new G4Tubs("WLSR_LAr_solid", 0.0 * cm, WLSR_r * cm, WLSR_h * cm, 0.0, CLHEP::twopi);  
+    auto* fWLSR_LAr_logical = new G4LogicalVolume(WLSR_LAr_solid, larMat, "WLSR_LAr_logical");
+    new G4PVPlacement(nullptr, G4ThreeVector(), fWLSR_LAr_logical,
+                    "WLSR_LAr_physical", fLarLogical, false, 0, true);
   }
 
   //
@@ -1368,8 +1415,8 @@ auto WLGDDetectorConstruction::SetupHallA() -> G4VPhysicalVolume*
   fCoutLogical->SetVisAttributes(blueVisAtt);
   fCvacLogical->SetVisAttributes(greyVisAtt);
   fCinnLogical->SetVisAttributes(blueVisAtt);
-  fLidLogical->SetVisAttributes(blueVisAtt);
-  fBotLogical->SetVisAttributes(blueVisAtt);
+  //fLidLogical->SetVisAttributes(blueVisAtt);
+  //fBotLogical->SetVisAttributes(blueVisAtt);
   fLayerLogical->SetVisAttributes(G4VisAttributes::Invisible);
   fGapLogical->SetVisAttributes(greyVisAtt);
   fGeLogical->SetVisAttributes(redVisAtt);
@@ -1393,7 +1440,7 @@ void WLGDDetectorConstruction::SetPositionOfDetectors(G4String name)
 void WLGDDetectorConstruction::SetGeometry(const G4String& name)
 {
   std::set<G4String> knownGeometries = { "baseline", "baseline_smaller", "baseline_large_reentrance_tube", "alternative",
-                                         "hallA", "baseline_large_reentrance_tube_4m_cryo" };
+                                         "hallA", "hallA_wo_ge", "hallA_only_WLSR", "baseline_large_reentrance_tube_4m_cryo" };
   if(knownGeometries.count(name) == 0)
   {
     G4Exception("WLGDDetectorConstruction::SetGeometry", "WLGD0001", JustWarning,
@@ -1531,6 +1578,20 @@ void WLGDDetectorConstruction::SetGdWater(G4int answer)
   G4RunManager::GetRunManager()->ReinitializeGeometry();
 }
 
+void WLGDDetectorConstruction::SetWoWater(G4int answer)
+{
+  fWithWoWater = answer;
+  WLGDDetectorConstruction::DefineMaterials();
+  G4RunManager::GetRunManager()->ReinitializeGeometry();
+}
+
+void WLGDDetectorConstruction::SetMaGeMaterial(G4int answer)
+{
+  fMaGeMaterial = answer;
+  WLGDDetectorConstruction::DefineMaterials();
+  G4RunManager::GetRunManager()->ReinitializeGeometry();
+}
+
 void WLGDDetectorConstruction::DefineCommands()
 {
   // Define geometry command directory using generic messenger class
@@ -1557,7 +1618,9 @@ void WLGDDetectorConstruction::DefineCommands()
     .SetGuidance("baseline_large_reentrance_tube_4m_cryo")
     .SetGuidance("alternative = NEEDS DESCRIPTION")
     .SetGuidance("hallA = Gerda mock-up for validation.")
-    .SetCandidates("baseline baseline_smaller baseline_large_reentrance_tube alternative hallA baseline_large_reentrance_tube_4m_cryo")
+    .SetGuidance("hallA_wo_ge = Gerda mock-up w/o HPGe")
+    .SetGuidance("hallA_only_WLSR = Gerda w/o detectors but with a workaround WLSR volume")
+    .SetCandidates("baseline baseline_smaller baseline_large_reentrance_tube alternative hallA hallA_wo_ge hallA_only_WLSR baseline_large_reentrance_tube_4m_cryo")
     .SetStates(G4State_PreInit)
     .SetToBeBroadcasted(false);
 
@@ -1707,6 +1770,15 @@ void WLGDDetectorConstruction::DefineCommands()
     .SetGuidance("1 = with Gd water")
     .SetCandidates("0 1")
     .SetDefaultValue("0");
+  // option to change the water to gadolinium weighted water in the water tank
+  fDetectorMessenger
+    ->DeclareMethod("Without_Water", &WLGDDetectorConstruction::SetWoWater)
+    .SetGuidance("Set whether to include water or not")
+    .SetGuidance("0 = with water")
+    .SetGuidance("1 = without water")
+    .SetCandidates("0 1")
+    .SetDefaultValue("0");
+
 
   // Define bias operator command directory using generic messenger class
   fBiasMessenger =
@@ -1729,6 +1801,17 @@ void WLGDDetectorConstruction::DefineCommands()
     ->DeclareMethod("setNeutronYieldBias", &WLGDDetectorConstruction::SetNeutronYieldBias)
     .SetGuidance("Set Bias factor for neutron yield process.")
     .SetDefaultValue("1.0")
+    .SetStates(G4State_PreInit)
+    .SetToBeBroadcasted(false);
+
+  // Define bias operator command directory using generic messenger class
+  fMaterialMessenger =
+    new G4GenericMessenger(this, "/WLGD/material/", "Commands for controlling the material choice");  
+    
+  fMaterialMessenger
+    ->DeclareMethod("setMaGeMaterial", &WLGDDetectorConstruction::SetMaGeMaterial)
+    .SetGuidance("Set LAr and Ge material to MaGe settings")
+    .SetDefaultValue("0")
     .SetStates(G4State_PreInit)
     .SetToBeBroadcasted(false);
 }

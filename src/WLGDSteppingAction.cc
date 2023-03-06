@@ -47,6 +47,22 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
   }
 #endif
 
+  if(fRunAction->getReadMuonCrossingWLSR())
+  {
+    if((aStep->GetTrack()->GetParticleDefinition()->GetParticleName() == "mu-" || aStep->GetTrack()->GetParticleDefinition()->GetParticleName() == "mu+"))
+    {
+      if(aStep->GetTrack()->GetNextVolume())
+      {
+        auto physVol1 = aStep->GetTrack()->GetVolume();
+        auto physVol2 = aStep->GetTrack()->GetNextVolume();
+        if(physVol2->GetName() == "WLSR_LAr_physical")
+          fEventAction->Add_Muon_WLSR_Edep(aStep->GetTotalEnergyDeposit() / eV);
+        if((physVol1->GetName() != "WLSR_LAr_physical" && physVol2->GetName() == "WLSR_LAr_physical") || (physVol1->GetName() == "WLSR_LAr_physical" && physVol2->GetName() != "WLSR_LAr_physical"))
+          fEventAction->Add_Muon_WLSR_intersect(aStep->GetPostStepPoint()->GetPosition().getX() / m,aStep->GetPostStepPoint()->GetPosition().getY() / m,aStep->GetPostStepPoint()->GetPosition().getZ() / m);
+      }
+    }
+  }
+
   // Edit: 2021/04/07 by Moritz Neuberger
   // Adding total energy deposition inside LAr
 
@@ -54,6 +70,8 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
   {
     if(aStep->GetTrack()->GetVolume()->GetName() == "World_phys")
       return;
+
+
     if((aStep->GetPostStepPoint()
           ->GetTouchable()
           ->GetVolume(0)
@@ -77,10 +95,12 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
     {
       if(aStep->GetTotalEnergyDeposit() > 0)
       {
+
         // get position of deposition
         G4double tmp_x = aStep->GetTrack()->GetPosition().getX();
         G4double tmp_y = aStep->GetTrack()->GetPosition().getY();
         G4double tmp_z = aStep->GetTrack()->GetPosition().getZ();
+
 
         // get id of which reentrance tube
         G4int whichReentranceTube;
@@ -106,6 +126,7 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
                ->GetName() == "Water_log")
           whichReentranceTube = 0;
 
+
         // calculate total energy deposition in water tank for muon veto
         if(aStep->GetPostStepPoint()
              ->GetTouchable()
@@ -119,7 +140,8 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
           // fEventAction->IncreaseEdepWater_delayed(aStep->GetTotalEnergyDeposit() / eV);
           return;
         }
-
+  
+        
         G4int detector_number;
         if(fDetectorConstruction->GetGeometryName() == "baseline_large_reentrance_tube"){
           detector_number = aStep->GetPostStepPoint()->GetTouchable()->GetVolume(1)->GetCopyNo();
@@ -169,6 +191,8 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
         }
 
         // Ge energy
+
+
 
         if(aStep->GetPostStepPoint()
              ->GetTouchable()
@@ -264,6 +288,9 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
               aStep->GetTotalEnergyDeposit() / eV, whichReentranceTube);
           }  // after delayed
         }
+
+
+
 
         if(fRunAction->getIndividualGeDepositionInfo())
         {
@@ -397,6 +424,7 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
           }
         }  // individual Gd interactions
 
+
         if(aStep->GetPostStepPoint()->GetGlobalTime() / s > 1 &&
            fAllowForLongTimeEmissionReadout == 0)
           return;  // skip all interactiosn >1s
@@ -435,6 +463,7 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
             tmp = detector_number;
           fEventAction->AddIndividualEnergyDeposition_DetectorNumber(tmp);
         }
+
       }
     }
   }

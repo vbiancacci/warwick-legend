@@ -186,6 +186,66 @@ void WLGDPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
 
     fParticleGun->GeneratePrimaryVertex(event);
   }
+
+  if(fGenerator == "Musun_alternative")
+  {
+    G4int    nEvent = 0;
+    G4double time   = 0.0;
+    G4double energy = 0.0 * MeV;
+    G4double px, py, pz;
+    G4double theta, phi;
+    G4double x = 0, y = 0, z = 0;
+    G4int    particleID = 0;
+
+    fInputFile >> nEvent >> particleID >> energy >> x >> y >> z >> px >> py >> pz; // >> theta >> phi;
+
+     //G4cout  << nEvent << " " << x << " " << y << " " << z << G4endl;
+    if(fInputFile.eof())
+    {
+      fInputFile.close();
+      G4cerr << "File over: not enough events! Debugoutput" << G4endl;
+      G4Exception("WLGDPrimaryGeneratorAction::GeneratePrimaryVertex()", "err001",
+                  FatalException, "Exit Warwick");
+      return;
+    }
+
+    G4double particle_time = time * s;
+    energy                 = energy * GeV;
+    theta                  = theta * rad;
+    phi                    = phi * rad;
+    x                      = x * cm;
+    y                      = y * cm;
+    z                      = fZShift + (z * cm);
+
+    //   G4cout << "Primary coordinates: " << position/m << " m" << G4endl;
+    //   G4cout << "Primary coordinates: " << x/cm << " " <<  y/cm << " " << z/cm << " "
+    //   << G4endl; G4cout << "Primary energy: " << energy/GeV << " GeV" << G4endl; G4cout
+    //   << "Theta: " << theta/deg << " deg; Phi: " << phi/deg << " deg" << G4endl;
+
+    G4ParticleTable* theParticleTable = G4ParticleTable::GetParticleTable();
+
+    G4String particleName = " ";
+
+    if(particleID == 10)
+      particleName = "mu+";
+    else
+      particleName = "mu-";
+
+    G4double theMass     = theParticleTable->FindParticle(particleName)->GetPDGMass();
+    G4double totMomentum = std::sqrt(energy * energy + 2 * theMass * energy);
+    //pz                   = -1 * std::cos(theta);
+    //px                   = std::sin(theta) * cos(phi);
+    //py                   = std::sin(theta) * sin(phi);
+    G4ThreeVector momentumDir(px, py, pz);
+
+    fParticleGun->SetParticleMomentumDirection(momentumDir);
+
+    fParticleGun->SetParticleEnergy(energy);
+
+    fParticleGun->SetParticlePosition(G4ThreeVector(x, y, z));
+
+    fParticleGun->GeneratePrimaryVertex(event);
+  }
   if(fGenerator == "Ge77m" || fGenerator == "Ge77andGe77m")
   {
     G4double cushift        = 150.;
@@ -473,7 +533,9 @@ void WLGDPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
     std::uniform_real_distribution<> rndm(0.0, 1.0);  // azimuth angle
 
     G4double WaterTankHeight = (650 + 0.8) * cm;
-    G4double WaterTankRadius = (550 + 0.6) * cm;
+    G4double WaterTankRadius = (550 + 0.6) * cm; 
+    // area: 3201372.3 cm^2
+    // n per sec: 6.04 /s ec
     G4double Offset          = (200 - 100 - (850 - 650)) * cm;
 
     G4double area_cyl =
@@ -557,7 +619,7 @@ void WLGDPrimaryGeneratorAction::SetGenerator(const G4String& name)
 {
   std::set<G4String> knownGenerators = {
     "MeiAndHume",        "Musun",           "Ge77m", "Ge77andGe77m",
-    "ModeratorNeutrons", "ExternalNeutrons"
+    "ModeratorNeutrons", "ExternalNeutrons", "Musun_alternative"
   };
   if(knownGenerators.count(name) == 0)
   {
@@ -603,10 +665,11 @@ void WLGDPrimaryGeneratorAction::DefineCommands()
     .SetGuidance("Set generator model of primary muons")
     .SetGuidance("MeiAndHume = WW standard case")
     .SetGuidance("Musun = Used in previous MaGe simulation")
+    .SetGuidance("Musun_alternative = Alternative Musun input")
     .SetGuidance("Ge77m = generate Ge77m inside the HPGe detectors")
     .SetGuidance("Ge77andGe77m = generate 50% Ge77, 50% Ge77m inside the HPGe detectors")
     .SetGuidance("ModeratorNeutrons = generate neutrons inside the neutron moderators")
     .SetGuidance("ExternalNeutrons = generate neutrons from outside the water tank")
     .SetCandidates(
-      "MeiAndHume Musun Ge77m Ge77andGe77m ModeratorNeutrons ExternalNeutrons");
+      "MeiAndHume Musun Musun_alternative Ge77m Ge77andGe77m ModeratorNeutrons ExternalNeutrons");
 }

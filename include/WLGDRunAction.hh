@@ -60,6 +60,7 @@ public:
   G4int getWriteOutAllNeutronInfoRoot() { return fWriteOutAllNeutronInfoRoot; }
   G4int getIndividualGeDepositionInfo() { return fIndividualGeDepositionInfo; }
   G4int getIndividualGdDepositionInfo() { return fIndividualGdDepositionInfo; }
+  G4int getReadMuonCrossingWLSR()       { return fReadMuonCrossingWLSR; }
 
 private:
   void DefineCommands();
@@ -78,6 +79,7 @@ private:
   G4int                 fWriteOutAllNeutronInfoRoot    = 0;
   G4int                 fIndividualGeDepositionInfo    = 0;
   G4int                 fIndividualGdDepositionInfo    = 0;
+  G4int                 fReadMuonCrossingWLSR          = 0;
   std::vector<G4int>    vector_eventNumber;
   std::vector<G4double> vector_x_dir;
   std::vector<G4double> vector_y_dir;
@@ -93,6 +95,7 @@ private:
   void                  SetWriteOutAllNeutronInfoRoot(G4int answer);
   void                  SetIndividualGeDepositionInfo(G4int answer);
   void                  SetIndividualGdDepositionInfo(G4int answer);
+  void                  SetReadMuonCrossingWLSR(G4int answer);
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

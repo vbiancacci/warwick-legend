@@ -45,6 +45,7 @@ WLGDRunAction::WLGDRunAction(WLGDEventAction* eventAction, G4String name)
   analysisManager->CreateNtupleDColumn("Muonxmom", fEventAction->GetMuonxMom());
   analysisManager->CreateNtupleDColumn("Muonymom", fEventAction->GetMuonyMom());
   analysisManager->CreateNtupleDColumn("Muonzmom", fEventAction->GetMuonzMom());
+  analysisManager->CreateNtupleDColumn("MuonEnergy", fEventAction->GetMuonEnergy());
 
   // Edit: 2021/04/07 by Moritz Neuberger
   // Adding additional outputs to further investigate situations in which Ge-77 is
@@ -245,6 +246,16 @@ WLGDRunAction::WLGDRunAction(WLGDEventAction* eventAction, G4String name)
   analysisManager->CreateNtupleIColumn("nCOther_A", fEventAction->GetnCOther_A());
   analysisManager->CreateNtupleIColumn("nCOther_Z", fEventAction->GetnCOther_ZC());
 
+  analysisManager->CreateNtupleDColumn("prod_timing",
+                                       fEventAction->Getprod_timing());
+  analysisManager->CreateNtupleDColumn("prod_x", fEventAction->Getprod_x());
+  analysisManager->CreateNtupleDColumn("prod_y", fEventAction->Getprod_y());
+  analysisManager->CreateNtupleDColumn("prod_z", fEventAction->Getprod_z());
+  analysisManager->CreateNtupleIColumn("prod_A", fEventAction->Getprod_A());
+  analysisManager->CreateNtupleIColumn("prod_Z", fEventAction->Getprod_ZC());//prod_parentType
+  analysisManager->CreateNtupleIColumn("prod_parentType", fEventAction->Getprod_parentType());//prod_parentType
+
+
   if(fIndividualGeDepositionInfo)
   {
     analysisManager->CreateNtupleDColumn("Ge77mGammaEmission_timing",
@@ -277,6 +288,11 @@ WLGDRunAction::WLGDRunAction(WLGDEventAction* eventAction, G4String name)
   analysisManager->CreateNtupleDColumn("TrjXPos", fEventAction->GetTrjXPos());
   analysisManager->CreateNtupleDColumn("TrjYPos", fEventAction->GetTrjYPos());
   analysisManager->CreateNtupleDColumn("TrjZPos", fEventAction->GetTrjZPos());
+
+  analysisManager->CreateNtupleDColumn("Muon_WLSR_intersect_x", fEventAction->Get_Muon_WLSR_intersect_x());
+  analysisManager->CreateNtupleDColumn("Muon_WLSR_intersect_y", fEventAction->Get_Muon_WLSR_intersect_y());
+  analysisManager->CreateNtupleDColumn("Muon_WLSR_intersect_z", fEventAction->Get_Muon_WLSR_intersect_z());
+  analysisManager->CreateNtupleDColumn("Muon_WLSR_Edep", fEventAction->Get_Muon_WLSR_Edep());
 
   analysisManager->FinishNtuple();
 }
@@ -379,6 +395,11 @@ void WLGDRunAction::SetIndividualGdDepositionInfo(G4int answer)
   fIndividualGdDepositionInfo = answer;
 }
 
+void WLGDRunAction::SetReadMuonCrossingWLSR(G4int answer)
+{
+  fReadMuonCrossingWLSR = answer;
+}
+
 void WLGDRunAction::DefineCommands()
 {
   // Define /WLGD/generator command directory using generic messenger class
@@ -439,4 +460,18 @@ void WLGDRunAction::DefineCommands()
     .SetGuidance("1 = do")
     .SetCandidates("0 1")
     .SetDefaultValue("0");
+
+
+  fMessenger
+    ->DeclareMethod("readMuonCrossingWLSR",
+                    &WLGDRunAction::SetReadMuonCrossingWLSR)
+    .SetGuidance(
+      "Set whether to write out the intersects of a muon crossing the WLSR plus the total energy deposited in it")
+    .SetGuidance("0 = don't")
+    .SetGuidance("1 = do")
+    .SetCandidates("0 1")
+    .SetDefaultValue("0");
+
+
+    //fReadMuonCrossingWLSR
 }

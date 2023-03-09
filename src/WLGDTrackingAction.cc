@@ -209,6 +209,17 @@ void WLGDTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
           fEventAction->AddNeutronTime(tmp_neutronTime);
           fEventAction->WriteMostOuterRadius();
           fEventAction->AddIDListOfGe77SiblingParticles(aTrack->GetTrackID());
+
+          for(int j = 0; j < NumberOfSecundaries; j++){            
+            /*G4cout << j << " - " << aTrack->GetStep()
+               ->GetSecondaryInCurrentStep()->size() << " - " << aTrack->GetStep()
+               ->GetSecondaryInCurrentStep()->at(j)->GetParticleDefinition()->GetPDGEncoding() << " - " << aTrack->GetStep()
+               ->GetSecondaryInCurrentStep()->at(j)->GetKineticEnergy();
+               G4cout << " - " << aTrack->GetStep()
+               ->GetSecondaryInCurrentStep()->at(j)->GetKineticEnergy()/eV << G4endl;*/
+            fEventAction->AddNeutronCaptureSiblings_edep(aTrack->GetStep()->GetSecondaryInCurrentStep()->at(j)->GetKineticEnergy() /eV);
+            fEventAction->AddNeutronCaptureSiblings_type(aTrack->GetStep()->GetSecondaryInCurrentStep()->at(j)->GetParticleDefinition()->GetPDGEncoding());
+          }
         }  // sending info of neutron producing Ge77 to output
         else
         {

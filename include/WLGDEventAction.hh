@@ -279,6 +279,10 @@ public:
   std::vector<G4int>&    GetGdSiblings_type() { return v_GdSiblings_type; }
   std::vector<G4int>&    GetGdSiblings_whichVolume() { return v_GdSiblings_whichVolume; }
 
+
+  std::vector<G4double>& GetNeutronCaptureSiblings_edep() { return v_NeutronCaptureSiblings_edep; }
+  std::vector<G4int>&    GetNeutronCaptureSiblings_type() { return v_NeutronCaptureSiblings_type; }
+
   std::vector<G4double>& Get_Muon_WLSR_intersect_x(){ return v_Muon_WLSR_intersect_x; }
   std::vector<G4double>& Get_Muon_WLSR_intersect_y(){ return v_Muon_WLSR_intersect_y; }
   std::vector<G4double>& Get_Muon_WLSR_intersect_z(){ return v_Muon_WLSR_intersect_z; }
@@ -319,6 +323,9 @@ public:
   {
     v_Ge77Siblings_whichVolume.push_back(volume);
   }
+
+  void AddNeutronCaptureSiblings_edep(double edep) { v_NeutronCaptureSiblings_edep.push_back(edep); }
+  void AddNeutronCaptureSiblings_type(int type) { v_NeutronCaptureSiblings_type.push_back(type); }
 
   void AddnCAr_timing(G4double time) { v_nCAr_timing.push_back(time); }
   void AddnCAr_x(G4double x) { v_nCAr_x.push_back(x); }
@@ -784,6 +791,9 @@ private:
   std::vector<G4int>    v_GdSiblings_id;
   std::vector<G4int>    v_GdSiblings_type;
   std::vector<G4int>    v_GdSiblings_whichVolume;
+  
+  std::vector<G4double> v_NeutronCaptureSiblings_edep;
+  std::vector<G4int>    v_NeutronCaptureSiblings_type;
 
   // trajectory data
   std::vector<G4int>        trjpdg;

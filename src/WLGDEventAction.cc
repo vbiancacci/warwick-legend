@@ -316,6 +316,9 @@ void WLGDEventAction::BeginOfEventAction(const G4Event*
   v_Ge77Siblings_type.clear();
   v_Ge77Siblings_whichVolume.clear();
 
+  v_NeutronCaptureSiblings_edep.clear();
+  v_NeutronCaptureSiblings_type.clear();
+
   v_GdSiblings_timing.clear();
   v_GdSiblings_x.clear();
   v_GdSiblings_y.clear();

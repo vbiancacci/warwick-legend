@@ -98,6 +98,10 @@ public:
 
   // -- set the generator method by name
   void SetGenerator(const G4String& name);
+  void SetSimpleNeutronGun_coord_x(const G4double& x);
+  void SetSimpleNeutronGun_coord_y(const G4double& y);
+  void SetSimpleNeutronGun_coord_z(const G4double& z);
+  void SetSimpleNeutronGun_ekin(const G4double& ekin);
   // -- adjust the z-offset for the Musun algorithm
   void SetZShift(G4double fZShift);
 
@@ -123,6 +127,12 @@ private:
 
   piecewise_linear_distribution<double>* neutronEnergySpectrumInBPE;
   piecewise_linear_distribution<double>* neutronEnergySpectrumFromOutside;
+
+  G4double coord_x;
+  G4double coord_y;
+  G4double coord_z;
+  G4double neutron_ekin;
+
 };
 
 #endif

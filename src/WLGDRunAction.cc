@@ -209,6 +209,12 @@ WLGDRunAction::WLGDRunAction(WLGDEventAction* eventAction, G4String name)
     analysisManager->CreateNtupleIColumn("Ge77Siblings_whichVolume",
                                          fEventAction->GetGe77Siblings_whichVolume());
   }
+  //if(fNeutronCaptureSiblings){
+    analysisManager->CreateNtupleIColumn("NeutronCaptureSiblings_type",
+                                         fEventAction->GetNeutronCaptureSiblings_type());
+    analysisManager->CreateNtupleDColumn("NeutronCaptureSiblings_edep",
+                                         fEventAction->GetNeutronCaptureSiblings_edep());
+  //y}
   if(fIndividualGdDepositionInfo)
   {
     analysisManager->CreateNtupleDColumn("GdSiblings_timing",
@@ -400,6 +406,11 @@ void WLGDRunAction::SetReadMuonCrossingWLSR(G4int answer)
   fReadMuonCrossingWLSR = answer;
 }
 
+void WLGDRunAction::SetNeutronCaptureSiblings(G4int answer)
+{
+  fNeutronCaptureSiblings = answer;
+}
+
 void WLGDRunAction::DefineCommands()
 {
   // Define /WLGD/generator command directory using generic messenger class
@@ -456,6 +467,16 @@ void WLGDRunAction::DefineCommands()
                     &WLGDRunAction::SetIndividualGdDepositionInfo)
     .SetGuidance(
       "Set whether to obtain individual energy deposition information inside with Gd")
+    .SetGuidance("0 = don't")
+    .SetGuidance("1 = do")
+    .SetCandidates("0 1")
+    .SetDefaultValue("0");
+
+  fMessenger
+    ->DeclareMethod("getNeutronCaptureSiblings",
+                    &WLGDRunAction::SetNeutronCaptureSiblings)
+    .SetGuidance(
+      "Set whether to obtain the information about the direct neutron capture siblings")
     .SetGuidance("0 = don't")
     .SetGuidance("1 = do")
     .SetCandidates("0 1")

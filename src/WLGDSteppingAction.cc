@@ -296,6 +296,8 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
         {
           if(fEventAction->GetIDListOfGe77().count(aStep->GetTrack()->GetParentID()))
           {
+            
+
             fEventAction->AddGe77mGammaEmission_timing(
               aStep->GetPostStepPoint()->GetGlobalTime() / s);
             fEventAction->AddGe77mGammaEmission_x(

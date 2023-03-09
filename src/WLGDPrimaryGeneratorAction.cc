@@ -82,6 +82,15 @@ void WLGDPrimaryGeneratorAction::ChangeFileName(G4String newFile)
 
 void WLGDPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
 {
+  if(fGenerator == "SimpleNeutronGun"){
+    G4ThreeVector momentumDir(1, 0, 0);
+    fParticleGun->SetParticleMomentumDirection(momentumDir);
+    fParticleGun->SetParticleEnergy(neutron_ekin * eV);
+    fParticleGun->SetParticlePosition(G4ThreeVector(coord_x*cm, coord_y*cm, coord_z*cm));
+    auto particleTable = G4ParticleTable::GetParticleTable();
+    fParticleGun->SetParticleDefinition(particleTable->FindParticle("neutron"));
+    fParticleGun->GeneratePrimaryVertex(event);
+  }
   if(fGenerator == "MeiAndHume")
   {
     using pld_type = std::piecewise_linear_distribution<double>;
@@ -619,7 +628,7 @@ void WLGDPrimaryGeneratorAction::SetGenerator(const G4String& name)
 {
   std::set<G4String> knownGenerators = {
     "MeiAndHume",        "Musun",           "Ge77m", "Ge77andGe77m",
-    "ModeratorNeutrons", "ExternalNeutrons", "Musun_alternative"
+    "ModeratorNeutrons", "ExternalNeutrons", "Musun_alternative", "SimpleNeutronGun"
   };
   if(knownGenerators.count(name) == 0)
   {
@@ -628,6 +637,23 @@ void WLGDPrimaryGeneratorAction::SetGenerator(const G4String& name)
     return;
   }
   fGenerator = name;
+}
+
+void WLGDPrimaryGeneratorAction::SetSimpleNeutronGun_coord_x(const G4double& x)
+{
+  coord_x = x;
+}
+void WLGDPrimaryGeneratorAction::SetSimpleNeutronGun_coord_y(const G4double& y)
+{
+  coord_y = y;
+}
+void WLGDPrimaryGeneratorAction::SetSimpleNeutronGun_coord_z(const G4double& z)
+{
+  coord_z = z;
+}
+void WLGDPrimaryGeneratorAction::SetSimpleNeutronGun_ekin(const G4double& ekin)
+{
+  neutron_ekin = ekin;
 }
 
 void WLGDPrimaryGeneratorAction::shortcutToChangeFileName(const G4String& newFile)
@@ -663,6 +689,7 @@ void WLGDPrimaryGeneratorAction::DefineCommands()
   // switch command
   fMessenger->DeclareMethod("setGenerator", &WLGDPrimaryGeneratorAction::SetGenerator)
     .SetGuidance("Set generator model of primary muons")
+    .SetGuidance("SimpleNeutronGun = generate neutrons with zero energy at a certain location")
     .SetGuidance("MeiAndHume = WW standard case")
     .SetGuidance("Musun = Used in previous MaGe simulation")
     .SetGuidance("Musun_alternative = Alternative Musun input")
@@ -671,5 +698,20 @@ void WLGDPrimaryGeneratorAction::DefineCommands()
     .SetGuidance("ModeratorNeutrons = generate neutrons inside the neutron moderators")
     .SetGuidance("ExternalNeutrons = generate neutrons from outside the water tank")
     .SetCandidates(
-      "MeiAndHume Musun Musun_alternative Ge77m Ge77andGe77m ModeratorNeutrons ExternalNeutrons");
+      "MeiAndHume Musun Musun_alternative Ge77m Ge77andGe77m ModeratorNeutrons ExternalNeutrons SimpleNeutronGun");
+
+  fMessenger->DeclareMethod("SimpleNeutronGun_coord_x", &WLGDPrimaryGeneratorAction::SetSimpleNeutronGun_coord_x)    
+    .SetGuidance("Set the x coordinate for the neutron gun")
+    .SetDefaultValue("0");
+  fMessenger->DeclareMethod("SimpleNeutronGun_coord_y", &WLGDPrimaryGeneratorAction::SetSimpleNeutronGun_coord_y)    
+    .SetGuidance("Set the y coordinate for the neutron gun")
+    .SetDefaultValue("0");
+  fMessenger->DeclareMethod("SimpleNeutronGun_coord_z", &WLGDPrimaryGeneratorAction::SetSimpleNeutronGun_coord_z)    
+    .SetGuidance("Set the z coordinate for the neutron gun")
+    .SetDefaultValue("0");
+  fMessenger->DeclareMethod("SimpleNeutronGun_ekin", &WLGDPrimaryGeneratorAction::SetSimpleNeutronGun_ekin)    
+    .SetGuidance("Set the ekin of the neutron")
+    .SetDefaultValue("0");
+
+
 }

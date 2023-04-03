@@ -71,27 +71,25 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
     if(aStep->GetTrack()->GetVolume()->GetName() == "World_phys")
       return;
 
-
-    if((aStep->GetPostStepPoint()
+    auto volumeName =  aStep->GetPostStepPoint()
           ->GetTouchable()
           ->GetVolume(0)
           ->GetLogicalVolume()
-          ->GetName() == "Lar_log") ||
-       aStep->GetPostStepPoint()
-           ->GetTouchable()
-           ->GetVolume(0)
-           ->GetLogicalVolume()
-           ->GetName() == "ULar_log" ||
-       aStep->GetPostStepPoint()
-           ->GetTouchable()
-           ->GetVolume(0)
-           ->GetLogicalVolume()
-           ->GetName() == "Ge_log" ||
-       aStep->GetPostStepPoint()
-           ->GetTouchable()
-           ->GetVolume(0)
-           ->GetLogicalVolume()
-           ->GetName() == "Water_log")
+          ->GetName();
+
+    if(volumeName == "Lar_log"                  ||
+       volumeName == "ULar_log"                 ||
+       volumeName == "Ge_log"                   ||
+       volumeName == "Water_log"                ||
+       volumeName == "BoratedPET_Logical"       ||
+       volumeName == "BoratedPET_Logical_Lid"   ||
+       volumeName == "Cout_log"                 ||
+       volumeName == "Cvac_log"                 ||
+       volumeName == "Cinn_log"                 ||
+       volumeName == "Lid_log"                  ||
+       volumeName == "Bot_log"                  ||
+       volumeName == "Copper_log")
+        
     {
       if(aStep->GetTotalEnergyDeposit() > 0)
       {
@@ -434,6 +432,30 @@ void WLGDSteppingAction::UserSteppingAction(const G4Step* aStep)
         if(fIndividualDepositionInfo == 0 &&
            fRunAction->getIndividualGeDepositionInfo() == 0)
           return;
+          
+        if(volumeName == "ULar_log")
+              whichVolume = 0;
+        if(volumeName == "Copper_log")
+              whichVolume = -1;
+        if(volumeName == "BoratedPET_Logical")
+              whichVolume = -2;
+        if(volumeName == "BoratedPET_Logical_Lid")
+              whichVolume = -3;
+        if(volumeName == "Lar_log")
+              whichVolume = -4;
+        if(volumeName == "Cinn_log")
+              whichVolume = -5;
+        if(volumeName == "Cvac_log")
+              whichVolume = -6;
+        if(volumeName == "Cout_log")
+              whichVolume = -7;
+        if(volumeName == "Lid_log")
+              whichVolume = -8;
+        if(volumeName == "Bot_log")
+              whichVolume = -9;
+        if(volumeName == "Water_log")
+              whichVolume = -10;          
+          
 
         if(fRunAction->getIndividualGeDepositionInfo() == 1 &&
            aStep->GetPostStepPoint()

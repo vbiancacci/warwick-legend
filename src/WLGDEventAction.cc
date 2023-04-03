@@ -101,6 +101,8 @@ void WLGDEventAction::BeginOfEventAction(const G4Event*
   neutronymom.clear();
   neutronzmom.clear();
   neutrontime.clear();
+  neutronekin.clear();
+  neutronid.clear();
 
   tmp_mostOuterRadius = 0;
   out_mostOuterRadius.clear();

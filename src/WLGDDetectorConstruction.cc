@@ -1091,7 +1091,7 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
       new G4Tubs("BoratedPET", 0, (fBoratedTurbineRadius * cm + b_width * 2), b_width,
                  0.0, CLHEP::twopi);
     fBoratedPETLogical_Tube =
-      new G4LogicalVolume(boratedPETSolid_Tube, BoratedPETMat, "BoratedPET_Logical");
+      new G4LogicalVolume(boratedPETSolid_Tube, BoratedPETMat, "BoratedPET_Logical_Lid");
 
     new G4PVPlacement(
       nullptr, G4ThreeVector(0, 0, fBoratedTurbinezPosition * cm - b_height - b_width),

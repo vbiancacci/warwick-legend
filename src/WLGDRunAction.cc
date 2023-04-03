@@ -129,7 +129,7 @@ WLGDRunAction::WLGDRunAction(WLGDEventAction* eventAction, G4String name)
     "IndividualEnergyDeposition_ReentranceTube",
     fEventAction->GetIndividualEnergyDeposition_ReentranceTube());
   analysisManager->CreateNtupleIColumn(
-    "IndividualEnergyDeposition_LArOrGe",
+    "IndividualEnergyDeposition_Volume",
     fEventAction->GetIndividualEnergyDeposition_LArOrGe());
   analysisManager->CreateNtupleIColumn("IndividualEnergyDeposition_ID",
                                        fEventAction->GetIndividualEnergyDeposition_ID());

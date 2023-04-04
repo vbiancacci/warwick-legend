@@ -234,25 +234,27 @@ WLGDRunAction::WLGDRunAction(WLGDEventAction* eventAction, G4String name)
                                          fEventAction->GetGdSiblings_whichVolume());
   }
 
-  analysisManager->CreateNtupleDColumn("nCAr_timing", fEventAction->GetnCAr_timing());
-  analysisManager->CreateNtupleDColumn("nCAr_x", fEventAction->GetnCAr_x());
-  analysisManager->CreateNtupleDColumn("nCAr_y", fEventAction->GetnCAr_y());
-  analysisManager->CreateNtupleDColumn("nCAr_z", fEventAction->GetnCAr_z());
-  analysisManager->CreateNtupleIColumn("nCAr_A", fEventAction->GetnCAr_A());
+  // analysisManager->CreateNtupleDColumn("nCAr_timing", fEventAction->GetnCAr_timing());
+  // analysisManager->CreateNtupleDColumn("nCAr_x", fEventAction->GetnCAr_x());
+  // analysisManager->CreateNtupleDColumn("nCAr_y", fEventAction->GetnCAr_y());
+  // analysisManager->CreateNtupleDColumn("nCAr_z", fEventAction->GetnCAr_z());
+  // analysisManager->CreateNtupleIColumn("nCAr_A", fEventAction->GetnCAr_A());
 
-  analysisManager->CreateNtupleDColumn("nCGd_timing", fEventAction->GetnCGd_timing());
-  analysisManager->CreateNtupleDColumn("nCGd_x", fEventAction->GetnCGd_x());
-  analysisManager->CreateNtupleDColumn("nCGd_y", fEventAction->GetnCGd_y());
-  analysisManager->CreateNtupleDColumn("nCGd_z", fEventAction->GetnCGd_z());
-  analysisManager->CreateNtupleIColumn("nCGd_A", fEventAction->GetnCGd_A());
+  // analysisManager->CreateNtupleDColumn("nCGd_timing", fEventAction->GetnCGd_timing());
+  // analysisManager->CreateNtupleDColumn("nCGd_x", fEventAction->GetnCGd_x());
+  // analysisManager->CreateNtupleDColumn("nCGd_y", fEventAction->GetnCGd_y());
+  // analysisManager->CreateNtupleDColumn("nCGd_z", fEventAction->GetnCGd_z());
+  // analysisManager->CreateNtupleIColumn("nCGd_A", fEventAction->GetnCGd_A());
 
-  analysisManager->CreateNtupleDColumn("nCOther_timing",
+  analysisManager->CreateNtupleDColumn("nCapture_timing",
                                        fEventAction->GetnCOther_timing());
-  analysisManager->CreateNtupleDColumn("nCOther_x", fEventAction->GetnCOther_x());
-  analysisManager->CreateNtupleDColumn("nCOther_y", fEventAction->GetnCOther_y());
-  analysisManager->CreateNtupleDColumn("nCOther_z", fEventAction->GetnCOther_z());
-  analysisManager->CreateNtupleIColumn("nCOther_A", fEventAction->GetnCOther_A());
-  analysisManager->CreateNtupleIColumn("nCOther_Z", fEventAction->GetnCOther_ZC());
+  analysisManager->CreateNtupleDColumn("nCapture_x", fEventAction->GetnCOther_x());
+  analysisManager->CreateNtupleDColumn("nCapture_y", fEventAction->GetnCOther_y());
+  analysisManager->CreateNtupleDColumn("nCapture_z", fEventAction->GetnCOther_z());
+  analysisManager->CreateNtupleIColumn("nCapture_A", fEventAction->GetnCOther_A());
+  analysisManager->CreateNtupleIColumn("nCapture_Z", fEventAction->GetnCOther_ZC());
+  analysisManager->CreateNtupleIColumn("nCapture_ID", fEventAction->GetnCOther_ID());
+  analysisManager->CreateNtupleIColumn("nCapture_Volume", fEventAction->GetnCOther_Volume());
 
   analysisManager->CreateNtupleDColumn("prod_timing",
                                        fEventAction->Getprod_timing());

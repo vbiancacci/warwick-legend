@@ -57,6 +57,7 @@ public:
   std::vector<G4double>& GetNeutronTime() { return neutrontime; }
   std::vector<G4double>& GetNeutronEkin() { return neutronekin; }
   std::vector<G4double>& GetNeutronID() { return neutronid; }
+  std::vector<G4double>& GetNeutronVolume() { return neutronvolume; }
   std::vector<G4int>&    GetNumberOfNeutronsInEvent()
   {
     return NumberOfNeutronsProducedInEvent;
@@ -401,6 +402,7 @@ public:
   void AddNeutronTime(G4double time) { neutrontime.push_back(time); }
   void AddNeutronEkin(G4double ekin) { neutronekin.push_back(ekin); }
   void AddNeutronID(G4double id)     { neutronid.push_back(id); }
+  void AddNeutronVolume(G4double nvolume)     { neutronvolume.push_back(nvolume); }
 
   void AddIndividualEnergyDeposition_Timing(G4double time)
   {
@@ -644,6 +646,7 @@ private:
   std::vector<G4double> neutrontime;
   std::vector<G4double> neutronekin;
   std::vector<G4double> neutronid;
+  std::vector<G4double> neutronvolume;
 
   // - redundant code for previously reading out the neutron track
   std::vector<G4double> out_neutron_track_x;

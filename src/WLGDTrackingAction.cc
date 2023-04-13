@@ -71,6 +71,36 @@ void WLGDTrackingAction::PreUserTrackingAction(const G4Track* aTrack)
       fEventAction->AddNeutronTime(tmp_neutronTime);
       fEventAction->AddNeutronEkin(aTrack->GetKineticEnergy() / eV);
       fEventAction->AddNeutronID(aTrack->GetTrackID());
+      G4String volumeName = aTrack->GetVolume()
+                                        ->GetLogicalVolume()
+                                        ->GetName();
+      G4int whichVolume = -9999;
+
+      if(volumeName == "Ge_log")
+          whichVolume = 1;
+      if(volumeName == "ULar_log")
+          whichVolume = 0;
+      if(volumeName == "Copper_log")
+          whichVolume = -1;
+      if(volumeName == "BoratedPET_Logical")
+          whichVolume = -2;
+      if(volumeName == "BoratedPET_Logical_Lid")
+          whichVolume = -3;
+      if(volumeName == "Lar_log")
+          whichVolume = -4;
+      if(volumeName == "Cinn_log")
+          whichVolume = -5;
+      if(volumeName == "Cvac_log")
+          whichVolume = -6;
+     if(volumeName == "Cout_log")
+          whichVolume = -7;
+     if(volumeName == "Lid_log")
+          whichVolume = -8;
+     if(volumeName == "Bot_log")
+          whichVolume = -9;
+     if(volumeName == "Water_log")
+          whichVolume = -10;    
+     fEventAction->AddNeutronVolume(whichVolume);
     }
 
     // initial value for furthest position of neutron away from center (for testing, can
@@ -225,6 +255,8 @@ void WLGDTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
                                         ->GetName();
         G4int whichVolume = -9999;
 
+        if(volumeName == "Ge_log")
+              whichVolume = 1;
         if(volumeName == "ULar_log")
               whichVolume = 0;
         if(volumeName == "Copper_log")

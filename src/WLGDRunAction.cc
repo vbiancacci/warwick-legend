@@ -73,6 +73,7 @@ WLGDRunAction::WLGDRunAction(WLGDEventAction* eventAction, G4String name)
   analysisManager->CreateNtupleDColumn("NeutronTime", fEventAction->GetNeutronTime());
   analysisManager->CreateNtupleDColumn("NeutronEkin", fEventAction->GetNeutronEkin());
   analysisManager->CreateNtupleDColumn("NeutronID", fEventAction->GetNeutronID());
+  analysisManager->CreateNtupleDColumn("NeutronVolume", fEventAction->GetNeutronVolume());
   analysisManager->CreateNtupleIColumn("NeutronsInEvent",
                                        fEventAction->GetNumberOfNeutronsInEvent());
   analysisManager->CreateNtupleDColumn("NeutronsMostOuterRadius",

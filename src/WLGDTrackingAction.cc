@@ -6,6 +6,7 @@
 #include "G4SystemOfUnits.hh"
 #include "G4Track.hh"
 #include "G4TrackingManager.hh"
+#include "G4EventManager.hh"
 #include "G4UnitsTable.hh"
 #include <map>
 
@@ -71,6 +72,7 @@ void WLGDTrackingAction::PreUserTrackingAction(const G4Track* aTrack)
       fEventAction->AddNeutronTime(tmp_neutronTime);
       fEventAction->AddNeutronEkin(aTrack->GetKineticEnergy() / eV);
       fEventAction->AddNeutronID(aTrack->GetTrackID());
+      fEventAction->AddNeutronEventID(G4EventManager::GetEventManager()->GetConstCurrentEvent()->GetEventID());
       G4String volumeName = aTrack->GetVolume()
                                         ->GetLogicalVolume()
                                         ->GetName();
@@ -249,6 +251,7 @@ void WLGDTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
                                       ->GetPDGCharge());
         // fEventAction->AddnCOther_ID(aTrack->GetParentID());
         fEventAction->AddnCOther_ID(aTrack->GetTrackID());
+        fEventAction->AddnCOther_EventID(G4EventManager::GetEventManager()->GetConstCurrentEvent()->GetEventID());
 
         G4String volumeName = aTrack->GetVolume()
                                         ->GetLogicalVolume()

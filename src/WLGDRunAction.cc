@@ -73,6 +73,7 @@ WLGDRunAction::WLGDRunAction(WLGDEventAction* eventAction, G4String name)
   analysisManager->CreateNtupleDColumn("NeutronTime", fEventAction->GetNeutronTime());
   analysisManager->CreateNtupleDColumn("NeutronEkin", fEventAction->GetNeutronEkin());
   analysisManager->CreateNtupleDColumn("NeutronID", fEventAction->GetNeutronID());
+  analysisManager->CreateNtupleDColumn("NeutronEventID", fEventAction->GetNeutronEventID());
   analysisManager->CreateNtupleDColumn("NeutronVolume", fEventAction->GetNeutronVolume());
   analysisManager->CreateNtupleIColumn("NeutronsInEvent",
                                        fEventAction->GetNumberOfNeutronsInEvent());
@@ -255,6 +256,7 @@ WLGDRunAction::WLGDRunAction(WLGDEventAction* eventAction, G4String name)
   analysisManager->CreateNtupleIColumn("nCapture_A", fEventAction->GetnCOther_A());
   analysisManager->CreateNtupleIColumn("nCapture_Z", fEventAction->GetnCOther_ZC());
   analysisManager->CreateNtupleIColumn("nCapture_ID", fEventAction->GetnCOther_ID());
+  analysisManager->CreateNtupleIColumn("nCapture_EventID", fEventAction->GetnCOther_EventID());
   analysisManager->CreateNtupleIColumn("nCapture_Volume", fEventAction->GetnCOther_Volume());
 
   analysisManager->CreateNtupleDColumn("prod_timing",

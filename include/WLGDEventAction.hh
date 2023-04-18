@@ -57,6 +57,7 @@ public:
   std::vector<G4double>& GetNeutronTime() { return neutrontime; }
   std::vector<G4double>& GetNeutronEkin() { return neutronekin; }
   std::vector<G4double>& GetNeutronID() { return neutronid; }
+  std::vector<G4double>& GetNeutronEventID() { return neutroneventid; }
   std::vector<G4double>& GetNeutronVolume() { return neutronvolume; }
   std::vector<G4int>&    GetNumberOfNeutronsInEvent()
   {
@@ -234,6 +235,7 @@ public:
   std::vector<G4int>&    GetnCOther_A() { return v_nCOther_A; }
   std::vector<G4int>&    GetnCOther_ZC() { return v_nCOther_ZC; }
   std::vector<G4int>&    GetnCOther_ID() { return v_nCOther_ID; }
+  std::vector<G4int>&    GetnCOther_EventID() { return v_nCOther_EventID; }
   std::vector<G4int>&    GetnCOther_Volume() { return v_nCOther_Volume; }
 
   std::vector<G4double>& Getprod_timing() { return v_prod_timing; }
@@ -351,6 +353,7 @@ public:
   void AddnCOther_A(G4int A) { v_nCOther_A.push_back(A); }
   void AddnCOther_ZC(G4int Z) { v_nCOther_ZC.push_back(Z); }
   void AddnCOther_ID(G4int ID) { v_nCOther_ID.push_back(ID); }
+  void AddnCOther_EventID(G4int EventID) { v_nCOther_EventID.push_back(EventID); }
   void AddnCOther_Volume(G4int volume) { v_nCOther_Volume.push_back(volume); }
 
   void Addprod_timing(G4double time) { v_prod_timing.push_back(time); }
@@ -402,6 +405,7 @@ public:
   void AddNeutronTime(G4double time) { neutrontime.push_back(time); }
   void AddNeutronEkin(G4double ekin) { neutronekin.push_back(ekin); }
   void AddNeutronID(G4double id)     { neutronid.push_back(id); }
+  void AddNeutronEventID(G4double eventid)     { neutroneventid.push_back(eventid); }
   void AddNeutronVolume(G4double nvolume)     { neutronvolume.push_back(nvolume); }
 
   void AddIndividualEnergyDeposition_Timing(G4double time)
@@ -646,6 +650,7 @@ private:
   std::vector<G4double> neutrontime;
   std::vector<G4double> neutronekin;
   std::vector<G4double> neutronid;
+  std::vector<G4double> neutroneventid;
   std::vector<G4double> neutronvolume;
 
   // - redundant code for previously reading out the neutron track
@@ -689,6 +694,7 @@ private:
   std::vector<G4int>    v_nCOther_A;
   std::vector<G4int>    v_nCOther_ZC;
   std::vector<G4int>    v_nCOther_ID;
+  std::vector<G4int>    v_nCOther_EventID;
   std::vector<G4int>    v_nCOther_Volume;
 
   // - production location, timing and mass of nuclei produced in a general matter

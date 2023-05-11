@@ -6,6 +6,7 @@
 #include "G4SystemOfUnits.hh"
 #include "G4Track.hh"
 #include "G4TrackingManager.hh"
+#include "G4EventManager.hh"
 #include "G4UnitsTable.hh"
 #include <map>
 
@@ -71,6 +72,37 @@ void WLGDTrackingAction::PreUserTrackingAction(const G4Track* aTrack)
       fEventAction->AddNeutronTime(tmp_neutronTime);
       fEventAction->AddNeutronEkin(aTrack->GetKineticEnergy() / eV);
       fEventAction->AddNeutronID(aTrack->GetTrackID());
+      fEventAction->AddNeutronEventID(G4EventManager::GetEventManager()->GetConstCurrentEvent()->GetEventID());
+      G4String volumeName = aTrack->GetVolume()
+                                        ->GetLogicalVolume()
+                                        ->GetName();
+      G4int whichVolume = -9999;
+
+      if(volumeName == "Ge_log")
+          whichVolume = 1;
+      if(volumeName == "ULar_log")
+          whichVolume = 0;
+      if(volumeName == "Copper_log")
+          whichVolume = -1;
+      if(volumeName == "BoratedPET_Logical")
+          whichVolume = -2;
+      if(volumeName == "BoratedPET_Logical_Lid")
+          whichVolume = -3;
+      if(volumeName == "Lar_log")
+          whichVolume = -4;
+      if(volumeName == "Cinn_log")
+          whichVolume = -5;
+      if(volumeName == "Cvac_log")
+          whichVolume = -6;
+     if(volumeName == "Cout_log")
+          whichVolume = -7;
+     if(volumeName == "Lid_log")
+          whichVolume = -8;
+     if(volumeName == "Bot_log")
+          whichVolume = -9;
+     if(volumeName == "Water_log")
+          whichVolume = -10;    
+     fEventAction->AddNeutronVolume(whichVolume);
     }
 
     // initial value for furthest position of neutron away from center (for testing, can
@@ -196,101 +228,61 @@ void WLGDTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
                ->GetParticleDefinition()
                ->GetPDGCharge() == 32)
         {
-          double tmp_x, tmp_y, tmp_z;
-          tmp_x = aTrack->GetStep()->GetPostStepPoint()->GetPosition().getX() / m;
-          tmp_y = aTrack->GetStep()->GetPostStepPoint()->GetPosition().getY() / m;
-          tmp_z = aTrack->GetStep()->GetPostStepPoint()->GetPosition().getZ() / m;
-          fEventAction->AddEkin(aTrack->GetStep()->GetPreStepPoint()->GetKineticEnergy() /
-                                eV);
-          fEventAction->AddNeutronxLoc(tmp_neutronXpos);
-          fEventAction->AddNeutronyLoc(tmp_neutronYpos);
-          fEventAction->AddNeutronzLoc(tmp_neutronZpos);
-          fEventAction->AddNeutronxMom(tmp_neutronXmom);
-          fEventAction->AddNeutronyMom(tmp_neutronYmom);
-          fEventAction->AddNeutronzMom(tmp_neutronZmom);
-          fEventAction->AddNeutronTime(tmp_neutronTime);
-          fEventAction->WriteMostOuterRadius();
-          fEventAction->AddIDListOfGe77SiblingParticles(aTrack->GetTrackID());
-
-          for(int j = 0; j < NumberOfSecundaries; j++){            
-            /*G4cout << j << " - " << aTrack->GetStep()
-               ->GetSecondaryInCurrentStep()->size() << " - " << aTrack->GetStep()
-               ->GetSecondaryInCurrentStep()->at(j)->GetParticleDefinition()->GetPDGEncoding() << " - " << aTrack->GetStep()
-               ->GetSecondaryInCurrentStep()->at(j)->GetKineticEnergy();
-               G4cout << " - " << aTrack->GetStep()
-               ->GetSecondaryInCurrentStep()->at(j)->GetKineticEnergy()/eV << G4endl;*/
-            fEventAction->AddNeutronCaptureSiblings_edep(aTrack->GetStep()->GetSecondaryInCurrentStep()->at(j)->GetKineticEnergy() /eV);
-            fEventAction->AddNeutronCaptureSiblings_type(aTrack->GetStep()->GetSecondaryInCurrentStep()->at(j)->GetParticleDefinition()->GetPDGEncoding());
-          }
-        }  // sending info of neutron producing Ge77 to output
-        else
-        {
-          if(aTrack->GetStep()
-               ->GetSecondaryInCurrentStep()
-               ->at(i)
-               ->GetParticleDefinition()
-               ->GetPDGCharge() == 18)
-          {
-            fEventAction->AddnCAr_timing(
-              aTrack->GetStep()->GetPostStepPoint()->GetGlobalTime() / s);
-            fEventAction->AddnCAr_x(
-              aTrack->GetStep()->GetPostStepPoint()->GetPosition().getX() / m);
-            fEventAction->AddnCAr_y(
-              aTrack->GetStep()->GetPostStepPoint()->GetPosition().getY() / m);
-            fEventAction->AddnCAr_z(
-              aTrack->GetStep()->GetPostStepPoint()->GetPosition().getZ() / m);
-            fEventAction->AddnCAr_A(aTrack->GetStep()
+          fEventAction->AddEkin(aTrack->GetStep()->GetPreStepPoint()->GetKineticEnergy() / eV);
+        }
+        
+        fEventAction->AddnCOther_timing(
+          aTrack->GetStep()->GetPostStepPoint()->GetGlobalTime() / s);
+        fEventAction->AddnCOther_x(
+          aTrack->GetStep()->GetPostStepPoint()->GetPosition().getX() / m);
+        fEventAction->AddnCOther_y(
+          aTrack->GetStep()->GetPostStepPoint()->GetPosition().getY() / m);
+        fEventAction->AddnCOther_z(
+          aTrack->GetStep()->GetPostStepPoint()->GetPosition().getZ() / m);
+        fEventAction->AddnCOther_A(aTrack->GetStep()
+                                     ->GetSecondaryInCurrentStep()
+                                     ->at(i)
+                                     ->GetParticleDefinition()
+                                     ->GetAtomicMass());
+        fEventAction->AddnCOther_ZC(aTrack->GetStep()
                                       ->GetSecondaryInCurrentStep()
                                       ->at(i)
                                       ->GetParticleDefinition()
-                                      ->GetAtomicMass());
-          }  // send info of nC on Ar
-          else
-          {
-            if(aTrack->GetStep()
-                 ->GetSecondaryInCurrentStep()
-                 ->at(i)
-                 ->GetParticleDefinition()
-                 ->GetPDGCharge() == 64)
-            {
-              fEventAction->AddnCGd_timing(
-                aTrack->GetStep()->GetPostStepPoint()->GetGlobalTime() / s);
-              fEventAction->AddnCGd_x(
-                aTrack->GetStep()->GetPostStepPoint()->GetPosition().getX() / m);
-              fEventAction->AddnCGd_y(
-                aTrack->GetStep()->GetPostStepPoint()->GetPosition().getY() / m);
-              fEventAction->AddnCGd_z(
-                aTrack->GetStep()->GetPostStepPoint()->GetPosition().getZ() / m);
-              fEventAction->AddnCGd_A(aTrack->GetStep()
-                                        ->GetSecondaryInCurrentStep()
-                                        ->at(i)
-                                        ->GetParticleDefinition()
-                                        ->GetAtomicMass());
-              fEventAction->AddIDListOfGdSiblingParticles(aTrack->GetTrackID());
-            }  // send info of nC on Gd
-            else
-            {
-              fEventAction->AddnCOther_timing(
-                aTrack->GetStep()->GetPostStepPoint()->GetGlobalTime() / s);
-              fEventAction->AddnCOther_x(
-                aTrack->GetStep()->GetPostStepPoint()->GetPosition().getX() / m);
-              fEventAction->AddnCOther_y(
-                aTrack->GetStep()->GetPostStepPoint()->GetPosition().getY() / m);
-              fEventAction->AddnCOther_z(
-                aTrack->GetStep()->GetPostStepPoint()->GetPosition().getZ() / m);
-              fEventAction->AddnCOther_A(aTrack->GetStep()
-                                           ->GetSecondaryInCurrentStep()
-                                           ->at(i)
-                                           ->GetParticleDefinition()
-                                           ->GetAtomicMass());
-              fEventAction->AddnCOther_ZC(aTrack->GetStep()
-                                            ->GetSecondaryInCurrentStep()
-                                            ->at(i)
-                                            ->GetParticleDefinition()
-                                            ->GetPDGCharge());
-            }  // send info of all other nC
-          }
-        }
+                                      ->GetPDGCharge());
+        // fEventAction->AddnCOther_ID(aTrack->GetParentID());
+        fEventAction->AddnCOther_ID(aTrack->GetTrackID());
+        fEventAction->AddnCOther_EventID(G4EventManager::GetEventManager()->GetConstCurrentEvent()->GetEventID());
+
+        G4String volumeName = aTrack->GetVolume()
+                                        ->GetLogicalVolume()
+                                        ->GetName();
+        G4int whichVolume = -9999;
+
+        if(volumeName == "Ge_log")
+              whichVolume = 1;
+        if(volumeName == "ULar_log")
+              whichVolume = 0;
+        if(volumeName == "Copper_log")
+              whichVolume = -1;
+        if(volumeName == "BoratedPET_Logical")
+              whichVolume = -2;
+        if(volumeName == "BoratedPET_Logical_Lid")
+              whichVolume = -3;
+        if(volumeName == "Lar_log")
+              whichVolume = -4;
+        if(volumeName == "Cinn_log")
+              whichVolume = -5;
+        if(volumeName == "Cvac_log")
+              whichVolume = -6;
+        if(volumeName == "Cout_log")
+              whichVolume = -7;
+        if(volumeName == "Lid_log")
+              whichVolume = -8;
+        if(volumeName == "Bot_log")
+              whichVolume = -9;
+        if(volumeName == "Water_log")
+              whichVolume = -10;    
+        fEventAction->AddnCOther_Volume(whichVolume);
       }
     }
   }

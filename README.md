@@ -157,8 +157,12 @@ Macros to controll the primary generator
 /WLGD/generator/
   - depth
   - setMUSUNFile (path to file)
+  - setMUSUNDirectory (full path to directory containing MUSUN files)
   - setGenerator (options: "MeiAndHume", "Musun", "Ge77m", "Ge77andGe77m", "ModeratorNeutrons", "ExternalNeutrons")
 ```
+
+More information on SetMUSUNDirectory can be found in the OpenMUSUNDirectory method of src/WLGDPrimaryGeneratorAction.cc
+
 ### Detector Macro
 Macros to controll the detector geometry
 ```

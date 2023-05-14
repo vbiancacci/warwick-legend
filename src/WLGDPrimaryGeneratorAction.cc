@@ -19,6 +19,8 @@
 #include "TFile.h"*/
 //#include "TH1.h"
 
+
+
 // G4String WLGDPrimaryGeneratorAction::fFileName;
 // std::ifstream* WLGDPrimaryGeneratorAction::fInputFile;
 
@@ -59,27 +61,119 @@ WLGDPrimaryGeneratorAction::~WLGDPrimaryGeneratorAction()
 void WLGDPrimaryGeneratorAction::OpenFile()
 {
   fInputFile.open(fFileName, std::ifstream::in);
-  if(!(fInputFile.is_open()))
-  {  
-     G4cerr << "Musung file not valid! Name: " << fFileName << G4endl;
-  }
+    if(!(fInputFile.is_open()))
+    {  
+    G4cerr << "Musung file not valid! Name: " << fFileName << G4endl;
+    }
 }
+
+void WLGDPrimaryGeneratorAction::OpenMUSUNDirectory(G4String pathtodata)
+{
+
+  fUsingMUSUNDirectory = true;
+
+  //With this flag, once the current MUSUN file closes, the program
+  //will attempt to find and open a file within the same directory
+
+  //This algorithm makes some assumptions:
+  //  -  All MUSUN input files are in .dat format
+  //  -  All files in .dat format in this directory are MUSUN input files,
+  //  -  N(input files) >> N(threads), so that double sampling is rare
+
+  //In theory, one could prevent double sampling the same input file
+  //by generating a list of potential input files BEFORE
+  //multi-threading begins, shuffling that list, and sampling file name
+  //from a position in that list corresponding to the thread ID of the
+  //current thread in an iterative fashion. This would be a lot of effort
+  //to prevent double sampling, which should be rare anyways.
+  //Also, consider that even if double sampling occurs, and a set of
+  //particles with the same initial parameters are used a second time,
+  //physical processes will still be randomized.
+  
+
+  //Prepare the input for the terminal
+  int pathlength = pathtodata.length();
+  const char* pathchar = pathtodata.c_str();
+  char slash = '/';
+
+  if(pathchar[pathlength-1]!=slash)//In case the user didn't add a slash to the end of the path
+    pathtodata += "/";
+  
+  G4String lscommand = "/bin/ls "+pathtodata+"*.dat";
+
+  
+  //Use terminal to populate the list of candidate data files, if the list is empty
+  if(!ListOfMUSUNFiles.size())
+    {
+      FILE *fp;//Dummy file for shell interaction
+      char path[1035];
+      
+      //Try to ls the given directory
+      fp = popen(lscommand, "r");//Fill dummy file with all paths in directory
+      if (fp == NULL)
+	{
+	  G4cout << "Failed to run command to list files in data directory!" << G4endl <<
+	    "Invalid path or directory has no .dat files." << G4endl;
+	  exit(1);
+	}
+      
+      while (fgets(path, sizeof(path), fp) != NULL)
+	{//Iterate over all valid results
+	  //G4cout << path << G4endl;//For debugging
+	  ListOfMUSUNFiles.push_back(path);
+	  ListOfMUSUNFiles.back().pop_back();//Remove last character of each line, which is a \n
+	}
+      pclose(fp);
+    }//if(!ListOfMFUSUNiles.size())
+
+  
+  OpenMUSUNFile();
+
+  
+}//OpenMUSUNDirectory
+
+
+
+void WLGDPrimaryGeneratorAction::OpenMUSUNFile()//If using the MUSUNDirectory option
+{ 
+
+  //Open a randomly chosen file from the list of candidates
+  int selectedfile = generator() % ListOfMUSUNFiles.size();//Generate a random file number
+  
+
+  //G4cout << selectedfile << G4endl;//For debugging
+  //G4cout << ListOfMUSUNFiles.at(selectedfile) << G4endl;
+  //G4cout << ListOfMUSUNFiles.size() << G4endl;
+
+
+  const char* filechar = ListOfMUSUNFiles.at(selectedfile).c_str();//Convert for open command
+
+    if(fInputFile.is_open())
+      fInputFile.close();  // close the old file
+  
+  G4cout << "opening file: " << filechar << G4endl;
+  fInputFile.open(filechar);
+  if(!(fInputFile.is_open()))
+    G4cerr << "MUSUN file not valid! Name: " << filechar << G4endl;
+
+}//OpenMUSUNFile
+
 
 
 void WLGDPrimaryGeneratorAction::ChangeFileName(G4String newFile)
 {
+
   if(fFileName != newFile)  // check if the new file is equal to the other
   {
-    if(fInputFile.is_open())
-      fInputFile.close();  // close the old file
     G4cout << "opening file: " << newFile << G4endl;
     fFileName = newFile;
     OpenFile();  // open the new one
   }
 }
 
-// -- depending on the name of the generator given, a different method is used to generate the primaries
 
+
+// -- depending on the name of the generator given, a different method is used to generate the primaries
 void WLGDPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
 {
   if(fGenerator == "SimpleNeutronGun"){
@@ -146,17 +240,26 @@ void WLGDPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
     G4double x = 0, y = 0, z = 0;
     G4int    particleID = 0;
 
+    
     fInputFile >> nEvent >> particleID >> energy >> x >> y >> z >> theta >> phi;
 
      //G4cout  << nEvent << " " << x << " " << y << " " << z << G4endl;
     if(fInputFile.eof())
-    {
-      fInputFile.close();
-      G4cerr << "File over: not enough events! Debugoutput" << G4endl;
-      G4Exception("WLGDPrimaryGeneratorAction::GeneratePrimaryVertex()", "err001",
-                  FatalException, "Exit Warwick");
-      return;
-    }
+      {//Current file is out of MUSUN muons to sample
+
+      if(fUsingMUSUNDirectory)//Using directory input option - find a new file to open
+	OpenMUSUNFile();
+      
+      else//Individual file opened - no way to access more events
+	{
+	  fInputFile.close();
+	  G4cerr << "File over: not enough events! Debugoutput" << G4endl;
+	  G4Exception("WLGDPrimaryGeneratorAction::GeneratePrimaryVertex()", "err001",
+		      FatalException, "Exit Warwick");
+	  return;
+	}
+      }//if(fInputFile.eof())
+
 
     G4double particle_time = time * s;
     energy                 = energy * GeV;
@@ -277,7 +380,7 @@ void WLGDPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
     G4int    z_number            = detectorNumber % nofLayers;
     G4int    string_number = (detectorNumber % (nofLayers * nofStrings)) / nofLayers;
     G4double radius        = gerad * cm * rndm(generator);
-    G4double ṕhi           = CLHEP::twopi * rndm(generator);
+    G4double thi           = CLHEP::twopi * rndm(generator);
 
     double offset_x, offset_y;
     if(whichReentranceTube == 0)
@@ -306,9 +409,9 @@ void WLGDPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
     G4double theta         = 0 * rad;
     G4double phi           = 0 * rad;
     G4double x =
-      radius * cos(ṕhi) + roiradius * cm * std::cos(string_number * angle) + offset_x;
+      radius * cos(thi) + roiradius * cm * std::cos(string_number * angle) + offset_x;
     G4double y =
-      radius * sin(ṕhi) + roiradius * cm * std::sin(string_number * angle) + offset_y;
+      radius * sin(thi) + roiradius * cm * std::sin(string_number * angle) + offset_y;
     G4double z = cushift * cm - step +
                  (nofLayers / 2 * layerthickness - z_number * layerthickness) * cm +
                  gehheight * cm * (1 - 2 * rndm(generator));
@@ -685,7 +788,16 @@ void WLGDPrimaryGeneratorAction::DefineCommands()
       .SetGuidance("Set MUSUN file name")
       .SetParameterName("filename", false)
       .SetDefaultValue("./musun_gs_100M.dat");
-  // generator command
+
+    auto& musundirectoryCmd =
+    fMessenger
+      ->DeclareMethod("setMUSUNDirectory",
+                      &WLGDPrimaryGeneratorAction::OpenMUSUNDirectory)
+      .SetGuidance("Set full path of directory containing multiple MUSUN files")
+      .SetParameterName("directoryname", false)
+      .SetDefaultValue("");
+
+    // generator command
   // switch command
   fMessenger->DeclareMethod("setGenerator", &WLGDPrimaryGeneratorAction::SetGenerator)
     .SetGuidance("Set generator model of primary muons")

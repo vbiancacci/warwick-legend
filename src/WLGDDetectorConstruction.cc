@@ -44,26 +44,29 @@ WLGDDetectorConstruction::~WLGDDetectorConstruction()
 
 auto WLGDDetectorConstruction::Construct() -> G4VPhysicalVolume*
 {
-  // Cleanup old geometry
+
+  // Clean up old geometry
   G4GeometryManager::GetInstance()->OpenGeometry();
   G4PhysicalVolumeStore::GetInstance()->Clean();
   G4LogicalVolumeStore::GetInstance()->Clean();
   G4SolidStore::GetInstance()->Clean();
 
   if(fGeometryName == "baseline" || fGeometryName == "baseline_smaller" || fGeometryName == "baseline_large_reentrance_tube" || fGeometryName == "baseline_large_reentrance_tube_4m_cryo")
-  {
     return SetupBaseline();
-  }
-  else if(fGeometryName == "hallA" || fGeometryName == "hallA_wo_ge" || fGeometryName == "hallA_only_WLSR")
-  {
-    return SetupHallA();
-  }
 
-  return SetupAlternative();
-}
+  else if(fGeometryName == "hallA" || fGeometryName == "hallA_wo_ge" || fGeometryName == "hallA_only_WLSR")
+    return SetupHallA();
+
+  else
+    return SetupAlternative();
+
+}//Construct()
+
+
 
 void WLGDDetectorConstruction::DefineMaterials()
 {
+  
   G4NistManager* nistManager = G4NistManager::Instance();
   nistManager->FindOrBuildMaterial("G4_Galactic");
   nistManager->FindOrBuildMaterial("G4_lAr");
@@ -72,10 +75,15 @@ void WLGDDetectorConstruction::DefineMaterials()
   nistManager->FindOrBuildMaterial("G4_Cu");
   nistManager->FindOrBuildMaterial("G4_WATER");
 
-  auto* C  = new G4Element("Carbon", "C", 6., 12.011 * g / mole);
-  auto* O  = new G4Element("Oxygen", "O", 8., 16.00 * g / mole);
-  auto* Ca = new G4Element("Calcium", "Ca", 20., 40.08 * g / mole);
-  auto* Mg = new G4Element("Magnesium", "Mg", 12., 24.31 * g / mole);
+  auto* H    = new G4Element("Hydrogen", "H", 1., 1.00794 * g / mole);
+  auto* C    = new G4Element("Carbon", "C", 6., 12.011 * g / mole);
+  auto* N    = new G4Element("Nitrogen", "N", 7., 14.00 * g / mole);
+  auto* O    = new G4Element("Oxygen", "O", 8., 16.00 * g / mole);
+  auto* elS  = new G4Element("Sulfur", "S", 16., 32.066 * g / mole);
+  auto* Mg   = new G4Element("Magnesium", "Mg", 12., 24.31 * g / mole);
+  auto* Ca   = new G4Element("Calcium", "Ca", 20., 40.08 * g / mole);
+  auto* elGd = new G4Element("Gadolinium", "Gd", 64, 157.25 * g / mole);
+  
 
   // Standard Rock definition, similar to Gran Sasso rock
   // with density from PDG report
@@ -85,8 +93,6 @@ void WLGDDetectorConstruction::DefineMaterials()
   stdRock->AddElement(C, 12.0 * perCent);
   stdRock->AddElement(Mg, 9.0 * perCent);
 
-  auto* H     = new G4Element("Hydrogen", "H", 1., 1.00794 * g / mole);
-  auto* N     = new G4Element("Nitrogen", "N", 7., 14.00 * g / mole);
   auto* puMat = new G4Material("polyurethane", 0.3 * g / cm3, 4);  // high density foam
   puMat->AddElement(H, 16);
   puMat->AddElement(O, 2);
@@ -103,8 +109,7 @@ void WLGDDetectorConstruction::DefineMaterials()
 
   // Borated Polyethylene according to GEM TN-92-172 TART Calculations of Neutron
   // Attenuation and Neutron-induced Photons on 5 % and 20 % Borated Polyethylene Slabs
-  auto* BoratedPET =
-    new G4Material("BoratedPET", 0.95 * g / cm3, 4);  // high density foam
+  auto* BoratedPET = new G4Material("BoratedPET", 0.95 * g / cm3, 4);  // high density foam
   BoratedPET->AddElement(H, 0.116);
   BoratedPET->AddElement(C, 0.612);
   BoratedPET->AddElement(SpecialB, 0.05);
@@ -116,16 +121,129 @@ void WLGDDetectorConstruction::DefineMaterials()
   PMMA->AddElement(C, 0.60);
   PMMA->AddElement(O, 0.32);
 
+
+  //Doped PMMA shielding materials - added by CJ in May 2023
+  //To calculate change in mass fraction, simply multiply all the current
+  //mass fractions by (1 - doping fraction) 
+
+  //Solid boron has multiple allotropes, between 2.35 and 2.52 g/cm^3 in density
+  //For simplicity let's use a value of 2.4, it's not super impactful anyway
+
+  //To calculate change in density is similarly easy
+  //For PMMA, new density = (1 - doping fraction)*1.18 + (doping fraction) * 2.4
+  
+  auto* PMMA1percentB = new G4Material("PMMA1percentB", 1.1922 * g / cm3, 4);
+  PMMA1percentB->AddElement(H, 0.0792);
+  PMMA1percentB->AddElement(C, 0.594 );
+  PMMA1percentB->AddElement(O, 0.3168);
+  PMMA1percentB->AddElement(SpecialB, 0.01);
+  
+  auto* PMMA3percentB = new G4Material("PMMA3percentB", 1.2166 * g / cm3, 4);
+  PMMA3percentB->AddElement(H, 0.0776);
+  PMMA3percentB->AddElement(C, 0.582 );
+  PMMA3percentB->AddElement(O, 0.3104);
+  PMMA3percentB->AddElement(SpecialB, 0.03);
+  
+  auto* PMMA5percentB = new G4Material("PMMA5percentB", 1.241 * g / cm3, 4);
+  PMMA5percentB->AddElement(H, 0.076);
+  PMMA5percentB->AddElement(C, 0.57 );
+  PMMA5percentB->AddElement(O, 0.304);
+  PMMA5percentB->AddElement(SpecialB, 0.05);
+  
+  auto* PMMA7percentB = new G4Material("PMMA7percentB", 1.2654 * g / cm3, 4);
+  PMMA7percentB->AddElement(H, 0.0744);
+  PMMA7percentB->AddElement(C, 0.558 );
+  PMMA7percentB->AddElement(O, 0.2976);
+  PMMA7percentB->AddElement(SpecialB, 0.07);
+  
+  auto* PMMA10percentB = new G4Material("PMMA10percentB", 1.302 * g / cm3, 4);
+  PMMA10percentB->AddElement(H, 0.072);
+  PMMA10percentB->AddElement(C, 0.54);
+  PMMA10percentB->AddElement(O, 0.288);
+  PMMA10percentB->AddElement(SpecialB, 0.1);
+
+
+  //Things are just as simple for the Gd-doped PMMA, but adjusting the density is much more significant
+  //I'm unsure whether the other study used pure Gd or Gd2O3
+  //The first seems more convenient, but the second is more realistic
+  //For simplicity and going with my gut feeling, I'll use pure Gd (density 7.9 g / cm3)
+  
+  auto* PMMA1percentGd = new G4Material("PMMA1percentGd", 1.2472 * g / cm3, 4);
+  PMMA1percentGd->AddElement(H, 0.0792);
+  PMMA1percentGd->AddElement(C, 0.594 );
+  PMMA1percentGd->AddElement(O, 0.3168);
+  PMMA1percentGd->AddElement(elGd, 0.01);
+  
+  auto* PMMA3percentGd = new G4Material("PMMA3percentGd", 1.3816 * g / cm3, 4);
+  PMMA3percentGd->AddElement(H, 0.0776);
+  PMMA3percentGd->AddElement(C, 0.582 );
+  PMMA3percentGd->AddElement(O, 0.3104);
+  PMMA3percentGd->AddElement(elGd, 0.03);
+  
+  auto* PMMA5percentGd = new G4Material("PMMA5percentGd", 1.516 * g / cm3, 4);
+  PMMA5percentGd->AddElement(H, 0.076);
+  PMMA5percentGd->AddElement(C, 0.57 );
+  PMMA5percentGd->AddElement(O, 0.304);
+  PMMA5percentGd->AddElement(elGd, 0.05);
+  
+  auto* PMMA7percentGd = new G4Material("PMMA7percentGd", 1.6504 * g / cm3, 4);
+  PMMA7percentGd->AddElement(H, 0.0744);
+  PMMA7percentGd->AddElement(C, 0.558 );
+  PMMA7percentGd->AddElement(O, 0.2976);
+  PMMA7percentGd->AddElement(elGd, 0.07);
+  
+  auto* PMMA10percentGd = new G4Material("PMMA10percentGd", 1.852 * g / cm3, 4);
+  PMMA10percentGd->AddElement(H, 0.072);
+  PMMA10percentGd->AddElement(C, 0.54);
+  PMMA10percentGd->AddElement(O, 0.288);
+  PMMA10percentGd->AddElement(elGd, 0.1);
+
+  
+  //The situation is a little more complicated for the Poly-Gd
+  //It's easier for us to just make a separate material definition for the Poly-Gd, then add it to the PMMA
+
+  //I assume this is the article which is referenced: https://www.sciencedirect.com/science/article/abs/pii/S1002072117301370
+  //I don't have free access to it, however. We'll play it by ear using the definition from another source:
+  //https://pubchem.ncbi.nlm.nih.gov/compound/Gadolinium-methacrylate
+  //Chemical formula: C12H18GdO6
+  //I couldn't find any information on the density of this substance
+  //Since this is basically three PMMA polymers with gadolinum jammed between, I'm gonna assume the density is slightly higher
+  //Essentially, 3 PMMAs (formula C5H8O2) have a CH3 stripped and replaced with one Gd bond and an H
+  //(C5H8O2 - CH2) x 3 = = C12H18O6 + Gd = C12H18GdO6
+
+  //Total molecular weight = 415.5
+  //Hydrogen content: (1.0078 x 18)/415.5 = 0.0436
+  //Carbon content: (12.011 x 12)/415.5 = 0.3469
+  //Oxygen content: (15.999 x 6)/415.5 = .2310
+  //Gadolinium content: 157.25/415.5 = 0.3785
+
+  //Density is just a guess
+  auto* PolyGd = new G4Material("PolyGd", 1.25 * g / cm3, 4);
+  PolyGd->AddElement(H,    0.0436);
+  PolyGd->AddElement(C,    0.3469);
+  PolyGd->AddElement(O,    0.2310);
+  PolyGd->AddElement(elGd, 0.3785);
+  
+  //Then make a compound material
+  auto* PMMA038percentPolyGd = new G4Material("PMMA038percentPolyGd", 1.1803 * g / cm3, 2);
+  PMMA038percentPolyGd->AddMaterial(PMMA,   0.9962);
+  PMMA038percentPolyGd->AddMaterial(PolyGd, 0.0038);
+
+  auto* PMMA191percentPolyGd = new G4Material("PMMA191percentPolyGd", 1.1813 * g / cm3, 2);
+  PMMA191percentPolyGd->AddMaterial(PMMA,   0.9809);
+  PMMA191percentPolyGd->AddMaterial(PolyGd, 0.0191);
+
+  auto* PMMA381percentPolyGd = new G4Material("PMMA381percentPolyGd", 1.1827 * g / cm3, 2);
+  PMMA381percentPolyGd->AddMaterial(PMMA,   0.9619);
+  PMMA381percentPolyGd->AddMaterial(PolyGd, 0.0381);
+
+  
   // Estimated using the number of elements per molecule (C_2 H_4)
   auto* PolyEthylene = new G4Material("PolyEthylene", 0.95 * g / cm3, 2);
   PolyEthylene->AddElement(H, 0.142);
   PolyEthylene->AddElement(C, 0.857);
 
-  G4Element* elGd = new G4Element("Gadolinium", "Gd", 64, 157.25 * g / mole);
-  G4Element* elS  = new G4Element("Sulfur", "S", 16., 32.066 * g / mole);
-  G4cout << elGd << G4endl;
-
-  G4double density = 3.01 * g / cm3;  // https://www.sigmaaldrich.com/catalog/product/aldrich/203300?lang=de&region=DE
+  G4double density = 3.01 * g / cm3;  // https://www.sigmaaldrich.com/catalog/product/aldrich/203300
                                       // @room temp
   G4Material* gadoliniumSulfate =
     new G4Material("GadoliniumSulfate", density, 3);  // Gd2(SO4)3
@@ -143,9 +261,9 @@ void WLGDDetectorConstruction::DefineMaterials()
   auto* Ge_74 = new G4Isotope("Ge74", 32, 74, 74.0 * g / mole);
   auto* Ge_76 = new G4Isotope("Ge76", 32, 76, 76.0 * g / mole);
 
-  G4Isotope* Ge_70 = new G4Isotope("Ge70",  32, 70, 69.92*g/mole);
-  G4Isotope* Ge_72 = new G4Isotope("Ge72",  32, 72, 71.92*g/mole);
-  G4Isotope* Ge_73 = new G4Isotope("Ge73",  32, 73, 73.0*g/mole);
+  auto* Ge_70 = new G4Isotope("Ge70",  32, 70, 69.92*g/mole);
+  auto* Ge_72 = new G4Isotope("Ge72",  32, 72, 71.92*g/mole);
+  auto* Ge_73 = new G4Isotope("Ge73",  32, 73, 73.0*g/mole);
 
   G4Element* eGe = new G4Element("enriched Germanium", "enrGe", 2);
 
@@ -153,19 +271,22 @@ void WLGDDetectorConstruction::DefineMaterials()
   eGe->AddIsotope(Ge_74, 13. * perCent);
   density      = 5.323 * g / cm3;
 
-  if(fMaGeMaterial){
-    density = 5.56 * g / cm3;
-    eGe = new G4Element("enriched Germanium", "enrGe", 5);  
-    eGe->AddIsotope(Ge_70,0.0*perCent);
-    eGe->AddIsotope(Ge_72,0.1*perCent);
-    eGe->AddIsotope(Ge_73,0.2*perCent);
-    eGe->AddIsotope(Ge_74,13.1*perCent);
-    eGe->AddIsotope(Ge_76,86.6*perCent);
-  }
+  if(fMaGeMaterial)
+    {
+      density = 5.56 * g / cm3;
+      eGe = new G4Element("enriched Germanium", "enrGe", 5);  
+      eGe->AddIsotope(Ge_70,0.0*perCent);
+      eGe->AddIsotope(Ge_72,0.1*perCent);
+      eGe->AddIsotope(Ge_73,0.2*perCent);
+      eGe->AddIsotope(Ge_74,13.1*perCent);
+      eGe->AddIsotope(Ge_76,86.6*perCent);
+    }
+
 
   auto* roiMat = new G4Material("enrGe", density, 1);
   roiMat->AddElement(eGe, 1);
 
+  
   // Edit: 2020/02/17 by Moritz Neuberger
   // Added new def. of LAr in order to add doping with Xe and He-3
 
@@ -177,14 +298,16 @@ void WLGDDetectorConstruction::DefineMaterials()
 
   G4double dComb = 1 / ((fArConc / dLAr) + (fXeConc / dLXe) + (fHe3Conc / dLHe3));
 
-  G4cout << "___________________________________________" << G4endl;
-  G4cout << "Mass ratios of cryostat:" << G4endl;
-  G4cout << "LAr:   " << fArConc << G4endl;
-  G4cout << "LXe:   " << fXeConc << G4endl;
-  G4cout << "LHe3:   " << fHe3Conc << G4endl;
-  G4cout << "dComb:   " << dComb << G4endl;
-  G4cout << "___________________________________________" << G4endl;
-
+  if(fXeConc || fHe3Conc)//Only output nonzero concentrations
+    {
+      G4cout << "___________________________________________" << G4endl;
+      G4cout << "Mass ratios of cryostat:" << G4endl;
+      G4cout << "LAr:   " << fArConc << G4endl;
+      G4cout << "LXe:   " << fXeConc << G4endl;
+      G4cout << "LHe3:   " << fHe3Conc << G4endl;
+      G4cout << "dComb:   " << dComb << G4endl;
+      G4cout << "___________________________________________" << G4endl;
+    }
   
   //auto* eLAr = new G4Element("LAr", "Ar", 18., 39.95 * g / mole);
   larMat = G4Material::GetMaterial("G4_lAr");
@@ -193,24 +316,28 @@ void WLGDDetectorConstruction::DefineMaterials()
   G4Isotope* iHe3   = new G4Isotope("He3", 2, 3);
   eHe3->AddIsotope(iHe3, 1);
 
-  if(fMaGeMaterial){
-    double densityLAr = 1.396  * g / cm3; 
-    G4Element* larEl = new G4Element("LAr", "Ar", 18., 39.95 * g / mole);
-    larMat = new G4Material("LAr", densityLAr, 1);
-    larMat->AddElement(larEl, 1);
-  }
+  if(fMaGeMaterial)
+    {
+      double densityLAr = 1.396  * g / cm3; 
+      G4Element* larEl = new G4Element("LAr", "Ar", 18., 39.95 * g / mole);
+      larMat = new G4Material("LAr", densityLAr, 1);
+      larMat->AddElement(larEl, 1);
+    }
 
-  CombinedArXeHe3 =
-    new G4Material("CombinedArXeHe3", dComb, 3, kStateLiquid, 87. * kelvin);
+  CombinedArXeHe3 = new G4Material("CombinedArXeHe3", dComb, 3, kStateLiquid, 87. * kelvin);
   CombinedArXeHe3->AddMaterial(larMat, fArConc);
   CombinedArXeHe3->AddElement(eHe3, fHe3Conc);
   CombinedArXeHe3->AddElement(eLXe, fXeConc);
 
-  G4cout << CombinedArXeHe3 << G4endl;
-}
+  //G4cout << CombinedArXeHe3 << G4endl;
+
+}//DefineMaterials()
+
+
 
 void WLGDDetectorConstruction::ConstructSDandField()
 {
+
   G4SDManager::GetSDMpointer()->SetVerboseLevel(1);
 
   // Only need to construct the (per-thread) SD once
@@ -223,9 +350,9 @@ void WLGDDetectorConstruction::ConstructSDandField()
 
     // Also only add it once to the SD manager!
     G4SDManager::GetSDMpointer()->AddNewDetector(fSD.Get());
-
     SetSensitiveDetector("Ge_log", fSD.Get());
 
+    
     // ----------------------------------------------
     // -- operator creation and attachment to volume:
     // ----------------------------------------------
@@ -249,6 +376,8 @@ void WLGDDetectorConstruction::ConstructSDandField()
         G4LogicalVolume *logicHall = volumeStore->GetVolume("Hall_log");
         biasnXS->AttachTo(logicHall);
     */
+
+    
     // -- Attach neutron XS biasing to Germanium -> enhance nCapture
     auto* biasnXS = new WLGDBiasMultiParticleChangeCrossSection();
     biasnXS->SetNeutronFactor(fNeutronBias);
@@ -267,15 +396,16 @@ void WLGDDetectorConstruction::ConstructSDandField()
     biasmuXS->AddParticle("mu-");
 
     if(fNeutronYieldBias != 1)
-    {
-      biasmuXS->AddParticle("neutron");
-      biasmuXS->AddParticle("pi+");
-      biasmuXS->AddParticle("pi-");
-      biasmuXS->AddParticle("gamma");
-      biasmuXS->AddParticle("kaon-");
-      biasmuXS->AddParticle("proton");
-    }
+      {
+	biasmuXS->AddParticle("neutron");
+	biasmuXS->AddParticle("pi+");
+	biasmuXS->AddParticle("pi-");
+	biasmuXS->AddParticle("gamma");
+	biasmuXS->AddParticle("kaon-");
+	biasmuXS->AddParticle("proton");
+      }
 
+    
     // G4LogicalVolume* logicGe = volumeStore->GetVolume("Ge_log");
     // biasmuXS->AttachTo(logicGe);
     G4LogicalVolume* logicCavern = volumeStore->GetVolume("Cavern_log");
@@ -287,44 +417,49 @@ void WLGDDetectorConstruction::ConstructSDandField()
     G4LogicalVolume* logicLar = volumeStore->GetVolume("Lar_log");
     biasmuXS->AttachTo(logicLar);
 
+    
     // non hallA have these volumes
     if(fGeometryName != "hallA")
-    {
-      G4LogicalVolume* logicCu = volumeStore->GetVolume("Copper_log");
-      biasmuXS->AttachTo(logicCu);
-      G4LogicalVolume* logicULar = volumeStore->GetVolume("ULar_log");
-      biasmuXS->AttachTo(logicULar);
-    }
+      {
+	G4LogicalVolume* logicCu = volumeStore->GetVolume("Copper_log");
+	biasmuXS->AttachTo(logicCu);
+	G4LogicalVolume* logicULar = volumeStore->GetVolume("ULar_log");
+	biasmuXS->AttachTo(logicULar);
+      }
 
+    
     // Baseline also has a water volume and cryostat
     if(fGeometryName == "baseline" || fGeometryName == "hallA" || fGeometryName == "hallA_wo_ge" || fGeometryName == "hallA_only_WLSR" ||
        fGeometryName == "baseline_smaller" || fGeometryName == "baseline_large_reentrance_tube" || fGeometryName == "baseline_large_reentrance_tube_4m_cryo")
-    {
-      G4LogicalVolume* logicWater = volumeStore->GetVolume("Water_log");
-      biasmuXS->AttachTo(logicWater);
-      G4LogicalVolume* logicCout = volumeStore->GetVolume("Cout_log");
-      biasmuXS->AttachTo(logicCout);
-      G4LogicalVolume* logicCinn = volumeStore->GetVolume("Cinn_log");
-      biasmuXS->AttachTo(logicCinn);
-      G4LogicalVolume* logicCLid = volumeStore->GetVolume("Lid_log");
-      biasmuXS->AttachTo(logicCLid);
-      G4LogicalVolume* logicCBot = volumeStore->GetVolume("Bot_log");
-      biasmuXS->AttachTo(logicCBot);
-    }
+      {
+	G4LogicalVolume* logicWater = volumeStore->GetVolume("Water_log");
+	biasmuXS->AttachTo(logicWater);
+	G4LogicalVolume* logicCout = volumeStore->GetVolume("Cout_log");
+	biasmuXS->AttachTo(logicCout);
+	G4LogicalVolume* logicCinn = volumeStore->GetVolume("Cinn_log");
+	biasmuXS->AttachTo(logicCinn);
+	G4LogicalVolume* logicCLid = volumeStore->GetVolume("Lid_log");
+	biasmuXS->AttachTo(logicCLid);
+	G4LogicalVolume* logicCBot = volumeStore->GetVolume("Bot_log");
+	biasmuXS->AttachTo(logicCBot);
+      }
+    
     // Alternative has the membrane and insulator
     else if(fGeometryName == "alternative")
-    {
-      G4LogicalVolume* logicPu = volumeStore->GetVolume("Pu_log");
-      biasmuXS->AttachTo(logicPu);
-      G4LogicalVolume* logicMembrane = volumeStore->GetVolume("Membrane_log");
-      biasmuXS->AttachTo(logicMembrane);
-    }
-  }
-  else
-  {
-    G4cout << " >>> fSD has entry. Repeated call." << G4endl;
-  }
-}
+      {
+	G4LogicalVolume* logicPu = volumeStore->GetVolume("Pu_log");
+	biasmuXS->AttachTo(logicPu);
+	G4LogicalVolume* logicMembrane = volumeStore->GetVolume("Membrane_log");
+	biasmuXS->AttachTo(logicMembrane);
+      }
+  }//if(!fSD.Get())
+  
+  //else
+      //G4cout << " >>> fSD has entry. Repeated call." << G4endl;
+
+}//ConstructSDandField()
+
+
 
 auto WLGDDetectorConstruction::SetupAlternative() -> G4VPhysicalVolume*
 {
@@ -341,21 +476,27 @@ auto WLGDDetectorConstruction::SetupAlternative() -> G4VPhysicalVolume*
 
   if(fXeConc != 0 || fHe3Conc != 0)
     larMat = larMat_alt;
+
+
   // size parameter, unit [cm]
+
   // cavern
   G4double stone     = 100.0;  // Hall wall thickness 1 m
   G4double hallhside = 850.0;  // Hall cube side 17 m
+
   // cryostat
   G4double tankhside  = 650;   // cryostat cube side 13 m
   G4double outerwall  = 1.2;   // outer SS wall thickness
   G4double insulation = 80.0;  // polyurethane foam
   G4double innerwall  = 0.12;  // inner SS membrane
+
   // copper tubes with Germanium ROI
   G4double copper    = 0.35;    // tube thickness 3.5 mm
   G4double curad     = 40.0;    // copper tube diam 80 cm
   G4double cuhheight = 334.34;  // copper tube height 7 m inside cryostat
   G4double cushift   = 234.34;  // shift cu tube inside cryostat to top
   G4double ringrad   = 100.0;   // cu tube placement ring radius
+
   // Ge cylinder for 250 kg at 5.32 g/cm3
   G4double roiradius = 30.0;  // string radius curad - Ge radius - gap
 
@@ -363,18 +504,18 @@ auto WLGDDetectorConstruction::SetupAlternative() -> G4VPhysicalVolume*
   G4double gehheight      = 5.0;                    // full height 10 cm
   G4double gegap          = 3.0;                    // gap between Ge 3cm
   G4double layerthickness = gegap + 2 * gehheight;  // 13 cm total
+
   G4int    nofLayers      = 8;   // 8 Ge + 7 gaps = 1010 mm string height
   G4int    nofStrings     = 12;  // 12 strings  of 8 Ge each
 
   // total
-  G4double offset =
-    hallhside - tankhside;  // shift cavern floor to keep detector centre at origin
+  G4double offset    = hallhside - tankhside;  // shift cavern floor to keep detector centre at origin
   G4double worldside = hallhside + stone + offset + 0.1;  // larger than rest
-  G4double larside =
-    tankhside - outerwall - insulation - innerwall;  // cube side of LAr volume
+  G4double larside   = tankhside - outerwall - insulation - innerwall;  // cube side of LAr volume
 
   fvertexZ = (worldside - stone - 0.1) * cm;  // max vertex height
   fmaxrad  = hallhside * cm;                  // max vertex circle radius
+
 
   // Volumes for this geometry
 
@@ -467,6 +608,7 @@ auto WLGDDetectorConstruction::SetupAlternative() -> G4VPhysicalVolume*
 
   auto* fLayerLogical = new G4LogicalVolume(layerSolid, larMat, "Layer_log");
 
+  
   // fill one layer
   auto* geSolid =
     new G4Tubs("ROI", 0.0 * cm, gerad * cm, gehheight * cm, 0.0, CLHEP::twopi);
@@ -482,6 +624,7 @@ auto WLGDDetectorConstruction::SetupAlternative() -> G4VPhysicalVolume*
   new G4PVPlacement(nullptr, G4ThreeVector(0.0, 0.0, gehheight * cm), fGapLogical,
                     "Gap_phys", fLayerLogical, false, 0, true);
 
+  
   // place layers as mother volume with unique copy number
   G4double step = (gehheight + gegap / 2) * cm;
   G4double xpos;
@@ -503,6 +646,7 @@ auto WLGDDetectorConstruction::SetupAlternative() -> G4VPhysicalVolume*
     }
   }
 
+  
   // placements
   new G4PVPlacement(nullptr, G4ThreeVector(ringrad * cm, 0., cushift * cm),
                     fCopperLogical, "Copper_phys", fLarLogical, false, 0, true);
@@ -555,11 +699,16 @@ auto WLGDDetectorConstruction::SetupAlternative() -> G4VPhysicalVolume*
   fUlarLogical->SetVisAttributes(greyVisAtt);
   fGeLogical->SetVisAttributes(redVisAtt);
 
+  
   return fWorldPhysical;
-}
+
+}//SetupAlternative()
+
+
 
 auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
 {
+
   // Get materials
   auto* worldMaterial = G4Material::GetMaterial("G4_Galactic");
   // auto* larMat        = G4Material::GetMaterial("G4_lAr");
@@ -578,6 +727,37 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
     BoratedPETMat = G4Material::GetMaterial("PolyEthylene");
   if(fSetMaterial == "PMMA")
     BoratedPETMat = G4Material::GetMaterial("PMMA");
+
+  if(fSetMaterial == "PMMA1percentB")
+    BoratedPETMat = G4Material::GetMaterial("PMMA1percentB");
+  if(fSetMaterial == "PMMA3percentB")
+    BoratedPETMat = G4Material::GetMaterial("PMMA3percentB");
+  if(fSetMaterial == "PMMA5percentB")
+    BoratedPETMat = G4Material::GetMaterial("PMMA5percentB");
+  if(fSetMaterial == "PMMA7percentB")
+    BoratedPETMat = G4Material::GetMaterial("PMMA7percentB");
+  if(fSetMaterial == "PMMA10percentB")
+    BoratedPETMat = G4Material::GetMaterial("PMMA10percentB");
+
+  if(fSetMaterial == "PMMA1percentGd")
+    BoratedPETMat = G4Material::GetMaterial("PMMA1percentGd");
+  if(fSetMaterial == "PMMA3percentGd")
+    BoratedPETMat = G4Material::GetMaterial("PMMA3percentGd");
+  if(fSetMaterial == "PMMA5percentGd")
+    BoratedPETMat = G4Material::GetMaterial("PMMA5percentGd");
+  if(fSetMaterial == "PMMA7percentGd")
+    BoratedPETMat = G4Material::GetMaterial("PMMA7percentGd");
+  if(fSetMaterial == "PMMA10percentGd")
+    BoratedPETMat = G4Material::GetMaterial("PMMA10percentGd");
+
+  if(fSetMaterial == "PMMA038percentPolyGd")
+    BoratedPETMat = G4Material::GetMaterial("PMMA038percentPolyGd");
+  if(fSetMaterial == "PMMA191percentPolyGd")
+    BoratedPETMat = G4Material::GetMaterial("PMMA191percentPolyGd");
+  if(fSetMaterial == "PMMA381percentPolyGd")
+    BoratedPETMat = G4Material::GetMaterial("PMMA381percentPolyGd");
+
+
   //auto* larMat /*_alt*/ = G4Material::GetMaterial("CombinedArXeHe3");
   // if(fXeConc != 0 || fHe3Conc != 0) BoratedPET
   
@@ -587,6 +767,7 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
 
   // G4cout << larMat << G4endl;
 
+  
   // Edit: 2021/03/30 by Moritz Neuberger
   // Adjusted size of stone (1m->5m) s.t. MUSUN cuboid lies inside.
   // Also adjusted relative geometry relations s.t. they are independent of the stone
@@ -619,15 +800,14 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
   G4double cryhheight = fCryostatHeight;       // 350.0;  // cryostat height 7 m
 
   if(fGeometryName == "baseline_large_reentrance_tube")
-  {
     vacgap     = 50.0;  
-  }
 
   if(fGeometryName == "baseline_smaller" || fGeometryName == "baseline_large_reentrance_tube_4m_cryo")
-  {
-    cryrad     = 200.0;  // cryostat diam 4 m
-    cryhheight = 225.0;  // cryostat height 4.5 m
-  }
+    {
+      cryrad     = 200.0;  // cryostat diam 4 m
+      cryhheight = 225.0;  // cryostat height 4.5 m
+    }
+  
   // Borated PET tubes around copper tubes
   G4double BoratedPETouterrad = 5.0;  // tube thickness 5 cm
   // copper tubes with Germanium ROI
@@ -636,14 +816,14 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
   G4double cuhheight = (400 - (350 - fCryostatHeight)) / 2.;  // 200.0;  // copper tube height 4 m inside cryostat
   G4double cushift = fCryostatHeight - cuhheight;  // 150.0;  // shift cu tube inside cryostat to top
   if(fGeometryName == "baseline_smaller" || fGeometryName == "baseline_large_reentrance_tube_4m_cryo")
-  {
-    cuhheight = 137.5;  // cupper height 2.25 m
-    cushift   = 87.5;   // shift
-  }
+    {
+      cuhheight = 137.5;  // cupper height 2.25 m
+      cushift   = 87.5;   // shift
+    }
   if(fGeometryName == "baseline_large_reentrance_tube" || fGeometryName == "baseline_large_reentrance_tube_4m_cryo")
-  {
-    curad     = 95.0;  
-  }
+      curad     = 95.0;  
+
+
   G4double ringrad = 100.0;  // cu tube placement ring radius
   // Ge cylinder 2.67 kg at 5.32 g/cm3
   G4double roiradius = 30.0;  // string radius curad - Ge radius - gap
@@ -767,7 +947,6 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
   // copper tubes, hollow cylinder shell
   //
 
-
   // Box variables
   G4double b_width  = fBoratedTurbineWidth / 2. * cm;   // 2.5 * cm;
   G4double b_length = fBoratedTurbineLength / 2. * cm;  // 0.25 * m;
@@ -832,163 +1011,171 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
   G4double angle = CLHEP::twopi / nofStrings;
 
   // layer logical into ULarlogical
-  if(fGeometryName == "baseline_large_reentrance_tube" || fGeometryName == "baseline_large_reentrance_tube_4m_cryo"){
-    G4double length = 16.75 * cm;
-
-    G4double vec_main_x = 1/2.;
-    G4double vec_main_y = sqrt(1 - vec_main_x*vec_main_x);
-    G4double vec_left_x = -1/2.;
-    G4double vec_left_y = sqrt(1 - vec_left_x*vec_left_x);
-    G4double vec_right_x = 1;
-    G4double vec_right_y = 0;
-
-    int N = 0;
-
-    for(G4int i = -4; i <= 4; i++){
-
-      for(G4int j = 0; j <= 4 && j <= 4 - i; j++){
-
-        // leave out calibration ports
-        if( ( i == -3 && j == 0 ) || ( i == 0 && j == 0 ) || ( i == 3 && j == 0) || ( i == -3 && j == 3) || ( i == 0 && j == 3) ) continue;
-
-        xpos = length * ( vec_main_x * i + vec_left_x * j);
-        ypos = length * ( vec_main_y * i + vec_left_y * j) ;
-
-        G4cout << "i: " << i << " j: " << j << " | x: " << xpos << " - y: " << ypos << G4endl;
-
-        for(G4int k = 0; k < nofLayers; k++)
-        {
-          // Cube coordinates
-          int x_coor = i;
-          int y_coor = j;
-          int z_coor = -(i + j);
-          int coordinate = N;//(x_coor<0)*1e6 + abs(x_coor)*1e5 + (y_coor<0)*1e4 + abs(y_coor)*1e3 + (z_coor<0)*1e2 + abs(z_coor)*1e1 + k;
-          G4cout << "coordinate: " << coordinate << G4endl;
-          new G4PVPlacement(
-            nullptr,
-            G4ThreeVector(xpos, ypos,
-                          -step + (nofLayers / 2 * layerthickness - k * layerthickness) * cm -
-                            offset_3 * cm),
-            fLayerLogical, "Layer_phys", fUlarLogical, false, coordinate, true);
-            N++;
-        }
-      }
-
-      for(G4int j = 1; j <= 4 && j <= 4 - i; j++){
-
-        // leave out calibration ports
-        if( ( i == -3 && j == 3 ) || ( i == 0 && j == 3 ) ) continue;
-
-        xpos = length * ( vec_main_x * i + vec_right_x * j);
-        ypos = length * ( vec_main_y * i + vec_right_y * j) ;
-
-        for(G4int k = 0; k < nofLayers; k++)
-        {
-          // Cube coordinates
-          int x_coor = i + j;
-          int y_coor = -j;
-          int z_coor = -i;
-          int coordinate = N;//(x_coor<0)*1e6 + abs(x_coor)*1e5 + (y_coor<0)*1e4 + abs(y_coor)*1e3 + (z_coor<0)*1e2 + abs(z_coor)*1e1 + k;
-          G4cout << "coordinate: " << coordinate << G4endl;
-          new G4PVPlacement(
-            nullptr,
-            G4ThreeVector(xpos, ypos,
-                          -step + (nofLayers / 2 * layerthickness - k * layerthickness) * cm -
-                            offset_3 * cm),
-            fLayerLogical, "Layer_phys", fUlarLogical, false, coordinate, true);
-            N++;
-        }
-      }
-    }
-  }
-  else{
-    for(G4int j = 0; j < nofStrings; j++)
+  if(fGeometryName == "baseline_large_reentrance_tube" || fGeometryName == "baseline_large_reentrance_tube_4m_cryo")
     {
-      xpos = roiradius * cm * std::cos(j * angle);
-      ypos = roiradius * cm * std::sin(j * angle);
+      
+      G4double length = 16.75 * cm;
+      
+      G4double vec_main_x = 1/2.;
+      G4double vec_main_y = sqrt(1 - vec_main_x*vec_main_x);
+      G4double vec_left_x = -1/2.;
+      G4double vec_left_y = sqrt(1 - vec_left_x*vec_left_x);
+      G4double vec_right_x = 1;
+      G4double vec_right_y = 0;
+      
+      int N = 0;
 
-      for(G4int i = 0; i < nofLayers; i++)
-      {
-        new G4PVPlacement(
-          nullptr,
-          G4ThreeVector(xpos, ypos,
-                        -step + (nofLayers / 2 * layerthickness - i * layerthickness) * cm -
-                          offset_3 * cm),
-          fLayerLogical, "Layer_phys", fUlarLogical, false, i + j * nofLayers, true);
-      }
+      //Construct crystal array
+      for(G4int i = -4; i <= 4; i++)
+	{
+	  
+	  for(G4int j = 0; j <= 4 && j <= 4 - i; j++)
+	    {
+	      
+	      // leave out calibration ports
+	      if( ( i == -3 && j == 0 ) || ( i == 0 && j == 0 ) || ( i == 3 && j == 0) || ( i == -3 && j == 3) || ( i == 0 && j == 3) ) continue;
+	      
+	      xpos = length * ( vec_main_x * i + vec_left_x * j);
+	      ypos = length * ( vec_main_y * i + vec_left_y * j) ;
+	      
+	      G4cout << "i: " << i << " j: " << j << " | x: " << xpos << " - y: " << ypos << G4endl;
+	  
+	      for(G4int k = 0; k < nofLayers; k++)
+		{
+		  // Cube coordinates
+		  int x_coor = i;
+		  int y_coor = j;
+		  int z_coor = -(i + j);
+		  int coordinate = N;//(x_coor<0)*1e6 + abs(x_coor)*1e5 + (y_coor<0)*1e4 + abs(y_coor)*1e3 + (z_coor<0)*1e2 + abs(z_coor)*1e1 + k;
+		  G4cout << "coordinate: " << coordinate << G4endl;
+		  new G4PVPlacement(nullptr,G4ThreeVector(xpos, ypos,
+				-step + (nofLayers / 2 * layerthickness - k * layerthickness) * cm - offset_3 * cm),
+				fLayerLogical, "Layer_phys", fUlarLogical, false, coordinate, true);
+		  N++;
+		}
+	    }//for(G4int j = 0;...
+	  
+	  
+	  for(G4int j = 1; j <= 4 && j <= 4 - i; j++)
+	    {
+	      
+	      // leave out calibration ports
+	      if( ( i == -3 && j == 3 ) || ( i == 0 && j == 3 ) ) continue;
+	      
+	      xpos = length * ( vec_main_x * i + vec_right_x * j);
+	      ypos = length * ( vec_main_y * i + vec_right_y * j) ;
+	      
+	      for(G4int k = 0; k < nofLayers; k++)
+		{
+		  // Cube coordinates
+		  int x_coor = i + j;
+		  int y_coor = -j;
+		  int z_coor = -i;
+		  int coordinate = N;//(x_coor<0)*1e6 + abs(x_coor)*1e5 + (y_coor<0)*1e4 + abs(y_coor)*1e3 + (z_coor<0)*1e2 + abs(z_coor)*1e1 + k;
+		  G4cout << "coordinate: " << coordinate << G4endl;
+		  new G4PVPlacement(
+				    nullptr,G4ThreeVector(xpos, ypos,
+					      -step + (nofLayers / 2 * layerthickness - k * layerthickness) * cm - offset_3 * cm),
+				              fLayerLogical, "Layer_phys", fUlarLogical, false, coordinate, true);
+		N++;
+	      }
+
+	  }//for(G4int j = 1; ...
+	  
+	}//for(G4int i = -4; ...
+      
+    }//if(fGeometryName == "baseline_large_reentrance_tube" || ...
+
+  
+  else
+    {
+      for(G4int j = 0; j < nofStrings; j++)
+	{
+	  xpos = roiradius * cm * std::cos(j * angle);
+	  ypos = roiradius * cm * std::sin(j * angle);
+	  
+	  for(G4int i = 0; i < nofLayers; i++)
+	    {
+	      new G4PVPlacement(nullptr, G4ThreeVector(xpos, ypos,
+                        -step + (nofLayers / 2 * layerthickness - i * layerthickness) * cm - offset_3 * cm),
+			fLayerLogical, "Layer_phys", fUlarLogical, false, i + j * nofLayers, true);
+	    }
+	}
     }
-  }
 
+  
   if(fGeometryName == "baseline")
-  {
-    // placements
-    if(fWithBoratedPET == 1)
+    {
+      // placements
+      if(fWithBoratedPET == 1)
+	new G4PVPlacement(nullptr, G4ThreeVector(ringrad * cm, 0., cushift * cm),
+			  fBoratedPETLogical_Tube, "BoratedPET_phys", fLarLogical, false, 0,
+			  true);
+      
+      if(fWithOutCupperTubes == 0)
+	new G4PVPlacement(nullptr, G4ThreeVector(ringrad * cm, 0., cushift * cm),
+			  fCopperLogical, "Copper_phys", fLarLogical, false, 0, true);
+      
       new G4PVPlacement(nullptr, G4ThreeVector(ringrad * cm, 0., cushift * cm),
-                        fBoratedPETLogical_Tube, "BoratedPET_phys", fLarLogical, false, 0,
-                        true);
-
-    if(fWithOutCupperTubes == 0)
-      new G4PVPlacement(nullptr, G4ThreeVector(ringrad * cm, 0., cushift * cm),
-                        fCopperLogical, "Copper_phys", fLarLogical, false, 0, true);
-
-    new G4PVPlacement(nullptr, G4ThreeVector(ringrad * cm, 0., cushift * cm),
-                      fUlarLogical, "ULar_phys", fLarLogical, false, 0, true);
-
-    // tower 2
-    if(fWithBoratedPET == 1)
+			fUlarLogical, "ULar_phys", fLarLogical, false, 0, true);
+      
+      // tower 2
+      if(fWithBoratedPET == 1)
+	new G4PVPlacement(nullptr, G4ThreeVector(0., ringrad * cm, cushift * cm),
+			  fBoratedPETLogical_Tube, "BoratedPET_phys2", fLarLogical, false,
+			  1, true);
+      
+      if(fWithOutCupperTubes == 0)
+	new G4PVPlacement(nullptr, G4ThreeVector(0., ringrad * cm, cushift * cm),
+			  fCopperLogical, "Copper_phys2", fLarLogical, false, 1, true);
+      
       new G4PVPlacement(nullptr, G4ThreeVector(0., ringrad * cm, cushift * cm),
-                        fBoratedPETLogical_Tube, "BoratedPET_phys2", fLarLogical, false,
-                        1, true);
-
-    if(fWithOutCupperTubes == 0)
-      new G4PVPlacement(nullptr, G4ThreeVector(0., ringrad * cm, cushift * cm),
-                        fCopperLogical, "Copper_phys2", fLarLogical, false, 1, true);
-
-    new G4PVPlacement(nullptr, G4ThreeVector(0., ringrad * cm, cushift * cm),
-                      fUlarLogical, "ULar_phys2", fLarLogical, false, 1, true);
-
-    // tower 3
-    if(fWithBoratedPET == 1)
+			fUlarLogical, "ULar_phys2", fLarLogical, false, 1, true);
+      
+      // tower 3
+      if(fWithBoratedPET == 1)
+	new G4PVPlacement(nullptr, G4ThreeVector(-ringrad * cm, 0., cushift * cm),
+			  fBoratedPETLogical_Tube, "BoratedPET_phys3", fLarLogical, false,
+			  2, true);
+      
+      if(fWithOutCupperTubes == 0)
+	new G4PVPlacement(nullptr, G4ThreeVector(-ringrad * cm, 0., cushift * cm),
+			  fCopperLogical, "Copper_phys3", fLarLogical, false, 2, true);
+      
       new G4PVPlacement(nullptr, G4ThreeVector(-ringrad * cm, 0., cushift * cm),
-                        fBoratedPETLogical_Tube, "BoratedPET_phys3", fLarLogical, false,
-                        2, true);
-
-    if(fWithOutCupperTubes == 0)
-      new G4PVPlacement(nullptr, G4ThreeVector(-ringrad * cm, 0., cushift * cm),
-                        fCopperLogical, "Copper_phys3", fLarLogical, false, 2, true);
-
-    new G4PVPlacement(nullptr, G4ThreeVector(-ringrad * cm, 0., cushift * cm),
-                      fUlarLogical, "ULar_phys3", fLarLogical, false, 2, true);
-
-    // tower 4
-    if(fWithBoratedPET == 1)
+			fUlarLogical, "ULar_phys3", fLarLogical, false, 2, true);
+      
+      // tower 4
+      if(fWithBoratedPET == 1)
+	new G4PVPlacement(nullptr, G4ThreeVector(0., -ringrad * cm, cushift * cm),
+			  fBoratedPETLogical_Tube, "BoratedPET_phys4", fLarLogical, false,
+			  3, true);
+      
+      if(fWithOutCupperTubes == 0)
+	new G4PVPlacement(nullptr, G4ThreeVector(0., -ringrad * cm, cushift * cm),
+			  fCopperLogical, "Copper_phys4", fLarLogical, false, 3, true);
+      
       new G4PVPlacement(nullptr, G4ThreeVector(0., -ringrad * cm, cushift * cm),
-                        fBoratedPETLogical_Tube, "BoratedPET_phys4", fLarLogical, false,
-                        3, true);
+			fUlarLogical, "ULar_phys4", fLarLogical, false, 3, true);
+    }//if(fGeometryName == "baseline")
 
-    if(fWithOutCupperTubes == 0)
-      new G4PVPlacement(nullptr, G4ThreeVector(0., -ringrad * cm, cushift * cm),
-                        fCopperLogical, "Copper_phys4", fLarLogical, false, 3, true);
-
-    new G4PVPlacement(nullptr, G4ThreeVector(0., -ringrad * cm, cushift * cm),
-                      fUlarLogical, "ULar_phys4", fLarLogical, false, 3, true);
-  }
-
+  
   if(fGeometryName == "baseline_smaller" || fGeometryName == "baseline_large_reentrance_tube" || fGeometryName == "baseline_large_reentrance_tube_4m_cryo")
-  {
-    // placements
-    if(fWithBoratedPET == 1)
-      new G4PVPlacement(nullptr, G4ThreeVector(0., 0., cushift * cm),
-                        fBoratedPETLogical_Tube, "BoratedPET_phys", fLarLogical, false, 0,
-                        true);
+    {
+      // placements
+      if(fWithBoratedPET == 1)
+	new G4PVPlacement(nullptr, G4ThreeVector(0., 0., cushift * cm),
+			  fBoratedPETLogical_Tube, "BoratedPET_phys", fLarLogical, false, 0,
+			  true);
+      
+      if(fWithOutCupperTubes == 0)
+	new G4PVPlacement(nullptr, G4ThreeVector(0., 0., cushift * cm), fCopperLogical,
+			  "Copper_phys", fLarLogical, false, 0, true);
+      
+      new G4PVPlacement(nullptr, G4ThreeVector(0., 0., cushift * cm), fUlarLogical,
+			"ULar_phys", fLarLogical, false, 0, true);
+    }
 
-    if(fWithOutCupperTubes == 0)
-      new G4PVPlacement(nullptr, G4ThreeVector(0., 0., cushift * cm), fCopperLogical,
-                        "Copper_phys", fLarLogical, false, 0, true);
-
-    new G4PVPlacement(nullptr, G4ThreeVector(0., 0., cushift * cm), fUlarLogical,
-                      "ULar_phys", fLarLogical, false, 0, true);
-  }
 
 #define whichGeometry 1
 
@@ -1001,105 +1188,108 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
     G4double          zpos           = 0 * cm;
     G4RotationMatrix* rotMat;
     for(G4int j = 0; j < NPanels; j++)
-    {
-      xpos   = radiusOfPanels * std::cos(j * anglePanel);
-      ypos   = radiusOfPanels * std::sin(j * anglePanel);
-      rotMat = new G4RotationMatrix;
-      rotMat->rotateZ(-(j + 1) * anglePanel + 90 * deg);
-      new G4PVPlacement(rotMat, G4ThreeVector(xpos, ypos, zpos), fBoratedPETLogical_Box,
-                        "BoratedPET_phys", fLarLogical, false, j, true);
-    }
+      {
+	xpos   = radiusOfPanels * std::cos(j * anglePanel);
+	ypos   = radiusOfPanels * std::sin(j * anglePanel);
+	rotMat = new G4RotationMatrix;
+	rotMat->rotateZ(-(j + 1) * anglePanel + 90 * deg);
+	new G4PVPlacement(rotMat, G4ThreeVector(xpos, ypos, zpos), fBoratedPETLogical_Box,
+			  "BoratedPET_phys", fLarLogical, false, j, true);
+      }
   }
 #endif
+
 #if whichGeometry == 1
-
   if(fWithBoratedPET == 2 || fWithBoratedPET == 4)
-  {
-    G4double densityOfBPE   = 0.95;
-    double   radiusOfPanels = fBoratedTurbineRadius * cm;
-    double   constantAngle  = fBoratedTurbineAngle * deg;  // 45 * deg;
-    int      NPanels;
-
-    if(fBoratedTurbineNPanels == 0)
-      NPanels = ceil(2 * 3.14159265 * radiusOfPanels / cm /
-                     (0.95 * b_length / cm * cos(constantAngle)));
-    else
-      NPanels = fBoratedTurbineNPanels;
-
-    fNPanels          = NPanels;
-    double anglePanel = 360. / NPanels * deg;
-
-    G4double totalVolume =
-      NPanels * 2 * b_length / cm * 2 * b_width / cm * 2 * b_height / cm;
-
-    G4cout << "Total Mass of B-PE: " << totalVolume * densityOfBPE << G4endl;
-
-    G4double          zpos = 0 * cm;
-    G4RotationMatrix* rotMat;
-
-    for(G4int j = 0; j < NPanels; j++)
     {
-      xpos   = radiusOfPanels * std::cos(j * anglePanel);
-      ypos   = radiusOfPanels * std::sin(j * anglePanel);
-      rotMat = new G4RotationMatrix;
-      rotMat->rotateZ(-j * anglePanel + 90 * deg + constantAngle);
-      new G4PVPlacement(rotMat, G4ThreeVector(xpos, ypos, zpos), fBoratedPETLogical_Box,
+      G4double densityOfBPE   = 0.95;
+      double   radiusOfPanels = fBoratedTurbineRadius * cm;
+      double   constantAngle  = fBoratedTurbineAngle * deg;  // 45 * deg;
+      int      NPanels;
+      
+      if(fBoratedTurbineNPanels == 0)
+	NPanels = ceil(2 * 3.14159265 * radiusOfPanels / cm /
+		       (0.95 * b_length / cm * cos(constantAngle)));
+      else
+	NPanels = fBoratedTurbineNPanels;
+      
+      fNPanels          = NPanels;
+      double anglePanel = 360. / NPanels * deg;
+      
+      G4double totalVolume =
+	NPanels * 2 * b_length / cm * 2 * b_width / cm * 2 * b_height / cm;
+      
+      G4cout << "Total Mass of B-PE: " << totalVolume * densityOfBPE << G4endl;
+      
+      
+      G4double          zpos = 0 * cm;
+      G4RotationMatrix* rotMat;
+      
+      for(G4int j = 0; j < NPanels; j++)
+	{
+	  xpos   = radiusOfPanels * std::cos(j * anglePanel);
+	  ypos   = radiusOfPanels * std::sin(j * anglePanel);
+	  rotMat = new G4RotationMatrix;
+	  rotMat->rotateZ(-j * anglePanel + 90 * deg + constantAngle);
+	  new G4PVPlacement(rotMat, G4ThreeVector(xpos, ypos, zpos), fBoratedPETLogical_Box,
                         "BoratedPET_phys", fLarLogical, false, j, true);
-    }
+	}
 
-    if(fWithBoratedPET == 4)
-    {
-      boratedPETSolid_Tube =
-        new G4Tubs("BoratedPET", 0, (fBoratedTurbineRadius * cm + b_width * 2), b_width,
-                   0.0, CLHEP::twopi);
-      fBoratedPETLogical_Tube =
-        new G4LogicalVolume(boratedPETSolid_Tube, BoratedPETMat, "BoratedPET_Logical");
-
-      new G4PVPlacement(
-        nullptr, G4ThreeVector(0, 0, fBoratedTurbinezPosition * cm - b_height - b_width),
-        fBoratedPETLogical_Tube, "BoratedPET_phys", fLarLogical, false, 0, true);
-      new G4PVPlacement(
-        nullptr, G4ThreeVector(0, 0, fBoratedTurbinezPosition * cm + b_height + b_width),
-        fBoratedPETLogical_Tube, "BoratedPET_phys", fLarLogical, false, 0, true);
+      
+      if(fWithBoratedPET == 4)
+	{
+	  boratedPETSolid_Tube =
+	    new G4Tubs("BoratedPET", 0, (fBoratedTurbineRadius * cm + b_width * 2), b_width,
+		       0.0, CLHEP::twopi);
+	  fBoratedPETLogical_Tube =
+	    new G4LogicalVolume(boratedPETSolid_Tube, BoratedPETMat, "BoratedPET_Logical");
+	  
+	  new G4PVPlacement(
+			    nullptr, G4ThreeVector(0, 0, fBoratedTurbinezPosition * cm - b_height - b_width),
+			    fBoratedPETLogical_Tube, "BoratedPET_phys", fLarLogical, false, 0, true);
+	  new G4PVPlacement(
+			    nullptr, G4ThreeVector(0, 0, fBoratedTurbinezPosition * cm + b_height + b_width),
+			    fBoratedPETLogical_Tube, "BoratedPET_phys", fLarLogical, false, 0, true);
+	}
     }
-  }
 #endif
 
+  
   if(fWithBoratedPET == 3)
-  {
-    G4double densityOfBPE   = 0.95;
-    double   radiusOfPanels = fBoratedTurbineRadius * cm;
+    {
+      G4double densityOfBPE   = 0.95;
+      double   radiusOfPanels = fBoratedTurbineRadius * cm;
+      
+      boratedPETSolid_Tube =
+	new G4Tubs("BoratedPET", fBoratedTurbineRadius * cm,
+		   (fBoratedTurbineRadius * cm + b_width * 2), b_height, 0.0, CLHEP::twopi);
+      fBoratedPETLogical_Tube =
+	new G4LogicalVolume(boratedPETSolid_Tube, BoratedPETMat, "BoratedPET_Logical");
+      
+      G4cout << "Total Mass of B-PE: "
+	     << 3.141592653589 * b_height / cm *
+	     (pow(fBoratedTurbineRadius + b_width / cm * 2, 2) -
+	     pow(fBoratedTurbineRadius, 2)) *
+	     densityOfBPE
+	     << G4endl;
 
-    boratedPETSolid_Tube =
-      new G4Tubs("BoratedPET", fBoratedTurbineRadius * cm,
-                 (fBoratedTurbineRadius * cm + b_width * 2), b_height, 0.0, CLHEP::twopi);
-    fBoratedPETLogical_Tube =
-      new G4LogicalVolume(boratedPETSolid_Tube, BoratedPETMat, "BoratedPET_Logical");
-
-    G4cout << "Total Mass of B-PE: "
-           << 3.141592653589 * b_height / cm *
-                (pow(fBoratedTurbineRadius + b_width / cm * 2, 2) -
-                 pow(fBoratedTurbineRadius, 2)) *
-                densityOfBPE
-           << G4endl;
-
-    new G4PVPlacement(nullptr, G4ThreeVector(0, 0, fBoratedTurbinezPosition * cm),
-                      fBoratedPETLogical_Tube, "BoratedPET_phys", fLarLogical, false, 0,
-                      true);
-
-    boratedPETSolid_Tube =
-      new G4Tubs("BoratedPET", 0, (fBoratedTurbineRadius * cm + b_width * 2), b_width,
-                 0.0, CLHEP::twopi);
-    fBoratedPETLogical_Tube =
-      new G4LogicalVolume(boratedPETSolid_Tube, BoratedPETMat, "BoratedPET_Logical_Lid");
-
-    new G4PVPlacement(
-      nullptr, G4ThreeVector(0, 0, fBoratedTurbinezPosition * cm - b_height - b_width),
-      fBoratedPETLogical_Tube, "BoratedPET_phys", fLarLogical, false, 0, true);
-    new G4PVPlacement(
-      nullptr, G4ThreeVector(0, 0, fBoratedTurbinezPosition * cm + b_height + b_width),
-      fBoratedPETLogical_Tube, "BoratedPET_phys", fLarLogical, false, 0, true);
-  }
+      new G4PVPlacement(nullptr, G4ThreeVector(0, 0, fBoratedTurbinezPosition * cm),
+			fBoratedPETLogical_Tube, "BoratedPET_phys", fLarLogical, false, 0,
+			true);
+      
+      boratedPETSolid_Tube =
+	new G4Tubs("BoratedPET", 0, (fBoratedTurbineRadius * cm + b_width * 2), b_width,
+		   0.0, CLHEP::twopi);
+      fBoratedPETLogical_Tube =
+	new G4LogicalVolume(boratedPETSolid_Tube, BoratedPETMat, "BoratedPET_Logical_Lid");
+      
+      new G4PVPlacement(
+			nullptr, G4ThreeVector(0, 0, fBoratedTurbinezPosition * cm - b_height - b_width),
+			fBoratedPETLogical_Tube, "BoratedPET_phys", fLarLogical, false, 0, true);
+      new G4PVPlacement(
+			nullptr, G4ThreeVector(0, 0, fBoratedTurbinezPosition * cm + b_height + b_width),
+			fBoratedPETLogical_Tube, "BoratedPET_phys", fLarLogical, false, 0, true);
+    }//if(fWithBoratedPET == 3)
 
   //
   // Visualization attributes
@@ -1175,12 +1365,18 @@ auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
   fGeLogical->SetVisAttributes(testVisAtt_Ge);
   fBoratedPETLogical_Tube->SetVisAttributes(testVisAtt4);
   fBoratedPETLogical_Box->SetVisAttributes(testVisAtt4);
+
   return fWorldPhysical;
-}
+
+}//SetupBaseline()
+
+
 
 auto WLGDDetectorConstruction::SetupHallA() -> G4VPhysicalVolume*
 {
+
   // Full copy of baseline set up but smaller as a Gerda mock-up.
+
   // Get materials
   auto* worldMaterial = G4Material::GetMaterial("G4_Galactic");
   //auto* larMat        = G4Material::GetMaterial("G4_lAr");
@@ -1198,6 +1394,7 @@ auto WLGDDetectorConstruction::SetupHallA() -> G4VPhysicalVolume*
 
   if(fXeConc != 0 || fHe3Conc != 0)
     larMat = larMat_alt;
+
   // constants
   // size parameter, unit [cm]
   G4double offset = 250.0;  // shift cavern floor to keep detector centre at origin
@@ -1365,34 +1562,37 @@ auto WLGDDetectorConstruction::SetupHallA() -> G4VPhysicalVolume*
   G4double ypos;
   G4double angle = CLHEP::twopi / 6.0;
 
-  if(fGeometryName != "hallA_wo_ge" && fGeometryName != "hallA_only_WLSR"){
-    for(G4int j = 0; j < 6; j++)
+  
+  if(fGeometryName != "hallA_wo_ge" && fGeometryName != "hallA_only_WLSR")
     {
-      xpos = roiradius * cm * std::cos(j * angle);
-      ypos = roiradius * cm * std::sin(j * angle);
-      for(G4int i = 0; i < nofLayers; i++)
-      {
-        new G4PVPlacement(
-          nullptr,
-          G4ThreeVector(xpos, ypos,
+      for(G4int j = 0; j < 6; j++)
+	{
+	  xpos = roiradius * cm * std::cos(j * angle);
+	  ypos = roiradius * cm * std::sin(j * angle);
+	  for(G4int i = 0; i < nofLayers; i++)
+	    {
+	      new G4PVPlacement(nullptr, G4ThreeVector(xpos, ypos,
                         -step + (nofLayers / 2 * layerthickness - i * layerthickness) * cm),
-          fLayerLogical, "Layer_phys", fLarLogical, false, i + j * nofLayers, true);
-      }
+                        fLayerLogical, "Layer_phys", fLarLogical, false, i + j * nofLayers, true);
+	    }
+	}
     }
-  }
+  
 
   // WLSR volume - its a workaround to access the volume of the WLSR w/o implementing it properly
-  if(fGeometryName == "hallA_only_WLSR"){
-    // cavern
-    G4double WLSR_r       = 70.0;  
-    G4double WLSR_h       = 300.0/2.; 
+  if(fGeometryName == "hallA_only_WLSR")
+    {
+      // cavern
+      G4double WLSR_r       = 70.0;  
+      G4double WLSR_h       = 300.0/2.; 
+      
+      auto WLSR_LAr_solid = new G4Tubs("WLSR_LAr_solid", 0.0 * cm, WLSR_r * cm, WLSR_h * cm, 0.0, CLHEP::twopi);  
+      auto* fWLSR_LAr_logical = new G4LogicalVolume(WLSR_LAr_solid, larMat, "WLSR_LAr_logical");
+      new G4PVPlacement(nullptr, G4ThreeVector(), fWLSR_LAr_logical,
+			"WLSR_LAr_physical", fLarLogical, false, 0, true);
+    }
 
-    auto WLSR_LAr_solid = new G4Tubs("WLSR_LAr_solid", 0.0 * cm, WLSR_r * cm, WLSR_h * cm, 0.0, CLHEP::twopi);  
-    auto* fWLSR_LAr_logical = new G4LogicalVolume(WLSR_LAr_solid, larMat, "WLSR_LAr_logical");
-    new G4PVPlacement(nullptr, G4ThreeVector(), fWLSR_LAr_logical,
-                    "WLSR_LAr_physical", fLarLogical, false, 0, true);
-  }
-
+  
   //
   // Visualization attributes
   //
@@ -1420,11 +1620,18 @@ auto WLGDDetectorConstruction::SetupHallA() -> G4VPhysicalVolume*
   fLayerLogical->SetVisAttributes(G4VisAttributes::Invisible);
   fGapLogical->SetVisAttributes(greyVisAtt);
   fGeLogical->SetVisAttributes(redVisAtt);
+
   return fWorldPhysical;
-}
+
+}//SetupHallA()
+
+
+
 void WLGDDetectorConstruction::SetPositionOfDetectors(G4String name)
 {
+
   std::set<G4String> knownGeometries = { "baseline", "original" };
+  
   if(knownGeometries.count(name) == 0)
   {
     G4Exception("WLGDDetectorConstruction::SetGeometry", "WLGD0001", JustWarning,
@@ -1435,38 +1642,45 @@ void WLGDDetectorConstruction::SetPositionOfDetectors(G4String name)
   fDetectorPosition = name;
   // Reinit wiping out stores
   G4RunManager::GetRunManager()->ReinitializeGeometry();
+
 }
+
+
 
 void WLGDDetectorConstruction::SetGeometry(const G4String& name)
 {
+
   std::set<G4String> knownGeometries = { "baseline", "baseline_smaller", "baseline_large_reentrance_tube", "alternative",
                                          "hallA", "hallA_wo_ge", "hallA_only_WLSR", "baseline_large_reentrance_tube_4m_cryo" };
   if(knownGeometries.count(name) == 0)
-  {
-    G4Exception("WLGDDetectorConstruction::SetGeometry", "WLGD0001", JustWarning,
-                ("Invalid geometry setup name '" + name + "'").c_str());
-    return;
-  }
+    {
+      G4Exception("WLGDDetectorConstruction::SetGeometry", "WLGD0001", JustWarning,
+		  ("Invalid geometry setup name '" + name + "'").c_str());
+      return;
+    }
 
   fGeometryName = name;
   // Reinit wiping out stores
   G4RunManager::GetRunManager()->ReinitializeGeometry();
 }
 
+
+
 void WLGDDetectorConstruction::ExportGeometry(const G4String& file)
 {
+
   G4GDMLParser parser;
   parser.Write(file);
 }
+
+
 
 void WLGDDetectorConstruction::SetNeutronBiasFactor(G4double nf) { fNeutronBias = nf; }
 
 void WLGDDetectorConstruction::SetMuonBiasFactor(G4double mf) { fMuonBias = mf; }
 
-void WLGDDetectorConstruction::SetNeutronYieldBias(G4double nf)
-{
-  fNeutronYieldBias = nf;
-}
+void WLGDDetectorConstruction::SetNeutronYieldBias(G4double nf) { fNeutronYieldBias = nf; }
+
 
 // Additional settings for adjusting the detector geometry
 
@@ -1486,7 +1700,7 @@ void WLGDDetectorConstruction::SetHe3Conc(G4double nf)
   G4RunManager::GetRunManager()->ReinitializeGeometry();
 }
 
-// changing the radius if the cryostat
+// changing the radius of the cryostat
 void WLGDDetectorConstruction::SetOuterCryostatRadius(G4double rad)
 {
   fCryostatOuterRadius = rad;
@@ -1511,7 +1725,7 @@ void WLGDDetectorConstruction::SetWithoutCupperTubes(G4int answer)
 }
 
 // option to include borated PE in the setup (1: tubes around the re-entrance tubes, 2:
-// trubine structure)
+// turbine structure)
 void WLGDDetectorConstruction::SetNeutronModerator(G4int answer)
 {
   fWithBoratedPET = answer;
@@ -1520,7 +1734,7 @@ void WLGDDetectorConstruction::SetNeutronModerator(G4int answer)
 }
 
 // option to include borated PE in the setup (1: tubes around the re-entrance tubes, 2:
-// trubine structure)
+// turbine structure)
 void WLGDDetectorConstruction::SetMaterial(G4String answer)
 {
   fSetMaterial = answer;
@@ -1594,6 +1808,7 @@ void WLGDDetectorConstruction::SetMaGeMaterial(G4int answer)
 
 void WLGDDetectorConstruction::DefineCommands()
 {
+
   // Define geometry command directory using generic messenger class
   fDetectorMessenger = new G4GenericMessenger(this, "/WLGD/detector/",
                                               "Commands for controlling detector setup");
@@ -1703,7 +1918,7 @@ void WLGDDetectorConstruction::DefineCommands()
     .SetGuidance("BoratedPE = normal case")
     .SetGuidance("PolyEthylene = without Boron")
     .SetGuidance("PMMA = instead using PMMA")
-    .SetCandidates("BoratedPE PolyEthylene PMMA")
+    .SetCandidates("BoratedPE PolyEthylene PMMA PMMA1percentB PMMA3percentB PMMA5percentB PMMA7percentB PMMA10percentB PMMA1percentGd PMMA3percentGd PMMA5percentGd PMMA7percentGd PMMA10percentGd PMMA038percentPolyGd PMMA191percentPolyGd PMMA381percentPolyGd")
     .SetDefaultValue("BoratedPE");
 
   // option to set the radius of the turbine structure
@@ -1814,4 +2029,4 @@ void WLGDDetectorConstruction::DefineCommands()
     .SetDefaultValue("0")
     .SetStates(G4State_PreInit)
     .SetToBeBroadcasted(false);
-}
+}//DefineCommands()

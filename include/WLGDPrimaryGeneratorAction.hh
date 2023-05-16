@@ -107,8 +107,12 @@ public:
 
   void ChangeFileName(G4String newFile);
   void OpenFile();
+  bool fUsingMUSUNDirectory;
+  void OpenMUSUNFile();
+  void OpenMUSUNDirectory();
   void shortcutToChangeFileName(const G4String& newFile);
 
+  
 private:
   void DefineCommands();
 
@@ -125,6 +129,8 @@ private:
   G4String           fFileName;
   G4double           fZShift;
 
+  std::vector<G4String> ListOfMUSUNFiles;
+  
   piecewise_linear_distribution<double>* neutronEnergySpectrumInBPE;
   piecewise_linear_distribution<double>* neutronEnergySpectrumFromOutside;
 

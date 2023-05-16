@@ -109,7 +109,7 @@ public:
   void OpenFile();
   bool fUsingMUSUNDirectory;
   void OpenMUSUNFile();
-  void OpenMUSUNDirectory();
+  void OpenMUSUNDirectory(G4String pathtodata);
   void shortcutToChangeFileName(const G4String& newFile);
 
   

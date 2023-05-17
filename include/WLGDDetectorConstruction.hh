@@ -88,6 +88,7 @@ private:
   void DefineMaterials();
 
   G4VPhysicalVolume* SetupBaseline();
+  G4VPhysicalVolume* SetupBaselineOriginal();
   G4VPhysicalVolume* SetupAlternative();
   G4VPhysicalVolume* SetupHallA();
 

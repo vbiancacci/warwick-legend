@@ -622,6 +622,87 @@ void WLGDPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
     fParticleGun->SetParticlePosition(G4ThreeVector(pos_x, pos_y, pos_z + Offset));
     fParticleGun->GeneratePrimaryVertex(event);
   }
+
+  if(fGenerator == "Positrons")
+  {
+    std::uniform_real_distribution<> rndm(0.0, 1.0);  // azimuth angle
+
+    G4double WaterTankHeight = (650 + 0.8) * cm;
+    G4double WaterTankRadius = (550 + 0.6) * cm;
+    G4double CryostatHeight = 350 * cm;
+    G4double CryostatRadius = 350 * cm; 
+    G4double Offset          = (200 - 100 - (850 - 650)) * cm;
+
+    
+    G4double Vol_top    = CLHEP::twopi * WaterTankRadius * WaterTankRadius * 2 * (WaterTankHeight-CryostatHeight);
+    G4double Vol_middle = CLHEP::twopi * 2 * (CryostatHeight) * (WaterTankRadius - CryostatRadius);
+    G4double Vol_bottom = Vol_top; //CLHEP::twopi * WaterTankRadius * WaterTankRadius * 2 * (WaterTankHeight-CryostatHeight);
+
+    G4double Prob_middle = Vol_middle / (Vol_bottom + Vol_middle + Vol_top);
+    G4double Prob_top = (1 - Prob_middle) / 2.;
+    G4double Prob_bottom = Prob_top;
+
+    std::discrete_distribution<> distribution_2({ Prob_middle, Prob_top, Prob_bottom });
+
+    G4int    where = distribution_2(generator);
+
+    G4double px, py, pz, pos_x, pos_y, pos_z;
+    G4double theta = CLHEP::twopi * rndm(generator);
+    G4double phi   = 2 * CLHEP::twopi * rndm(generator);
+    
+    if(where == 0)
+    {
+      G4double pos_phi    = CLHEP::twopi * rndm(generator);
+
+      pos_x = ( (WaterTankRadius - CryostatRadius) * rndm(generator) + CryostatRadius) * cos(pos_phi);
+      pos_y = ( (WaterTankRadius - CryostatRadius) * rndm(generator) + CryostatRadius) * sin(pos_phi);
+      pos_z = CryostatHeight * (1 - 2 * rndm(generator));
+
+      //G4double mom_phi   = CLHEP::twopi / 4. * (3 - 2 * rndm(generator)) + pos_phi;
+      //G4double mom_theta = CLHEP::twopi / 2. * rndm(generator);
+    }
+
+    if(where > 0)
+    {
+      G4double pos_phi = CLHEP::twopi * rndm(generator);
+      G4double pos_height = (WaterTankHeight - CryostatHeight) * rndm(generator) + CryostatHeight;
+      G4double pos_rad = WaterTankRadius * rndm(generator);
+      if(where == 2) //bottom side
+        pos_height *=-1;
+
+      pos_x = pos_rad * cos(pos_phi);
+      pos_y = pos_rad * sin(pos_phi);
+      pos_z = pos_height;
+
+      //G4double mom_phi   = CLHEP::twopi * rndm(generator);
+      //G4double mom_theta = -CLHEP::twopi / 4. * rndm(generator);
+      //if(where == 2)
+      //  mom_theta += CLHEP::twopi / 4.;
+
+      //px = sin(mom_theta) * cos(mom_phi);
+      //py = sin(mom_theta) * sin(mom_phi);
+      //pz = cos(mom_theta);
+    }
+    fParticleGun->SetParticlePosition(G4ThreeVector(pos_x, pos_y, pos_z + Offset));
+
+    pz = -1 * std::cos(theta);
+    px = std::sin(theta) * cos(phi);
+    py = std::sin(theta) * sin(phi);
+    G4ThreeVector momentumDir(px, py, pz);
+    fParticleGun->SetParticleMomentumDirection(momentumDir);
+
+    G4double energy = 10e3 *keV;
+    G4ParticleTable* theParticleTable = G4ParticleTable::GetParticleTable();
+    fParticleGun->SetParticleDefinition(theParticleTable->FindParticle("e+"));
+    G4double theMass = theParticleTable->FindParticle("e+")->GetPDGMass();
+    G4double totMomentum = std::sqrt(energy * energy + 2 * theMass * energy);
+    fParticleGun->SetParticleEnergy(energy);
+
+    fParticleGun->GeneratePrimaryVertex(event);
+  }
+
+
+
 }
 
 void WLGDPrimaryGeneratorAction::SetGenerator(const G4String& name)

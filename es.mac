@@ -1,0 +1,33 @@
+# minimal command set test
+# verbose
+
+/run/verbose 0
+/tracking/verbose 0
+#/run/setCut 3.0 cm
+/tracking/verbose 0
+
+/WLGD/detector/setGeometry baseline
+#/WLGD/detector/Cryostat_Radius_Outer 325
+#/WLGD/detector/Cryostat_Height 325
+#/WLGD/detector/Cryostat_Vacgap 50
+#/WLGD/detector/With_Gd_Water 1
+#/WLGD/detector/With_NeutronModerators 0
+#/WLGD/detector/Which_Material PMMA
+
+#/WLGD/detector/TurbineAndTube_Height 300 cm
+#/WLGD/detector/TurbineAndTube_Radius 160 cm
+#/WLGD/detector/TurbineAndTube_Width  10 cm
+#/WLGD/detector/TurbineAndTube_zPosition 42 cm
+/WLGD/event/saveAllEvents 1
+
+#Init
+/run/initialize
+
+#Idle state
+/WLGD/step/getDepositionInfo 1
+/WLGD/step/getIndividualDepositionInfo 1
+/WLGD/step/AllowForLongTimeEmissionReadout 1
+/WLGD/generator/setGenerator Positrons                    # set the primary generator to the (Alpha,n) generator in the moderators
+
+# start
+/run/beamOn 10000

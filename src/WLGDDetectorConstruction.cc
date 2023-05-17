@@ -557,8 +557,97 @@ auto WLGDDetectorConstruction::SetupAlternative() -> G4VPhysicalVolume*
 
   return fWorldPhysical;
 }
-
 auto WLGDDetectorConstruction::SetupBaseline() -> G4VPhysicalVolume*
+{
+  // Get materials
+  auto* worldMaterial = G4Material::GetMaterial("G4_Galactic");
+  auto* waterMat = G4Material::GetMaterial("G4_WATER");
+  auto* steelMat      = G4Material::GetMaterial("G4_STAINLESS-STEEL");
+
+  G4double stone       = 500.0;  // Hall wall thickness 5 m
+  G4double hallrad     = 600.0;  // Hall cylinder diam 12 m
+  G4double hallhheight = 850.0;  // Hall cylinder height 17 m
+  G4double offset = 200.0;  // shift cavern floor to keep detector centre at origin
+  //G4double offset_2 = 100.0;  // shift s.t. cavern, hall and tank are in line for different stone sizes
+  //G4double offset_3 = 100;  // 69.5; // shift to get to the baseline lowered position
+
+  // water tank
+  G4double tankwalltop = 0.6;  // water tank thickness at top 6 mm
+  G4double tankwallbot = 0.8;  // water tank thickness at bottom 8 mm
+  G4double tankrad     = 550;  // water tank diam 11 m
+  G4double tankhheight = 650;  // water tank height 13 m
+  // cryostat
+  G4double cryowall   = 3.0;                   // cryostat wall thickness from GERDA
+  G4double vacgap     = 1.0;                   // vacuum gap between walls
+  G4double cryrad     = fCryostatOuterRadius;  // 350.0;  // cryostat diam 7 m
+  G4double cryhheight = fCryostatHeight;       // 350.0;  // cryostat height 7 m
+
+ 
+  fvertexZ = (hallhheight + offset) * cm;
+  fmaxrad  = hallrad * cm;
+
+  // Volumes for this geometry
+
+  //
+  // World
+  //
+  auto* worldSolid =
+    new G4Tubs("World", 0.0 * cm, (hallrad + stone + 0.1) * cm,
+               (hallhheight + stone + offset + 0.1) * cm, 0.0, CLHEP::twopi);
+  auto* fWorldLogical  = new G4LogicalVolume(worldSolid, worldMaterial, "World_log");
+  auto* fWorldPhysical = new G4PVPlacement(nullptr, G4ThreeVector(), fWorldLogical,
+                                           "World_phys", nullptr, false, 0);
+
+  //
+  // Tank
+  //
+  auto* tankSolid =
+    new G4Cons("Tank", 0.0 * cm, (tankrad + tankwallbot) * cm, 0.0 * cm,
+               (tankrad + tankwalltop) * cm, tankhheight * cm, 0.0, CLHEP::twopi);
+  auto* fTankLogical  = new G4LogicalVolume(tankSolid, steelMat, "Tank_log");
+  auto* fTankPhysical = new G4PVPlacement(
+    nullptr,
+    G4ThreeVector(),
+    fTankLogical, "Tank_phys", fWorldLogical, false, 0, true);
+
+  //
+  // Water
+  //
+  auto* waterSolid     = new G4Tubs("Water", 0.0 * cm, tankrad * cm,
+                                    (tankhheight - tankwallbot) * cm, 0.0, CLHEP::twopi);
+  auto* fWaterLogical  = new G4LogicalVolume(waterSolid, waterMat, "Water_log");
+  auto* fWaterPhysical = new G4PVPlacement(nullptr, G4ThreeVector(), fWaterLogical,
+                                           "Water_phys", fTankLogical, false, 0, true);
+
+  //
+  // outer cryostat
+  //
+  auto* coutSolid =
+    new G4Tubs("Cout", 0.0 * cm, cryrad * cm, cryhheight * cm, 0.0, CLHEP::twopi);
+  auto* fCoutLogical  = new G4LogicalVolume(coutSolid, steelMat, "Cout_log");
+  auto* fCoutPhysical = new G4PVPlacement(nullptr, G4ThreeVector(), fCoutLogical,
+                                          "Cout_phys", fWaterLogical, false, 0, true);
+
+  
+  //
+  // Visualization
+  //
+   G4Color testColor_water(170 / 255., 191 / 225., 219 / 225.); //170, 191, 219
+  auto*   testVisAtt_water = new G4VisAttributes(testColor_water);
+  testVisAtt_water->SetVisibility(true);
+  auto* greyVisAtt = new G4VisAttributes(G4Colour::Grey());
+  greyVisAtt->SetVisibility(true);
+
+  fTankLogical->SetVisAttributes(greyVisAtt);
+  fWaterLogical->SetVisAttributes(testVisAtt_water);
+  fCoutLogical->SetVisAttributes(greyVisAtt);
+  
+}
+
+
+
+
+auto WLGDDetectorConstruction::SetupBaselineOriginal() -> G4VPhysicalVolume*
 {
   // Get materials
   auto* worldMaterial = G4Material::GetMaterial("G4_Galactic");

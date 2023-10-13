@@ -181,11 +181,12 @@ int main(int argc, char** argv)
         auto visManager = std::make_unique<G4VisExecutive>();
         visManager->Initialize();
 
-        UImanager->ApplyCommand("/control/execute vis.mac");
+        UImanager->ApplyCommand("/control/execute init_vis.mac");
         ui->SessionStart();
         // UI must be deleted *before* the vis manager
         delete ui;
     }
+    
     else  // Batch mode
     {
         G4String command = "/control/execute ";
